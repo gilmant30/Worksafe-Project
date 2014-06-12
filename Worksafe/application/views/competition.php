@@ -2,7 +2,7 @@
 <html>
 <head>
 
-<link href="header.css" rel="stylesheet">
+<style>@import url('<?=base_url()?>/assets/css/header.css'); </style>
 
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -19,7 +19,7 @@
 <h1>Competition Front Page</h1>
 
 <div class="competition" id="links">
-<a href="http://babbage.cs.missouri.edu/~tmgy87/Worksafe/admin/new_competition.php">Start New Competition</a>
+<a href="<?= base_url();?>index.php/admin/newCompetition">Start New Competition</a>
 
 <a href="#">Edit Competition</a>
 
