@@ -25,9 +25,7 @@
 
 <a href="#">Delete Competition</a>
 
-<br /><br /><br />
 
-<a href="http://babbage.cs.missouri.edu/~tmgy87/Worksafe/admin/create_question.php">Create Questions</a>
 </div>
 
 </body>

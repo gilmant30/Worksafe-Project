@@ -18,7 +18,7 @@ class Admin_model extends CI_Model {
 	{
 		//put data in array to be put in db
 		$data = array(
-			'competition_id' => 3,
+			'competition_id' => 11,
 			'year' => 2014,
 			'question_per_day' => $question,
 			'answers_per_day' => $answer,
@@ -39,6 +39,18 @@ class Admin_model extends CI_Model {
 		}
 	}
 
+	function get_competition_id($start, $end, $days, $question, $answer, $title)
+	{
+		$query = $this->db->query("SELECT * FROM competition WHERE name = '$title';");
+	
+		return $query;
+	}
+
+	function get_competition_data($id)
+	{
+		$query = $this->db->query("SELECT * FROM competition WHERE id = '$id';");
+		return $query;
+	}
 }
 
 ?>
