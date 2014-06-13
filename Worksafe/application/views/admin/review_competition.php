@@ -16,14 +16,9 @@
 <title>Competition</title>
 </head>
 <body>
-<h1>Competition Front Page</h1>
+<h1>Competition Review Page</h1>
 
-<div class="competition" id="links">
-<a href="<?= base_url();?>index.php/admin/newCompetition">Start New Competition</a>
 
-<a href="<?= base_url();?>index.php/admin/showCompetition">Edit Competition</a>
-
-<a href="#">Delete Competition</a>
 
 
 </div>

@@ -18,41 +18,55 @@
 </head>
 <body>
 <?php
-        $day = 1;
-        $final_day = 2;
-        $arr = array(1,2,3,4);
-        $answer = array(1,2,3);
+        $attributes = array('name' => 'create_question', 'onsubmit' => '');
 
-        echo "<h1>Create Questions for day $day out of $final_day</h1>";
-
+        echo "<h1>Create Questions for <strong>$title</strong> day $current_day out of $days_of_competition</h1>";
         echo '<div id=create_qustion">';
         echo '<h2>Create Questions</h2>';
-        echo '<form name="create_question" action="#" method="POST" onsubmit="" enctype="multipart/form-data">';
 
-        foreach($arr as &$value)
+        echo form_open('admin/uploadQuestions', $attributes);
+
+        //dynamically create questions form based on user input from new_competition page
+        for($i=1;$i<($questions+1);$i++)
         {
-                echo "<p>Question $value:</p>";
-                echo '<textarea id = "question" name="question'.$value.'" required></textarea>';
+                $question_input = array('name' => 'question'.$i, 'id' => 'question');
+                $category_input = array('name' => 'category'.$i, 'id' => 'category');
+                $type_input = array('name' => 'type'.$i, 'id' => 'type');
+                
+                echo "<p>Question $i:</p>";
+                echo form_label('Category: ','category'.$i);
+                echo form_input($category_input);
+                echo '<br />';
+                echo form_label('Type: ','type'.$i);
+                echo form_input($type_input);
+                echo '<br />';
+                echo form_textarea($question_input);
+               //echo '<textarea id = "question" name="question'.$i.'" required></textarea>';
                 echo '<br />';
 
-                foreach($answer as &$ans)
+                //dynamically create answer input and radio buttons from data given on new_competition page
+                for($a=1;$a<($answers+1);$a++)
                 {
-                        echo "<p>Answer $ans:</p>";
-                        echo '<textarea id="answer" name="q'.$value.'answer'.$ans.'" required></textarea>';
-                        echo '<input type="radio" name="correct_ans'.$value.'"/>';
+                        $answer_input = array('name' => 'q'.$i.'answer'.$a, 'id' => 'answer');
+                        $radio_input = array('name' => 'correct_ans_q'.$i, 'value' => 'q'.$i.'a'.$a);
+
+                        echo "<p>Answer $a:</p>";
+                        echo form_textarea($answer_input);
+                        echo form_label('Question '.$i.' answer '.$a.' correct  ','correct_ans_q'.$i.'a'.$a);
+                        echo form_radio($radio_input);
                         echo '<br />';
                 }
                 echo '<br />';
                 echo '<br />';
         }
-        //echo '<input type="submit" value="Finish"/>';
-        //echo '</form>';
-        if($day!=$final_day)
+
+        if($current_day!=$days_of_competition)
         {
-        echo '<input type="submit" value="Continue to next day"/>';
+                echo form_submit('Submit', 'Continue to next day');
         }
         else
-        echo '<input type="submit" value="Finish"/>';
+                echo form_submit('Submit', 'Finish');
+
 
         echo '</form>';
         echo '</div>';

@@ -5,6 +5,10 @@ h1{
         height: 100px;
 }
 
+strong{
+    color: blue; 
+}
+
 a {
     background:#eee;
     text-decoration:none;

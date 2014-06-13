@@ -158,35 +158,8 @@ function validateForm() {
     echo form_close();       
 
   ?>
-
-<!--
-        <form name="createComp" action="#" method="POST" onsubmit="return validateForm()" enctype="multipart/form-data">
-        <h2>Create a new competition</h2>
-        <p id="dates">Select dates of competition:</p>
-        </br>
-        <label for="from">From:</label>
-        <input type="text" id="from" name="from">
-        <div id="comp_from"></div>
-        <label for="to">To:</label>
-        <input type="text" id="to" name="to">
-        <div id="comp_to"></div>
-        </br>
-
-        <label>Select number of questions per day: </label>
-        <input type="text" name="num_questions_per_day" id="question"/>
-        <div id="comp_question"></div>
-        </br>
-
-        <label>Select number of answers per question: </label>
-        <input type="text" name="num_answers" id="answer"/>
-        <div id="comp_answer"></div>
-        </br>
-
-        <input type="submit" value="Submit" name="Submit"/>
-        </form>
-
--->        
-        </div>
+    
+  </div>
 
 </body>
 </html>

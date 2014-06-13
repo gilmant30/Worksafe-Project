@@ -16,14 +16,23 @@
 <title>Competition</title>
 </head>
 <body>
-<h1>Competition Front Page</h1>
+<h1>Show Competition Page</h1>
 
-<div class="competition" id="links">
-<a href="<?= base_url();?>index.php/admin/newCompetition">Start New Competition</a>
+<?php
+	echo "<table>";
+	echo "<tr>";
+	echo "<td>Id</td>";
+	echo "<td>Name</td>";
+	echo "</tr>";
+	foreach ($array->result() as $row) {
+		echo "<tr>";
+		echo "<td>$row->competition_id</td>";
+		echo "<td>$row->name</td>";
+		echo "</tr>";
+	}
+	echo "</table>";
 
-<a href="<?= base_url();?>index.php/admin/showCompetition">Edit Competition</a>
-
-<a href="#">Delete Competition</a>
+?>
 
 
 </div>
