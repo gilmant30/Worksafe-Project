@@ -123,6 +123,7 @@ class Admin extends CI_Controller {
 		
 	}
 
+	//page where question form is created
 	public function createQuestion()
 	{
 
@@ -168,6 +169,7 @@ class Admin extends CI_Controller {
 	}
 
 
+	//upload questions into the database
 	public function uploadQuestions()
 	{
 
