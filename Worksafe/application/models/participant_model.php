@@ -113,5 +113,61 @@ class Participant_model extends CI_Model {
 			echo "error with retrieving competition id";
 		}
 	}
+
+	function get_question_data_from_date_question($competition_id, $today_date)
+	{
+		$query = $this->db->query("SELECT * FROM date_question WHERE competition_id = '$competition_id' AND question_date = '$today_date';");
+
+		if($query->num_rows() > 0)
+			return $query;
+		else
+			echo "error with retrieving question data from get_question_data_from_date_question";
+	}
+
+	function get_questions($question_id)
+	{
+		$query = $this->db->query("SELECT * FROM question WHERE question_id = '$question_id';");
+
+		if($query->num_rows() == 1)
+			return $query;
+		else
+			echo "error with retrieving question from get_questions function";
+	}
+
+	function get_answers($question_id)
+	{
+		$query = $this->db->query("SELECT * FROM answer WHERE question_id = '$question_id';");
+
+		if($query->num_rows() > 0)
+			return $query;
+		else
+			echo "error with retrieving question from get_answers function";
+	}
+
+	function get_days_in_competition()
+	{
+		$query = $this->db->query("SELECT question_per_day FROM competition WHERE active = 'yes';");
+
+		if($query->num_rows() == 1)
+		{
+			$query = $query->row();
+			return $query->question_per_day;
+		}
+		else
+			echo "error with retrieving questions_per_day from competition db";
+	}
+
+	function check_answer($answer_id)
+	{
+		$query = $this->db->query("SELECT * FROM answer WHERE answer_id = '$answer_id';");
+
+		if($query->num_rows() == 1)
+		{
+			$query = $query->row();
+			return $query;
+		}
+		else
+			echo "error with retrieving correct field from answer db";
+	}
 }
 ?>

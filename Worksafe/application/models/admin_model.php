@@ -130,7 +130,7 @@ class Admin_model extends CI_Model {
 			'date_question_id' => 2,
 			'question_id' => $question_id,
 			'competition_id' => $competition_id,
-			'date' => $date_question_asked
+			'question_date' => $date_question_asked
 		);
 
 

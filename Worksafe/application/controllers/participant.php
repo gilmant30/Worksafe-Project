@@ -115,10 +115,11 @@ class Participant extends CI_Controller {
 	function questionPage()
 	{
 		$today = strtotime(date('Y-m-d'));
-		$query['competition'] = $this->Participant_model->get_competition_data();
+		$data['competition'] = $this->Participant_model->get_competition_data();
+		$data['question'] = new ArrayObject();
+		$data['answer'] = new ArrayObject();
 		
-		
-		$row = $query['competition']->row();
+		$row = $data['competition']->row();
 
 		$competition_id = $row->competition_id;
 		$start_date = strtotime($row->start_date);
@@ -142,7 +143,85 @@ class Participant extends CI_Controller {
 		*/
 
 		//goes inside else statement
-		$this->load->view('participant/participant_question_page',$query);
+		//for testing purposes only
+		$today_date = '2014-06-15';
+
+
+		//get question for the specific date
+		$query = $this->Participant_model->get_question_data_from_date_question($competition_id,$today_date);
+		
+		//make sure a row exists
+		if($query->num_rows() > 0)
+		{
+			//for each question 
+			foreach($query->result() as $row)
+			{
+				//get question data using the question id
+				$question_data = $this->Participant_model->get_questions($row->question_id);
+				
+				//put the data into an array of objects
+				$question_data = $question_data->result();
+
+				//add to the array of object in data['question']
+				$data['question']->append($question_data);
+
+				//echo $question_data[0]->question_id;
+				//echo "<br />";
+
+				$answer = $this->Participant_model->get_answers($question_data[0]->question_id);
+
+				if($answer->num_rows > 0)
+				{
+					//for each answer that coincides with the question just gottne
+					foreach ($answer->result() as $ans_row) {
+						//put data into an array of objects
+						$data['answer']->append($ans_row);
+					}
+					
+				}
+
+				else
+				{
+					echo "error getting answers from database";
+				}
+			}
+
+
+			//var_dump($data['question']);
+			
+		}
+		else
+		{
+			echo "error getting data from database";
+		}
+
+		$this->load->view('participant/participant_question_page',$data);
+	}
+
+	function answerQuestions()
+	{
+
+		$num = $this->Participant_model->get_days_in_competition();
+
+
+		for($i=0;$i<$num;$i++)
+		{
+			$answer = $this->security->xss_clean($this->input->post('correct_ans_q'.$i));
+
+			$correct = $this->Participant_model->check_answer($answer);
+			
+			if($correct->correct == 'y')
+			{
+				echo $correct->answer.' is correct';
+			}
+			else
+			{
+				echo $correct->answer.' is incorrect';
+			}
+			echo '<br />';
+			
+		}
+
 	}
 
 }
