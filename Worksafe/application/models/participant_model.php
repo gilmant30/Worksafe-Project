@@ -102,7 +102,7 @@ class Participant_model extends CI_Model {
 
 	function get_competition_data()
 	{
-		$query = $this->db->query("SELECT * FROM competition WHERE active = 'yes';");
+		$query = $this->db->query("SELECT * FROM competition WHERE active = 'y';");
 		
 		if($query->num_rows() == 1)
 		{

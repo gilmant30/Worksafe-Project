@@ -19,7 +19,7 @@ $('#toggle-login').click(function(){
 <title>Competition</title>
 </head>
 <body>
-<!--<h1>Admin Login Page</h1> -->
+<h1>Admin Login Page</h1> 
 
 <span class="button" id="toggle-login">Login</span>
 
@@ -27,19 +27,19 @@ $('#toggle-login').click(function(){
   <div id="triangle"></div>
   <h2>Worksafe Week Admin Login</h2>
   <?php
-	$input = array('name' => 'username', 'placeholder' => 'Username');
+  
+	$input = array('name' => 'email', 'placeholder' => 'Email');
 	$password = array('name' => 'password', 'placeholder' => 'Password');
 
 	echo form_open('admin/login');
 	echo form_input($input);
 	echo form_password($password);
 	echo form_submit('admin_login_submit', 'Log in');
-  	echo form_close();
+  echo form_close();
 
-  	if($error == TRUE)
-  	{
-  		echo "<div>Incorrect Username or Password</div>";
-  	}
+  echo validation_errors();
+  echo '<div id="error">'.$error.'</div>';
+  	
   ?>
 </div>
 

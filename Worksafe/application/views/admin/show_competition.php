@@ -23,11 +23,19 @@
 	echo "<tr>";
 	echo "<td>Id</td>";
 	echo "<td>Name</td>";
+	echo "<td>Questions per day</td>";
+	echo "<td>Answers per questions</td>";
+	echo "<td>Start date</td>";
+	echo "<td>End date</td>";
 	echo "</tr>";
 	foreach ($array->result() as $row) {
 		echo "<tr>";
 		echo "<td>$row->competition_id</td>";
 		echo "<td>$row->name</td>";
+		echo "<td>$row->question_per_day</td>";
+		echo "<td>$row->answers_per_day</td>";
+		echo "<td>$row->start_date</td>";
+		echo "<td>$row->end_date</td>";
 		echo "</tr>";
 	}
 	echo "</table>";

@@ -14,42 +14,56 @@ class Participant extends CI_Controller {
 
 	function index()
 	{
-		$this->load->view('participant/participant_login');
+		$data['error'] = $this->session->flashdata('error');
+		$this->load->view('participant/participant_login', $data);
 	}
 
 	function login()
 	{
-		//check to make sure email is valid
-		$email = $this->security->xss_clean($this->input->post('email'));
 
-		//query db to make sure email is already in the database
-		$query = $this->Participant_model->check_participant_email($email);
+		//put validation on so email field is required
+		$this->form_validation->set_rules('email', 'Email', 'required');
 
-		//check if number of rows returned is greater than 0
-		if($query->num_rows() > 0)
+		//if either is empty returns error
+		if($this->form_validation->run() === FALSE)
 		{
-			$row = $query->row();
-
-			$cookie_participant_id = array(
-			'name' => 'participant_id',
-			'value' => $row->user_id,
-			'expire' => 86500,
-			);
-
-		$this->input->set_cookie($cookie_participant_id);
-
-		redirect('participant/questionPage');
-
+			$this->session->set_flashdata('error', 'Must not leave the email field blank');
+			redirect('participant/index');
 		}
 		else
 		{
-			echo 'user with that id is not enrolled yet';
-		}
+			//check to make sure email is valid
+			$email = $this->security->xss_clean($this->input->post('email'));
 
+			//query db to make sure email is already in the database
+			$query = $this->Participant_model->check_participant_email($email);
+
+			//check if number of rows returned is greater than 0
+			if($query->num_rows() > 0)
+			{
+				$row = $query->row();
+
+				$cookie_participant_id = array(
+				'name' => 'participant_id',
+				'value' => $row->user_id,
+				'expire' => 86500,
+				);
+
+			$this->input->set_cookie($cookie_participant_id);
+
+			redirect('participant/questionPage');
+			}
+			else
+			{
+				$this->session->set_flashdata('error', 'Email is not yet registered');
+				redirect('participant/index');
+			}
+		}
 	}
 
 	function signup()
 	{
+		$query['error'] = $this->session->flashdata('error');
 		//get all the organiztions in the database to fill the dropdown
 		$query['organization'] = $this->Participant_model->get_all_organizations();
 
@@ -58,57 +72,73 @@ class Participant extends CI_Controller {
 
 	function enroll()
 	{
-		//check to make sure email is valid
-		$email = $this->security->xss_clean($this->input->post('email'));
-		$zipcode = $this->security->xss_clean($this->input->post('zipcode'));
-		$org_id = $this->security->xss_clean($this->input->post('organization'));
 
-		$query = $this->Participant_model->check_participant_email($email);
+		//put validation on so email field is required
+		$this->form_validation->set_rules('email', 'Email', 'required');
+		$this->form_validation->set_rules('zipcode', 'Zipcode', 'required');
 
-		//check if number of rows returned is greater than 0
-		if($query->num_rows() > 0)
+		//if either email or zipcode is empty returns error
+		if($this->form_validation->run() === FALSE)
 		{
-			echo 'user already registered';
+			$this->session->set_flashdata('error', 'Must not leave the email or zipcode fields blank');
+			redirect('participant/signup');
 		}
 		else
 		{
-			
-			//send to participant_model to run function insert_participant(), throw error if it didn't add to database
-			try
-			{
-				//insert participant into db
-				$this->Participant_model->insert_participant($email,$zipcode);
-			} catch (Exception $e) {
-				echo 'Caught exception: ', $e->getMessage(), "\n";
-			}
-			
-			$participant_id = $this->Participant_model->get_participant_id($email,$zipcode);
+			//check to make sure email is valid
+			$email = $this->security->xss_clean($this->input->post('email'));
+			$zipcode = $this->security->xss_clean($this->input->post('zipcode'));
+			$org_id = $this->security->xss_clean($this->input->post('organization'));
 
-			//send to participant_model to run function insert_participant_into_user_role(), throw error if it didn't add to database
-			try
-			{
-				//insert participant into db
-				$this->Participant_model->insert_participant_into_user_role($participant_id);
-			} catch (Exception $e) {
-				echo 'Caught exception: ', $e->getMessage(), "\n";
-			}
-			
-			//send to participant_model to run function assoc_user_org(), throw error if it didn't add to database
-			try
-			{
-				//assoc participant with organization
-				$this->Participant_model->assoc_user_org($participant_id, $org_id);
-			} catch (Exception $e) {
-				echo 'Caught exception: ', $e->getMessage(), "\n";
-			}
+			//query to see if email is already registered
+			$query = $this->Participant_model->check_participant_email($email);
 
-			//set session for participant
 
-			//redirect to question page after enrollment is complete
-			redirect('participant/questionPage');
-								
+			//if number of rows is greater than 0 then user is registered
+			if($query->num_rows() > 0)
+			{
+				$this->session->set_flashdata('error', 'User is already registered');
+				redirect('participant/signup');
+			}
+			else
+			{
+				
+				//send to participant_model to run function insert_participant(), throw error if it didn't add to database
+				try
+				{
+					//insert participant into db
+					$this->Participant_model->insert_participant($email,$zipcode);
+				} catch (Exception $e) {
+					echo 'Caught exception: ', $e->getMessage(), "\n";
+				}
+				
+				$participant_id = $this->Participant_model->get_participant_id($email,$zipcode);
+
+				//send to participant_model to run function insert_participant_into_user_role(), throw error if it didn't add to database
+				try
+				{
+					//insert participant into db
+					$this->Participant_model->insert_participant_into_user_role($participant_id);
+				} catch (Exception $e) {
+					echo 'Caught exception: ', $e->getMessage(), "\n";
+				}
+				
+				//send to participant_model to run function assoc_user_org(), throw error if it didn't add to database
+				try
+				{
+					//assoc participant with organization
+					$this->Participant_model->assoc_user_org($participant_id, $org_id);
+				} catch (Exception $e) {
+					echo 'Caught exception: ', $e->getMessage(), "\n";
+				}
+
+				//set session for participant
+
+				//redirect to question page after enrollment is complete
+				redirect('participant/questionPage');
+									
+			}
 		}
-		
 
 	}
 

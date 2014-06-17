@@ -32,6 +32,7 @@
 </script>
 
 <script>
+/*
 function validateForm() {
     var from = document.forms["createComp"]["from"].value;
     var to = document.forms["createComp"]["to"].value;
@@ -108,6 +109,7 @@ function validateForm() {
         return false;
         }
 }
+*/
 </script>
 
 <title>UPLOAD</title>
@@ -157,6 +159,8 @@ function validateForm() {
 
     echo form_close();       
 
+  echo validation_errors();
+  echo '<div id="error">'.$error.'</div>';
   ?>
     
   </div>

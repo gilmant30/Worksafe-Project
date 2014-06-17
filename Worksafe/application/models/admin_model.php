@@ -7,26 +7,32 @@ class Admin_model extends CI_Model {
 		$this->load->database();
 	}
 
-	function validate_admin_login($user,$pass)
+	function validate_admin_login($email,$pass)
 	{
 		$pass = (string)$pass;
-		$query = $this->db->query("SELECT * FROM user WHERE password = '$pass' AND name = '$user';");
+		$query = $this->db->query("SELECT * FROM user WHERE password = '$pass' AND email = '$email';");
 		return $query;
 	}
 
+
 	function insert_competition_format($start, $end, $days, $question, $answer, $title)
 	{
+		//update all competitions so the one created is active
+		$data = array('active' => 'n');
+		$this->db->update('competition', $data);
+
 		//put data in array to be put in db
 		$data = array(
 			//remove competition_id when actually doing this because it'll be incremented automatically
-			'competition_id' => 1,
+			'competition_id' => 2,
 			'year' => 2014,
 			'question_per_day' => $question,
 			'answers_per_day' => $answer,
 			'name' => $title,
 			'start_date' => $start,
 			'end_date' => $end,
-			'days_of_competition' => $days
+			'days_of_competition' => $days,
+			'active' => 'y'
 		);
 
 		//insert into db, throw error if data not inserted

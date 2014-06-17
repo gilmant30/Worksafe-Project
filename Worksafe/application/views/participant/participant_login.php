@@ -35,12 +35,10 @@ $('#toggle-login').click(function(){
   echo '<br />';
   echo '<br />';
 	echo form_submit('participant_login_submit', 'Log in');
-  	echo form_close();
-
-  	if($error == TRUE)
-  	{
-  		echo "<div>Incorrect Email or zipcode</div>";
-  	}
+  echo form_close();
+  
+  echo validation_errors();
+  echo '<div id="error">'.$error.'</div>';
   ?>
 </div>
 

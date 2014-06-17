@@ -43,10 +43,8 @@ $('#toggle-login').click(function(){
 	echo form_submit('particpant_signup_submit', 'Log in');
   echo form_close();
 
-  	if($error == TRUE)
-  	{
-  		echo "<div>Incorrect</div>";
-  	}
+  echo validation_errors();
+  echo '<div id="error">'.$error.'</div>';
   ?>
 </div>
 
