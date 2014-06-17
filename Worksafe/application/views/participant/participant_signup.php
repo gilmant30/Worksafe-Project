@@ -39,8 +39,11 @@ $('#toggle-login').click(function(){
     echo "<option value=$row->user_id>$row->name</option>";
   }
   echo '</select>';
-  //echo form_dropdown('organization',$organization, '',$org);
-	echo form_submit('particpant_signup_submit', 'Log in');
+
+  echo '<a href="'.base_url().'index.php/participant">Login</a>';
+  echo '<br />';
+  echo '<br />';
+	echo form_submit('particpant_signup_submit', 'Register');
   echo form_close();
 
   echo validation_errors();

@@ -2,19 +2,24 @@
 
 class Admin extends CI_Controller {
 
-
+	//parent function
 	function __construct()
 	{
 		parent::__construct();
 		$this->load->helper(array('form', 'url', 'string', 'cookie'));  //load a form and the base_url
         $this->load->library(array('form_validation', 'security', 'session')); //set form_validation rules and xss_cleaning
         $this->load->model('Admin_model');
-
 	}
 
 	//gets user to login page
 	public function index()
 	{
+		//if admin is already logged in send to competition page
+		if($this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/competition');
+		}
+		
 		$data['error'] = $this->session->flashdata('error');
 		$this->load->view('admin/admin_login',$data);
 	}
@@ -46,6 +51,13 @@ class Admin extends CI_Controller {
 			//if number of rows returned is zero then user is not in the db so return an error else redirect to competition page
 			if($query->num_rows() >0)
 			{
+				//set session data for admin logged in
+				$session_data = array(
+				'adminLoggedin' => TRUE
+				);
+
+				//set session
+				$this->session->set_userdata($session_data);
 				redirect('admin/competition');
 			}
 			else
@@ -56,36 +68,55 @@ class Admin extends CI_Controller {
 		}
 	}
 
+	//loads main admin page
 	public function competition()
 	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
 		$this->load->view('admin/competition');
 	}
 
+	//load view that has form for a new competition
 	public function newCompetition()
 	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
 		$data['error'] = $this->session->flashdata('error');
 		$this->load->view('admin/new_competition',$data);
 	}
 
+	//logic for creating a new competition
 	public function createCompetition()
 	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
 		//load helper
 		$this->load->helper('date');
 
-		//put validation on so email and password fields are required
+		//put required validation on all form fields
 		$this->form_validation->set_rules('from', 'From', 'required');
 		$this->form_validation->set_rules('to', 'To', 'required');
 		$this->form_validation->set_rules('num_questions_per_day', 'Number of questions', 'required');
 		$this->form_validation->set_rules('num_answers', 'Number of answers', 'required');
 		$this->form_validation->set_rules('title', 'Title', 'required');
 
-		//if either is empty returns error
+		//if any fields are empty throw error
 		if($this->form_validation->run() === FALSE)
 		{
 			$this->session->set_flashdata('error', 'Must not leave any fields blank');
 			redirect('admin/newCompetition');
 		}
 
+		//if all fields filled in continue
 		else
 		{
 			//get start_date convert string into date 
@@ -100,6 +131,7 @@ class Admin extends CI_Controller {
 			$time_end = strtotime($time_end);
 			$end_date = date('Y-m-d', strtotime($end_date));
 
+			//get rest of form data
 			$num_question = $this->security->xss_clean($this->input->post('num_questions_per_day'));
 			$num_answers = $this->security->xss_clean($this->input->post('num_answers'));
 			$title = $this->security->xss_clean($this->input->post('title'));
@@ -116,10 +148,8 @@ class Admin extends CI_Controller {
 				echo 'Caught exception: ', $e->getMessage(), "\n";
 			}
 
-
 			//get competition id
-			$query = $this->Admin_model->get_competition_id($start_date, $end_date, $days, $num_question, $num_answers, $title);
-
+			$query = $this->Admin_model->get_competition_id($title);
 
 			//make sure the query returns something
 			if($query->num_rows() > 0)
@@ -138,12 +168,14 @@ class Admin extends CI_Controller {
 				'expire' => 86500,
 				);
 
+			//set cookie for the question day for creating questions
 			$cookie_question_day = array(
 				'name' => 'question_day',
 				'value' => 1,
 				'expire' => 86500,
 				);
 
+			//set cookies
 			$this->input->set_cookie($cookie_id);
 			$this->input->set_cookie($cookie_question_day);
 
@@ -154,12 +186,18 @@ class Admin extends CI_Controller {
 
 	public function selectCompetition()
 	{
-		
+
+
 	}
 
 	//page where question form is created
 	public function createQuestion()
 	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
 
 		//retrieve cookie data for competition id and question day
 		$id = $this->input->cookie('competition_id');
@@ -183,6 +221,7 @@ class Admin extends CI_Controller {
 		{
 			redirect('admin/reviewCompetition');
 		}
+
 		else
 		{
 			//put all data used on create_question page into array
@@ -202,11 +241,9 @@ class Admin extends CI_Controller {
 		}
 	}
 
-
 	//upload questions into the database
 	public function uploadQuestions()
 	{
-
 		//get cookie data
 		$competition_id = $this->input->cookie('competition_id');
 		$question_day = $this->input->cookie('question_day');
@@ -224,7 +261,7 @@ class Admin extends CI_Controller {
 			echo "error getting data from database";
 		}
 
-		//get correct date, questions will be used on
+		//get correct date, questions will be used on by adding the question day to the start day
 		$date = strtotime("+$question_day day", strtotime($row->start_date));
 		$date_question_asked = date("Y-m-d", $date); 
 
@@ -300,25 +337,45 @@ class Admin extends CI_Controller {
 		//reload cookie
 		$this->input->set_cookie($cookie_question_day);
 
-
-			redirect("admin/createQuestion");
+		//redirect back to create question page and check whether there are more days or not
+		redirect("admin/createQuestion");
 	}
 
-	function reviewCompetition()
+	//gets data and loads view that shows a review of the competition
+	public function reviewCompetition()
 	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
+
+		//get competition id from cookie
 		$competition_id = $this->input->cookie('competition_id');
+		
+		//grab all questions that have to do with the specific competition id
 		$query['questions'] = $this->Admin_model->get_all_questions($competition_id);
 
+		//load review page
 		$this->load->view('admin/review_competition');
 	}
 
-	function showCompetition()
+	//show all competitions that are in the db
+	public function showCompetition()
 	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
 		//get all data for competitions
 		$query['array'] = $this->Admin_model->get_all_competitions();
 		$this->load->view('admin/show_competition',$query);
 	}
-}
 
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
+	//for testing to destroy session
+	public function destroy_session()
+	{
+		$this->session->sess_destroy();
+	}
+}

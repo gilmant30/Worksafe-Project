@@ -1,26 +1,32 @@
 <?php
 class Admin_model extends CI_Model {
 	
+	//parent function that loads database
 	function __construct()
 	{
 		parent::__construct();
 		$this->load->database();
 	}
 
+	//validate whether email and password are correct and that the role is admin
 	function validate_admin_login($email,$pass)
 	{
+		//convert password to string
 		$pass = (string)$pass;
-		$query = $this->db->query("SELECT * FROM user WHERE password = '$pass' AND email = '$email';");
+		$query = $this->db->query("SELECT * FROM user INNER JOIN user_role ON user.user_id = user_role.user_id WHERE user.password = '$pass' AND user.email = '$email' AND user_role.role_id = '1' AND user_role.status = 'active';");
 		return $query;
 	}
 
-
+	//insert the format of the competition into the 'competition' table
 	function insert_competition_format($start, $end, $days, $question, $answer, $title)
 	{
+		//unblock when real db is used
+		/*
 		//update all competitions so the one created is active
 		$data = array('active' => 'n');
 		$this->db->update('competition', $data);
-
+		*/
+		
 		//put data in array to be put in db
 		$data = array(
 			//remove competition_id when actually doing this because it'll be incremented automatically
@@ -46,20 +52,22 @@ class Admin_model extends CI_Model {
 		}
 	}
 
-	function get_competition_id($start, $end, $days, $question, $answer, $title)
+	//get competition id by title
+	function get_competition_id($title)
 	{
 		$query = $this->db->query("SELECT * FROM competition WHERE name = '$title';");
 	
 		return $query;
 	}
 
+	//get all competition data by id
 	function get_competition_data($id)
 	{
-
 		$query = $this->db->query("SELECT * FROM competition WHERE competition_id = '$id';");
 		return $query;
 	}
 
+	//insert the category into the database
 	function insert_category($category)
 	{
 		//check whether category name is already in the db
@@ -89,6 +97,7 @@ class Admin_model extends CI_Model {
 		}
 	}
 
+	//insert the question data into the 'question' table
 	function insert_question($question,$category_id,$type,$competition_id)
 	{
 		//put question info into an array
@@ -111,7 +120,7 @@ class Admin_model extends CI_Model {
 		}
 	}	
 
-
+	//get question id by all fields
 	function get_question_id($question,$category_id,$type,$competition_id)
 	{
 		//query question table to get question_id
@@ -128,6 +137,7 @@ class Admin_model extends CI_Model {
 		}
 	}
 
+	//insert the specific date the question will be asked on
 	function insert_date_question($question_id,$competition_id,$date_question_asked)
 	{
 		//put question info into an array
@@ -151,11 +161,13 @@ class Admin_model extends CI_Model {
 		}
 	}
 
+	//insert the answer data into the 'answer' table
 	function insert_answer($answer,$correct,$competition_id,$question_id)
 	{
 		$data = array(
 			//remove answer_id when actually doing this because it'll be incremented automatically
 			'answer_id' => 2,
+			//***************
 			'question_id' => $question_id,
 			'answer' => $answer,
 			'correct' => $correct
@@ -170,9 +182,9 @@ class Admin_model extends CI_Model {
 		{
 			return $this->db->affected_rows();
 		}
-
 	}
 
+	//get all competitions from the 'competitions' table
 	function get_all_competitions()
 	{
 		$query = $this->db->query("SELECT * FROM competition;");
@@ -185,13 +197,11 @@ class Admin_model extends CI_Model {
 		{
 			echo "error with retrieving competition data";
 		}
-
 	}
 
 	function get_all_questions($competition_id)
 	{
-
-		
+	
 	}
 }
 
