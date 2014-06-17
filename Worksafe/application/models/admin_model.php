@@ -199,6 +199,46 @@ class Admin_model extends CI_Model {
 		}
 	}
 
+	//get all the organizations that are active
+	function get_all_organizations()
+	{
+		$query = $this->db->query("SELECT user.name, user.user_id FROM user INNER JOIN user_role ON user.user_id = user_role.user_id INNER JOIN roles ON roles.role_id = user_role.role_id WHERE user_role.role_id = '2' AND user_role.status = 'active';");
+
+		//return entire query
+		return $query;
+	}
+
+	function get_participants_by_org($org_id)
+	{
+		$query = $this->db->query("SELECT * FROM user_org_assoc WHERE org_id = '$org_id';");
+
+		return $query;
+	}
+
+	//get participant data for a single participant by the user id
+	function get_participant_data($participant_id)
+	{
+		$query = $this->db->query("SELECT * FROM user WHERE user_id = '$participant_id';");
+
+		if($query->num_rows() > 0)
+		{
+			$query = $query->row();
+			return $query;
+		}
+		else
+		{
+			echo 'Error with get_participant_data() function';
+		}
+	}
+
+	//get the number of commits for a specific user
+	function commits_by_user($participant_id)
+	{
+		$query = $this->db->query("SELECT * FROM commitment WHERE user_id = '$participant_id';");
+
+		return $query->num_rows();	
+	}
+
 	function get_all_questions($competition_id)
 	{
 	

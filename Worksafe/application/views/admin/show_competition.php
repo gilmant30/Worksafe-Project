@@ -42,6 +42,9 @@
 
 ?>
 
+<br />
+<a href="http://localhost/worksafe/index.php/admin/competition">Home page</a>
+
 
 </div>
 

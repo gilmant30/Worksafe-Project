@@ -271,9 +271,14 @@ class Participant extends CI_Controller {
 		$this->load->view('participant/participant_question_page',$data);
 	}
 
-	//logic for checking the answers submitted from the question page
+	//logic for checking the answers submitted from the question page and giving commitments
 	public function answerQuestions()
 	{
+
+		if(!$this->session->userdata('isLoggedin'))
+		{
+			redirect('participant/');
+		}
 
 		//grabs the number of questions per day for the competition
 		$num = $this->Participant_model->get_questions_per_day_in_competition();
@@ -287,6 +292,7 @@ class Participant extends CI_Controller {
 			//grab all information for the answer given by the answer_id
 			$correct = $this->Participant_model->check_answer($answer);
 			
+			/*
 			//display whether the answer is correct or not
 			if($correct->correct == 'y')
 			{
@@ -297,7 +303,32 @@ class Participant extends CI_Controller {
 				echo $correct->answer.' is incorrect';
 			}
 			echo '<br />';
-			
+			*/
+		}
+
+		$participant_id = $this->input->cookie('participant_id');
+		$competition_id = $this->Participant_model->get_competition_id();
+
+		//check to see if a commitment has been added that day for the participant
+		$commit = $this->Participant_model->check_commitment($participant_id, $competition_id);
+
+		//if commitment has been given already don't give another, redirect to message page
+		if($commit->num_rows() > 0)
+		{
+			echo "commitment already gotten for the day";
+		}
+		else
+		{
+			//send to participant_model to run function add_commitment, throw error if it didn't add to database
+			try
+			{
+				//insert participant into db
+				$this->Participant_model->add_commitment($participant_id, $competition_id);
+			} catch (Exception $e) {
+				echo 'Caught exception: ', $e->getMessage(), "\n";
+			}
+
+			redirect('participant/addedCommitment');
 		}
 	}
 
@@ -309,6 +340,11 @@ class Participant extends CI_Controller {
 			redirect('participant/');
 		}
 		$this->load->view('participant/participant_info_page');
+	}
+
+	public function addedCommitment()
+	{
+		echo 'commitment added';
 	}
 
 	public function destroy_session()

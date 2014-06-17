@@ -23,7 +23,7 @@
 
 <a href="<?= base_url();?>index.php/admin/showCompetition">Show Competitions</a>
 
-<a href="#">Delete Competition</a>
+<a href="<?= base_url();?>index.php/admin/showOrganization">Show Organizations</a>
 
 
 </div>

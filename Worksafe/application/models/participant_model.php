@@ -126,6 +126,22 @@ class Participant_model extends CI_Model {
 		}
 	}
 
+	//get competition id for the active competition
+	function get_competition_id()
+	{
+		$query = $this->db->query("SELECT * FROM competition WHERE active = 'y';");
+		
+		if($query->num_rows() == 1)
+		{
+			$row = $query->row();
+			return $row->competition_id;
+		}
+		else
+		{
+			echo "error with retrieving competition id";
+		}
+	}
+
 	//get the data for the questions for the particular day it is
 	function get_question_data_from_date_question($competition_id, $today_date)
 	{
@@ -185,6 +201,34 @@ class Participant_model extends CI_Model {
 		}
 		else
 			echo "error with retrieving correct field from answer db";
+	}
+
+	function add_commitment($participant_id, $competition_id)
+	{
+		$data = array(
+			'commitment_id' => 1,
+			'user_id' => $participant_id,
+			'competition_id' => $competition_id,
+			'commitment_date' => date('Y-m-d')
+			);
+
+		//insert into db, throw error if data not inserted
+		if( $this->db->insert('commitment', $data) != TRUE)
+		{
+			throw new Exception("Cannot insert into commitment table");
+		}
+		else
+		{
+			return $this->db->affected_rows();
+		}
+	}
+
+	function check_commitment($participant_id, $competition_id)
+	{
+		$date = date('Y-m-d');
+		$query = $this->db->query("SELECT * FROM commitment WHERE user_id = '$participant_id' AND competition_id = '$competition_id' AND commitment_date = '$date';");
+
+		return $query;
 	}
 }
 ?>

@@ -19,7 +19,7 @@ class Admin extends CI_Controller {
 		{
 			redirect('admin/competition');
 		}
-		
+
 		$data['error'] = $this->session->flashdata('error');
 		$this->load->view('admin/admin_login',$data);
 	}
@@ -371,6 +371,51 @@ class Admin extends CI_Controller {
 		//get all data for competitions
 		$query['array'] = $this->Admin_model->get_all_competitions();
 		$this->load->view('admin/show_competition',$query);
+	}
+
+	//show all active organizations
+	public function showOrganization()
+	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
+		$query['organization'] = $this->Admin_model->get_all_organizations();
+		$this->load->view('admin/show_organization',$query);
+	}
+
+	//show all participants associated with a specific user
+	public function showParticipants($org_id)
+	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
+
+		$data['participant'] = new ArrayObject();
+
+		$query = $this->Admin_model->get_participants_by_org($org_id);
+
+		foreach ($query->result() as $row) {
+			//get participant data
+			$participant_data = $this->Admin_model->get_participant_data($row->participant_id);
+
+			//get # of commitments by participants so far
+			$commits = $this->Admin_model->commits_by_user($participant_data->user_id);
+
+			//put data into array
+			$test = array(
+				'user_id' => $participant_data->user_id,
+				'email' => $participant_data->email,
+				'commit' => $commits
+				 );
+
+			$data['participant']->append($test);
+		}
+
+		$this->load->view('admin/show_participant',$data);
 	}
 
 	//for testing to destroy session
