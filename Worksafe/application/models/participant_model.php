@@ -30,7 +30,7 @@ class Participant_model extends CI_Model {
 	{
 		$data = array(
 			//id just for testing, automatically put in with oracle tables
-			'user_id' => 6,
+			'user_id' => 7,
 			//*******
 			'email' => $email,
 			'zipcode' => $zipcode
@@ -69,7 +69,7 @@ class Participant_model extends CI_Model {
 	{
 		$data = array(
 			//id just for testing, automatically put in with oracle tables
-			'user_role_id' => 5,
+			'user_role_id' => 7,
 			//********
 			'role_id' => 3,
 			'user_id' => $participant_id,
@@ -223,6 +223,7 @@ class Participant_model extends CI_Model {
 		}
 	}
 
+	//check to see if participant has already added a commitment for the day
 	function check_commitment($participant_id, $competition_id)
 	{
 		$date = date('Y-m-d');

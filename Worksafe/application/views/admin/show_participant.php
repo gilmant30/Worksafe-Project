@@ -16,7 +16,7 @@
 <title>Competition</title>
 </head>
 <body>
-<h1>Show Organizations</h1>
+<h1>Show Participants</h1>
 
 <div id='org_table'>
 	<table>

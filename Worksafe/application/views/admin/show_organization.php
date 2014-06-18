@@ -23,12 +23,14 @@
 		<tr>
 			<td>Organization id</td>
 			<td>Organization name</td>
+      <td>Total Commitments</td>
 		</tr>
   <?php
-  	foreach ($organization->result() as $row) {
+  	foreach ($organization as $row) {
     	echo "<tr>";
-    	echo '<td><a href ="'.base_url().'index.php/admin/showParticipants/'.$row->user_id.'" id="org_id_link">'.$row->user_id.'</a></td>';
-    	echo "<td>$row->name</td>";
+    	echo '<td><a href ="'.base_url().'index.php/admin/showParticipants/'.$row['user_id'].'" id="org_id_link">'.$row['user_id'].'</a></td>';
+    	echo '<td>'.$row['name'].'</td>';
+      echo '<td>'.$row['total_commits'].'</td>';
     	echo "</tr>";
   }
   ?>

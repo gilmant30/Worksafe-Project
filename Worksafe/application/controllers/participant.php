@@ -143,6 +143,7 @@ class Participant extends CI_Controller {
 					echo 'Caught exception: ', $e->getMessage(), "\n";
 				}
 				
+				//grab participant id
 				$participant_id = $this->Participant_model->get_participant_id($email,$zipcode);
 
 				//send to participant_model to run function insert_participant_into_user_role(), throw error if it didn't add to database
@@ -163,7 +164,12 @@ class Participant extends CI_Controller {
 					echo 'Caught exception: ', $e->getMessage(), "\n";
 				}
 
-				//set session for participant
+				//set cookie for participant
+				$cookie_participant_id = array(
+				'name' => 'participant_id',
+				'value' => $participant_id,
+				'expire' => 86500,
+				);
 
 				//redirect to question page after enrollment is complete
 				$session_data = array(
@@ -171,7 +177,8 @@ class Participant extends CI_Controller {
 					'isLoggedin' => TRUE
 					);
 
-			$this->session->set_userdata($session_data);
+				$this->input->set_cookie($cookie_participant_id);
+				$this->session->set_userdata($session_data);
 				redirect('participant/info');
 									
 			}
@@ -217,7 +224,7 @@ class Participant extends CI_Controller {
 
 		//goes inside else statement
 		//for testing purposes only
-		$today_date = '2014-06-15';
+		$today_date = '2014-06-16';
 
 
 		//get question for the specific date
@@ -258,9 +265,6 @@ class Participant extends CI_Controller {
 					echo "error getting answers from database";
 				}
 			}
-
-
-			//var_dump($data['question']);
 			
 		}
 		else

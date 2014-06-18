@@ -52,12 +52,19 @@ class Admin_model extends CI_Model {
 		}
 	}
 
-	//get competition id by title
-	function get_competition_id($title)
+	//get competition id by active competition
+	function get_competition_id()
 	{
-		$query = $this->db->query("SELECT * FROM competition WHERE name = '$title';");
-	
-		return $query;
+		$query = $this->db->query("SELECT * FROM competition WHERE active = 'y';");
+		if($query->num_rows() == 1)
+		{
+			$query = $query->row();
+			return $query->competition_id;
+		}
+		else
+		{
+			echo 'error with get_competition_id';
+		}
 	}
 
 	//get all competition data by id
@@ -239,9 +246,41 @@ class Admin_model extends CI_Model {
 		return $query->num_rows();	
 	}
 
+	//get all the questions for a specific comeptition by competition id
 	function get_all_questions($competition_id)
 	{
-	
+		$query = $this->db->query("SELECT * FROM date_question WHERE competition_id = '$competition_id';");
+
+		if($query->num_rows() > 0)
+			return $query;
+		else
+			echo "Error with get_all_questions() function";
+	}
+
+	//get all the question data by the question id
+	function get_question_data($question_id)
+	{
+		$query = $this->db->query("SELECT * FROM question WHERE question_id = '$question_id';");
+
+		if($query->num_rows == 1)
+		{
+			$query = $query->row();
+			return $query;		}
+		else
+		{
+			echo "error with get_question_name() function";
+		}
+	}
+
+	//get all the answer data for a particular question
+	function get_answers($question_id)
+	{
+		$query = $this->db->query("SELECT * FROM answer WHERE question_id = '$question_id';");
+
+		if($query->num_rows() > 0)
+			return $query;
+		else
+			echo "error with retrieving question from get_answers function";
 	}
 }
 

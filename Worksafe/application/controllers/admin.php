@@ -148,25 +148,6 @@ class Admin extends CI_Controller {
 				echo 'Caught exception: ', $e->getMessage(), "\n";
 			}
 
-			//get competition id
-			$query = $this->Admin_model->get_competition_id($title);
-
-			//make sure the query returns something
-			if($query->num_rows() > 0)
-			{
-				$row = $query->row();
-			}
-			else
-			{
-				echo "error getting data from database";
-			}
-
-			//set cookie for competition id
-			$cookie_id = array(
-				'name' => 'competition_id',
-				'value' => $row->competition_id,
-				'expire' => 86500,
-				);
 
 			//set cookie for the question day for creating questions
 			$cookie_question_day = array(
@@ -176,7 +157,6 @@ class Admin extends CI_Controller {
 				);
 
 			//set cookies
-			$this->input->set_cookie($cookie_id);
 			$this->input->set_cookie($cookie_question_day);
 
 			//redirect to createQuestion page
@@ -199,9 +179,11 @@ class Admin extends CI_Controller {
 			redirect('admin/');
 		}
 
-		//retrieve cookie data for competition id and question day
-		$id = $this->input->cookie('competition_id');
+		//retrieve cookie data for and question day
 		$question_day = $this->input->cookie('question_day');
+
+		//grab the competition id from the active competition
+		$id = $this->Admin_model->get_competition_id();
 
 		//get all competition data from competition id
 		$query = $this->Admin_model->get_competition_data($id);
@@ -350,14 +332,48 @@ class Admin extends CI_Controller {
 			redirect('admin/');
 		}
 
-		//get competition id from cookie
-		$competition_id = $this->input->cookie('competition_id');
+		//create object array to send to view
+		$data['review'] = new ArrayObject();
+
+		//get active competition
+		$competition_id = $this->Admin_model->get_competition_id();
 		
 		//grab all questions that have to do with the specific competition id
-		$query['questions'] = $this->Admin_model->get_all_questions($competition_id);
+		$question = $this->Admin_model->get_all_questions($competition_id);
+
+		//loop through all questions
+		foreach ($question->result() as $question) {
+			$answer = new ArrayObject();
+			
+			$question_date = $question->question_date;
+
+			//get all the question data
+			$question_data = $this->Admin_model->get_question_data($question->question_id);
+
+			//get all the answers for a specific question
+			$answer_array = $this->Admin_model->get_answers($question_data->question_id);
+
+			//loop through each answer
+			foreach ($answer_array->result() as $row) {
+				
+				//add all the answer data to the answer array
+				$answer->append($row);
+			}
+
+			//put question and answers in a review array
+			$review_array = array(
+				'question_name' => $question_data->question,
+				'question_date' => $question_date,
+				'answer_data' => $answer
+				);
+
+			//append array to object array to be sent to view
+			$data['review']->append($review_array);
+
+		}
 
 		//load review page
-		$this->load->view('admin/review_competition');
+		$this->load->view('admin/review_competition',$data);
 	}
 
 	//show all competitions that are in the db
@@ -381,8 +397,49 @@ class Admin extends CI_Controller {
 		{
 			redirect('admin/');
 		}
-		$query['organization'] = $this->Admin_model->get_all_organizations();
-		$this->load->view('admin/show_organization',$query);
+
+		//create object array to send to view
+		$data['organization'] = new ArrayObject();
+
+		//get all the active organizations
+		$org_data = $this->Admin_model->get_all_organizations();
+
+		//go through every org and get data from each
+		foreach($org_data->result() as $org) {
+			//reset the org commits
+			$org_commits = 0;
+
+			//get all participants associated with a specific organization
+			$query = $this->Admin_model->get_participants_by_org($org->user_id);
+
+			//go through each array of participants to get individual commitments
+			foreach ($query->result() as $participant) {
+
+				//get participant data
+				$participant_data = $this->Admin_model->get_participant_data($participant->participant_id);
+
+				//get # of commitments by participants so far
+				$participant_commits = $this->Admin_model->commits_by_user($participant_data->user_id);
+
+				$org_commits = $org_commits + $participant_commits;
+
+			}
+
+			//upload everything into array
+			$total_commit_array = array(
+				'user_id' => $org->user_id,
+				'name' => $org->name,
+				'total_commits' => $org_commits
+				);
+
+			//add array to array of objects
+			$data['organization']->append($total_commit_array);
+
+		}
+
+
+
+		$this->load->view('admin/show_organization',$data);
 	}
 
 	//show all participants associated with a specific user
@@ -406,13 +463,13 @@ class Admin extends CI_Controller {
 			$commits = $this->Admin_model->commits_by_user($participant_data->user_id);
 
 			//put data into array
-			$test = array(
+			$participant_array = array(
 				'user_id' => $participant_data->user_id,
 				'email' => $participant_data->email,
 				'commit' => $commits
 				 );
 
-			$data['participant']->append($test);
+			$data['participant']->append($participant_array);
 		}
 
 		$this->load->view('admin/show_participant',$data);

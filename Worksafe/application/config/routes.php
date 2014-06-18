@@ -38,7 +38,7 @@
 |
 */
 
-$route['default_controller'] = "admin";
+$route['default_controller'] = "participant";
 $route['404_override'] = '';
 
 
