@@ -3,7 +3,7 @@
 <head>
 
 <style>@import url('<?=base_url()?>/assets/css/header.css'); </style>
-
+<style>@import url('<?=base_url()?>/assets/css/show_tables.css'); </style>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
@@ -19,12 +19,15 @@
 <h1>Show Participants</h1>
 
 <div id='org_table'>
-	<table>
+	<table class="bordered">
+    <thead>
 		<tr>
-			<td>Participant id</td>
-			<td>Participant email</td>
-      <td>Participant commitment count</td>
+			<th>Participant id</th>
+			<th>Participant email</th>
+      <th>Commitment count</th>
 		</tr>
+  </thead>
+  <tbody>
   <?php
   	foreach ($participant as $row) {
     	
@@ -32,10 +35,10 @@
     	echo '<td>'.$row['user_id'].'</td>';
     	echo '<td>'.$row['email'].'</td>';
       echo '<td>'.$row['commit'].'</td>';
-      echo "<td></td>";
     	echo "</tr>";
   }
   ?>
+</tbody>
 	</table>
 
 <br />

@@ -2,7 +2,7 @@
 <html>
 <head>
 
-<style>@import url('<?=base_url()?>/assets/css/header.css'); </style>
+
 <style>@import url('<?=base_url()?>/assets/css/login.css'); </style>
 
 

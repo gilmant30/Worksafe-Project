@@ -21,8 +21,8 @@ $('#toggle-login').click(function(){
 <body>
 <!--<h1>Admin Login Page</h1> -->
 
-<?php $test = $competition->result();
-echo '<span class="button" id="toggle-login">'.$test[0]->name.' </span>';
+<?php 
+echo '<span class="button" id="toggle-login">'.$competition->name.' </span>';
 ?>
 <div id="question_page">
   <div id="triangle"></div>
@@ -42,13 +42,13 @@ echo '<span class="button" id="toggle-login">'.$test[0]->name.' </span>';
 
 
     //input the question into the form  
-    echo '<p id = "question">'.$quest[0]->question.'</p>';
+    echo '<p id = "question">'.$quest->question.'</p>';
 
 
 
     foreach ($answer as $ans) {
 
-      if($ans->question_id == $quest[0]->question_id)
+      if($ans->question_id == $quest->question_id)
       {
         $radio_input = array('name' => 'correct_ans_q'.$q, 'value' => $ans->answer_id);
         echo form_radio($radio_input);

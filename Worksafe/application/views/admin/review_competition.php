@@ -3,7 +3,7 @@
 <head>
 
 <style>@import url('<?=base_url()?>/assets/css/header.css'); </style>
-
+<style>@import url('<?=base_url()?>/assets/css/review_competition.css'); </style>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
@@ -17,28 +17,39 @@
 </head>
 <body>
 <h1>Competition Review Page</h1>
-<?php
-foreach ($review as $question) {
-	echo '<p>Question: '.$question['question_name'].'</p>';
-	echo '<p>Date: '.$question['question_date'].'</p>';
+<div id = "review_competition">
+<div id="update"><?=$update?></div>
+<h2>Questions and answers for competition</h2>
 
+<?php
+echo form_open('admin/editCompetition');
+foreach ($review as $question) {
+	echo '<p>Question:</p>';
+	$array = array('name' => 'q'.$question['question_id'], 'value' => $question['question_name'] );
+	echo form_input($array);
+	echo '<p id="date">Date: '.$question['question_date'].'</p>';
+	echo '<p>Answers:</p>';
 	foreach ($question['answer_data'] as $value) {
 		if($value->correct == 'y')
 		{
-			echo '<p style = "color:green;"">'.$value->answer.'</p>';
+			$answer = array('name' => 'a'.$value->answer_id, 'value' => $value->answer, 'id' => 'correct');
 		}
 		else
 		{
-			echo '<p>'.$value->answer.'</p>';
+			$answer = array('name' => 'a'.$value->answer_id, 'value' => $value->answer);
 		}
+		echo form_input($answer);
 	}
-
-	echo "<br />";
+		echo "<br />";
+		echo "<br />";
 }
-
+	echo form_submit('edit_competition', 'Update Competition');
+echo form_close();
 ?>
+<br />
+<a id="home_link" href="<?= base_url();?>index.php/admin/Competition">Competition home page</a>
 
-<a href="<?= base_url();?>index.php/admin/Competition">Competition home page</a>
+</div>
 
 </body>
 </html>

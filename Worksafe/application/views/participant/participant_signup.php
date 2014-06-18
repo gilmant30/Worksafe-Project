@@ -2,7 +2,7 @@
 <html>
 <head>
 
-<style>@import url('<?=base_url()?>/assets/css/header.css'); </style>
+
 <style>@import url('<?=base_url()?>/assets/css/login.css'); </style>
 
 
@@ -40,7 +40,7 @@ $('#toggle-login').click(function(){
   }
   echo '</select>';
 
-  echo '<a href="'.base_url().'index.php/participant">Login</a>';
+  echo '<a href="'.base_url().'index.php/participant">Already a user?</a>';
   echo '<br />';
   echo '<br />';
 	echo form_submit('particpant_signup_submit', 'Register');

@@ -199,14 +199,17 @@ class Participant extends CI_Controller {
 		$data['question'] = new ArrayObject();
 		$data['answer'] = new ArrayObject();
 		
-		$row = $data['competition']->row();
 
-		$competition_id = $row->competition_id;
-		$start_date = strtotime($row->start_date);
-		$end_date = strtotime($row->end_date);
-		$name = $row->name;
+		$competition_id = $data['competition']->competition_id;
+		$start_date = strtotime($data['competition']->start_date);
+		$end_date = strtotime($data['competition']->end_date);
+		$name = $data['competition']->name;
 		
+		//for testing purposes only
+		$today_date = '2014-06-16';
+
 		/*
+		//switch to $today once testing is done
 		if($today > $start_date)
 		{
 			echo "competition has not yet started";
@@ -215,64 +218,29 @@ class Participant extends CI_Controller {
 			echo "competition has already ended";
 		}
 		else
-		{
-			$data['competition'] = $name;
-			$this->load->view('participant/participant_question_page'$data);
-		}
-
-		*/
-
-		//goes inside else statement
-		//for testing purposes only
-		$today_date = '2014-06-16';
-
-
-		//get question for the specific date
-		$query = $this->Participant_model->get_question_data_from_date_question($competition_id,$today_date);
+		{*/
+			//get question for the specific date
+			$query = $this->Participant_model->get_question_data_from_date_question($competition_id,$today_date);
 		
-		//make sure a row exists
-		if($query->num_rows() > 0)
-		{
 			//for each question 
 			foreach($query->result() as $row)
 			{
 				//get question data using the question id
 				$question_data = $this->Participant_model->get_questions($row->question_id);
-				
-				//put the data into an array of objects
-				$question_data = $question_data->result();
 
 				//add to the array of object in data['question']
-				$data['question']->append($question_data);
+				$data['question']->append($question_data); 
 
-				//echo $question_data[0]->question_id;
-				//echo "<br />";
-
-				$answer = $this->Participant_model->get_answers($question_data[0]->question_id);
-
-				if($answer->num_rows > 0)
-				{
+				$answer = $this->Participant_model->get_answers($question_data->question_id);
 					//for each answer that coincides with the question just gottne
 					foreach ($answer->result() as $ans_row) {
 						//put data into an array of objects
 						$data['answer']->append($ans_row);
 					}
-					
-				}
-
-				else
-				{
-					echo "error getting answers from database";
-				}
 			}
-			
-		}
-		else
-		{
-			echo "error getting data from database";
-		}
 
 		$this->load->view('participant/participant_question_page',$data);
+		//}		
 	}
 
 	//logic for checking the answers submitted from the question page and giving commitments

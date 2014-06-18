@@ -30,7 +30,7 @@ class Admin_model extends CI_Model {
 		//put data in array to be put in db
 		$data = array(
 			//remove competition_id when actually doing this because it'll be incremented automatically
-			'competition_id' => 2,
+			'competition_id' => 3,
 			'year' => 2014,
 			'question_per_day' => $question,
 			'answers_per_day' => $answer,
@@ -273,7 +273,7 @@ class Admin_model extends CI_Model {
 	}
 
 	//get all the answer data for a particular question
-	function get_answers($question_id)
+	function get_all_answers($question_id)
 	{
 		$query = $this->db->query("SELECT * FROM answer WHERE question_id = '$question_id';");
 
@@ -282,6 +282,51 @@ class Admin_model extends CI_Model {
 		else
 			echo "error with retrieving question from get_answers function";
 	}
+
+	//check to see if question has changed at all
+	function check_question($question_id, $question)
+	{
+		$query = $this->db->query("SELECT * FROM question WHERE question_id = '$question_id' AND question = '$question';");
+
+		//if number of rows returned is 0 then update the question field
+		if($query->num_rows() == 0)
+		{
+			$this->update_qustion($question_id, $question);
+			echo "updated   ";
+		}
+		else
+		{
+			echo "question remains the same ";
+		}
+	}
+
+	//update the question
+	function update_qustion($question_id, $question)
+	{
+		$this->db->query("UPDATE question SET question = '$question' WHERE question_id = '$question_id';");
+	}
+
+	function check_answer($answer_id, $answer)
+	{
+		$query = $this->db->query("SELECT * FROM answer WHERE answer_id = '$answer_id' AND answer = '$answer';");
+
+		//if number of rows returned is 0 then update the answer field
+		if($query->num_rows() == 0)
+		{
+			$this->update_answer($answer_id, $answer);
+			echo "updated   ";
+		}
+		else
+		{
+			echo "answer remains the same ";
+		}
+	}
+
+	function update_answer($answer_id, $answer)
+	{
+		$this->db->query("UPDATE answer SET answer = '$answer' WHERE answer_id = '$answer_id';");
+	}
+
 }
 
 ?>

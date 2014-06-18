@@ -121,22 +121,20 @@ class Admin extends CI_Controller {
 		{
 			//get start_date convert string into date 
 			$start_date = $this->security->xss_clean($this->input->post('from'));
-			$time_start = date('Y-m-d', strtotime($start_date));
-			$time_start = strtotime($time_start);
 			$start_date = date('Y-m-d', strtotime($start_date));
+			$time_start = strtotime($start_date);
 		
 			//get end_date convert string into date
 			$end_date = $this->security->xss_clean($this->input->post('to'));
-			$time_end = date('Y-m-d', strtotime($end_date));
-			$time_end = strtotime($time_end);
 			$end_date = date('Y-m-d', strtotime($end_date));
+			$time_end = strtotime($end_date);
 
 			//get rest of form data
 			$num_question = $this->security->xss_clean($this->input->post('num_questions_per_day'));
 			$num_answers = $this->security->xss_clean($this->input->post('num_answers'));
 			$title = $this->security->xss_clean($this->input->post('title'));
 
-			//find number of days in betweem days		
+			//find number of days in between start and end date		
 			$difference = abs($time_end - $time_start); 
 			$days = floor($difference/(60*60*24)) + 1;
 
@@ -148,7 +146,6 @@ class Admin extends CI_Controller {
 				echo 'Caught exception: ', $e->getMessage(), "\n";
 			}
 
-
 			//set cookie for the question day for creating questions
 			$cookie_question_day = array(
 				'name' => 'question_day',
@@ -156,7 +153,7 @@ class Admin extends CI_Controller {
 				'expire' => 86500,
 				);
 
-			//set cookies
+			//screate cookie
 			$this->input->set_cookie($cookie_question_day);
 
 			//redirect to createQuestion page
@@ -164,11 +161,6 @@ class Admin extends CI_Controller {
 		}
 	}
 
-	public function selectCompetition()
-	{
-
-
-	}
 
 	//page where question form is created
 	public function createQuestion()
@@ -332,6 +324,9 @@ class Admin extends CI_Controller {
 			redirect('admin/');
 		}
 
+		//puts update value if there is one
+		$data['update'] = $this->session->flashdata('update');
+
 		//create object array to send to view
 		$data['review'] = new ArrayObject();
 
@@ -351,7 +346,7 @@ class Admin extends CI_Controller {
 			$question_data = $this->Admin_model->get_question_data($question->question_id);
 
 			//get all the answers for a specific question
-			$answer_array = $this->Admin_model->get_answers($question_data->question_id);
+			$answer_array = $this->Admin_model->get_all_answers($question_data->question_id);
 
 			//loop through each answer
 			foreach ($answer_array->result() as $row) {
@@ -362,6 +357,7 @@ class Admin extends CI_Controller {
 
 			//put question and answers in a review array
 			$review_array = array(
+				'question_id' => $question_data->question_id,
 				'question_name' => $question_data->question,
 				'question_date' => $question_date,
 				'answer_data' => $answer
@@ -387,6 +383,39 @@ class Admin extends CI_Controller {
 		//get all data for competitions
 		$query['array'] = $this->Admin_model->get_all_competitions();
 		$this->load->view('admin/show_competition',$query);
+	}
+
+	public function editCompetition()
+	{
+
+		//get the competition id
+		$competition_id = $this->Admin_model->get_competition_id();
+
+		//get all the questions for that competition with the competition id
+		$questions = $this->Admin_model->get_all_questions($competition_id);
+
+		foreach ($questions->result() as $row) {
+			//get question data for each question
+			$question_data = $this->Admin_model->get_question_data($row->question_id);
+
+			//get the input data from the form
+			$question_string = $this->security->xss_clean($this->input->post('q'.$question_data->question_id));
+
+			//update or do nothing to the question
+			$this->Admin_model->check_question($question_data->question_id, $question_string);
+			
+			$answers = $this->Admin_model->get_all_answers($row->question_id);
+
+			foreach ($answers->result() as $ans) {
+				$answer_string = $this->security->xss_clean($this->input->post('a'.$ans->answer_id));
+
+				//update or do nothing to the answer
+				$this->Admin_model->check_answer($ans->answer_id, $answer_string);
+			}
+		}
+
+		$this->session->set_flashdata('update', 'Questions and answers have been updated');
+		redirect('admin/reviewCompetition');
 	}
 
 	//show all active organizations

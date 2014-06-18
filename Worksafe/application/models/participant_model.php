@@ -118,7 +118,7 @@ class Participant_model extends CI_Model {
 		
 		if($query->num_rows() == 1)
 		{
-			return $query;
+			return $query->row();
 		}
 		else
 		{
@@ -159,7 +159,7 @@ class Participant_model extends CI_Model {
 		$query = $this->db->query("SELECT * FROM question WHERE question_id = '$question_id';");
 
 		if($query->num_rows() == 1)
-			return $query;
+			return $query->row();
 		else
 			echo "error with retrieving question from get_questions function";
 	}
