@@ -106,12 +106,12 @@ class Participant extends CI_Controller {
 
 		//put validation on so email field is required
 		$this->form_validation->set_rules('email', 'Email', 'required');
-		$this->form_validation->set_rules('zipcode', 'Zipcode', 'required');
+		$this->form_validation->set_rules('zipcode', 'Zipcode', 'required|min_length[5]|max_length[5]');
 
 		//if either email or zipcode is empty returns error
 		if($this->form_validation->run() === FALSE)
 		{
-			$this->session->set_flashdata('error', 'Must not leave the email or zipcode fields blank');
+			$this->session->set_flashdata('error', 'Error with either email or zipcode');
 			redirect('participant/signup');
 		}
 		else
@@ -357,6 +357,70 @@ class Participant extends CI_Controller {
 
 		$data['commitment'] = $this->session->flashdata('commitment');
 		$this->load->view('participant/participant_info_page',$data);
+	}
+
+	public function leaderboard()
+	{
+		if(!$this->session->userdata('isLoggedin'))
+		{
+			redirect('participant/');
+		}
+		$this->load->model('Admin_model');
+
+		//get competition data for active competition and put in object array to send to view
+		$competition_id = $this->Admin_model->get_competition_id();
+		$query = $this->Admin_model->get_competition_data($competition_id);
+		$data['competition'] = $query->row();
+
+		//create object array to send to view
+		$data['organization'] = new ArrayObject();
+		
+
+		$competition_id = $this->Admin_model->get_competition_id();
+
+		//get all the active organizations for the active competition
+		$org_data = $this->Admin_model->get_all_organizations($competition_id);
+
+		//go through every org and get data from each
+		foreach($org_data->result() as $org) {
+			//reset the org commits
+			$org_commits = 0;
+
+			//get all participants associated with a specific organization
+			$query = $this->Admin_model->get_participants_by_org($org->user_id);
+
+			//go through each array of participants to get individual commitments
+			foreach ($query->result() as $participant) {
+
+				//get participant data
+				$participant_data = $this->Admin_model->get_participant_data($participant->participant_id);
+
+				//get # of commitments by participants so far
+				$participant_commits = $this->Admin_model->commits_by_user($participant_data->user_id);
+
+				$org_commits = $org_commits + $participant_commits;
+
+			}
+
+			$num_rows = $this->Admin_model->check_org_competition_assoc($competition_id, $org->user_id);
+
+			if($num_rows > 0)
+			{
+				//upload everything into array
+				$total_commit_array = array(
+					'user_id' => $org->user_id,
+					'name' => $org->name,
+					'total_commits' => $org_commits
+					);
+
+				//add array to array of objects
+				$data['organization']->append($total_commit_array);
+			}
+		}
+
+
+
+		$this->load->view('participant/participant_leaderboard',$data);
 	}
 
 	public function destroy_session()

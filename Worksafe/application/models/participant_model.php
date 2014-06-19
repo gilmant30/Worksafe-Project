@@ -30,7 +30,7 @@ class Participant_model extends CI_Model {
 	{
 		$data = array(
 			//id just for testing, automatically put in with oracle tables
-			'user_id' => 7,
+			'user_id' => 9,
 			//*******
 			'email' => $email,
 			'zipcode' => $zipcode
@@ -69,7 +69,7 @@ class Participant_model extends CI_Model {
 	{
 		$data = array(
 			//id just for testing, automatically put in with oracle tables
-			'user_role_id' => 7,
+			'user_role_id' => 9,
 			//********
 			'role_id' => 3,
 			'user_id' => $participant_id,
@@ -92,12 +92,15 @@ class Participant_model extends CI_Model {
 	//insert into the 'user_org_assoc' table to associate the participant with the organization they will represent
 	function assoc_user_org($participant_id, $org_id)
 	{
+		$competition_id = $this->get_competition_id();
+
 		$data = array(
 			//id just for testing, automatically put in with oracle tables
-			'user_org_assoc_id' => 2,
+			'user_org_assoc_id' => 5,
 			//*********
 			'org_id' => $org_id,
-			'participant_id' => $participant_id
+			'participant_id' => $participant_id,
+			'competition_id' => $competition_id
 		);
 
 		//insert into db, throw error if data not inserted
@@ -242,7 +245,7 @@ class Participant_model extends CI_Model {
 	function insert_into_user_question($participant_id, $question_id, $answer_id)
 	{
 		$data = array(
-			'user_question_id' => 3,
+			'user_question_id' => 5,
 			'user_id' => $participant_id,
 			'question_id' => $question_id,
 			'answer_id' => $answer_id

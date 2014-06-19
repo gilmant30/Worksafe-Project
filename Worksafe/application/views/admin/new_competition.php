@@ -161,6 +161,7 @@ function validateForm() {
 
   echo validation_errors();
   echo '<div id="error">'.$error.'</div>';
+  echo '<div id="error">'.$error_title.'</div>';
   ?>
     
   </div>

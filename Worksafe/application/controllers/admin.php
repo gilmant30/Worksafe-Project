@@ -88,6 +88,7 @@ class Admin extends CI_Controller {
 			redirect('admin/');
 		}
 		$data['error'] = $this->session->flashdata('error');
+		$data['error_title'] = $this->session->flashdata('error_title');
 		$this->load->view('admin/new_competition',$data);
 	}
 
@@ -134,6 +135,15 @@ class Admin extends CI_Controller {
 			$num_answers = $this->security->xss_clean($this->input->post('num_answers'));
 			$title = $this->security->xss_clean($this->input->post('title'));
 
+			//check if the title name is already being used
+			$query = $this->Admin_model->check_competition_title($title);
+
+			//redirect to newCompetition page if title is already used
+			if($query != 0)
+			{
+				$this->session->set_flashdata('error_title', 'title name is already being used');
+				redirect('admin/newCompetition');
+			}
 			//find number of days in between start and end date		
 			$difference = abs($time_end - $time_start); 
 			$days = floor($difference/(60*60*24)) + 1;
@@ -381,9 +391,11 @@ class Admin extends CI_Controller {
 		{
 			redirect('admin/');
 		}
+
+		$data['delete_competition'] = $this->session->flashdata('delete_competition');
 		//get all data for competitions
-		$query['array'] = $this->Admin_model->get_all_competitions();
-		$this->load->view('admin/show_competition',$query);
+		$data['array'] = $this->Admin_model->get_all_competitions();
+		$this->load->view('admin/show_competition',$data);
 	}
 
 	//logic for editing competition
@@ -448,7 +460,7 @@ class Admin extends CI_Controller {
 		redirect('admin/reviewCompetition');
 	}
 
-	//show all active organizations
+	//show all active organizations for the active competition
 	public function showOrganization()
 	{
 		//if user is not logged in redirect to login page
@@ -457,11 +469,19 @@ class Admin extends CI_Controller {
 			redirect('admin/');
 		}
 
+		//get competition data for active competition and put in object array to send to view
+		$competition_id = $this->Admin_model->get_competition_id();
+		$query = $this->Admin_model->get_competition_data($competition_id);
+		$data['competition'] = $query->row();
+
 		//create object array to send to view
 		$data['organization'] = new ArrayObject();
+		
 
-		//get all the active organizations
-		$org_data = $this->Admin_model->get_all_organizations();
+		$competition_id = $this->Admin_model->get_competition_id();
+
+		//get all the active organizations for the active competition
+		$org_data = $this->Admin_model->get_all_organizations($competition_id);
 
 		//go through every org and get data from each
 		foreach($org_data->result() as $org) {
@@ -484,16 +504,20 @@ class Admin extends CI_Controller {
 
 			}
 
-			//upload everything into array
-			$total_commit_array = array(
-				'user_id' => $org->user_id,
-				'name' => $org->name,
-				'total_commits' => $org_commits
-				);
+			$num_rows = $this->Admin_model->check_org_competition_assoc($competition_id, $org->user_id);
 
-			//add array to array of objects
-			$data['organization']->append($total_commit_array);
+			if($num_rows > 0)
+			{
+				//upload everything into array
+				$total_commit_array = array(
+					'user_id' => $org->user_id,
+					'name' => $org->name,
+					'total_commits' => $org_commits
+					);
 
+				//add array to array of objects
+				$data['organization']->append($total_commit_array);
+			}
 		}
 
 
@@ -510,10 +534,16 @@ class Admin extends CI_Controller {
 			redirect('admin/');
 		}
 
+		//get the organization data to send to view
+		$data['competition'] = $this->Admin_model->get_org_data($org_id);
+
+		//create object array to send to view
 		$data['participant'] = new ArrayObject();
 
+		//get all participants associated with a specific organization
 		$query = $this->Admin_model->get_participants_by_org($org_id);
 
+		//go through each participant to get their commitments
 		foreach ($query->result() as $row) {
 			//get participant data
 			$participant_data = $this->Admin_model->get_participant_data($row->participant_id);
@@ -528,10 +558,50 @@ class Admin extends CI_Controller {
 				'commit' => $commits
 				 );
 
+			//append to end of object array
 			$data['participant']->append($participant_array);
 		}
 
+		//load view
 		$this->load->view('admin/show_participant',$data);
+	}
+
+	//logic for switching the active competition
+	public function activateCompetition($competition_id)
+	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
+
+		$this->Admin_model->activate_competition($competition_id);
+		redirect('admin/showCompetition');
+	}
+
+	public function deleteCompetition($competition_id)
+	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
+
+		//check to see if the competition to be deleted is the active one
+		$num_rows = $this->Admin_model->check_if_active($competition_id);
+
+		//if the competition is not active delete it
+		if($num_rows == 0)
+		{
+			$this->Admin_model->delete_competition($competition_id);
+			redirect('admin/showCompetition');
+		}
+		//if the competition is active throw an error
+		else
+		{
+			$this->session->set_flashdata('delete_competition', 'You cannot delete the active competition');
+			redirect('admin/showCompetition');
+		}
 	}
 
 	//for testing to destroy session

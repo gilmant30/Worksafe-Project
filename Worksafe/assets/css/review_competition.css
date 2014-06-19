@@ -43,6 +43,11 @@ div{
   color:#555;
 }
 
+#date{
+  background:#ffd;
+
+}
+
 #correct_answer{
   color:green;
   font-weight: bold;

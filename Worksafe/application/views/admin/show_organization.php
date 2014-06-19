@@ -16,7 +16,8 @@
 <title>Competition</title>
 </head>
 <body>
-<h1>Show Organizations</h1>
+<h1>Show Organizations for <?= $competition->name ?> - only ones with at least one commitment show up</h1>
+
 
 <div id='org_table'>
 	<table class="bordered">
@@ -42,7 +43,6 @@
 
 <br />
 <a href="<?= base_url();?>index.php/admin/competition">Home page</a>
-
 
 </div>
 

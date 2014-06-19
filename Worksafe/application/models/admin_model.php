@@ -17,15 +17,23 @@ class Admin_model extends CI_Model {
 		return $query;
 	}
 
+	//check if the title name is being used returns 0 if it isn't being used
+	function check_competition_title($title)
+	{
+		$query = $this->db->query("SELECT * FROM competition WHERE name = '$title';");
+
+		return $query->num_rows();
+	}
+
 	//insert the format of the competition into the 'competition' table
 	function insert_competition_format($start, $end, $days, $question, $answer, $title)
 	{
 		//unblock when real db is used
-		/*
+		
 		//update all competitions so the one created is active
 		$data = array('active' => 'n');
 		$this->db->update('competition', $data);
-		*/
+		
 		
 		//put data in array to be put in db
 		$data = array(
@@ -84,7 +92,7 @@ class Admin_model extends CI_Model {
 		if($query->num_rows() == 0)
 		{
 			$data = array(
-				'category_id' => 1,
+				'category_id' => 2,
 				'name' => $category
 				);
 			//insert name into category table
@@ -206,8 +214,8 @@ class Admin_model extends CI_Model {
 		}
 	}
 
-	//get all the organizations that are active
-	function get_all_organizations()
+	//get all the organizations that are active with active competition
+	function get_all_organizations($competition_id)
 	{
 		$query = $this->db->query("SELECT user.name, user.user_id FROM user INNER JOIN user_role ON user.user_id = user_role.user_id INNER JOIN roles ON roles.role_id = user_role.role_id WHERE user_role.role_id = '2' AND user_role.status = 'active';");
 
@@ -215,6 +223,7 @@ class Admin_model extends CI_Model {
 		return $query;
 	}
 
+	//get all participants that are linked to a specific organization
 	function get_participants_by_org($org_id)
 	{
 		$query = $this->db->query("SELECT * FROM user_org_assoc WHERE org_id = '$org_id';");
@@ -236,6 +245,14 @@ class Admin_model extends CI_Model {
 		{
 			echo 'Error with get_participant_data() function';
 		}
+	}
+
+	//get the organization data by the org id
+	function get_org_data($org_id)
+	{
+		$query = $this->db->query("SELECT * FROM user WHERE user_id = '$org_id';");
+
+		return $query->row();
 	}
 
 	//get the number of commits for a specific user
@@ -327,6 +344,47 @@ class Admin_model extends CI_Model {
 		$this->db->query("UPDATE answer SET answer = '$answer' WHERE answer_id = '$answer_id';");
 	}
 
+	//sets the active competition 
+	function activate_competition($competition_id)
+	{
+		//set all competitions active column to n
+		$data = array('active' => 'n');
+		$this->db->update('competition', $data);
+
+		$this->db->query("UPDATE competition SET active = 'y' WHERE competition_id = '$competition_id';");
+	}
+
+	function check_if_active($competition_id)
+	{
+		$query = $this->db->query("SELECT * FROM competition WHERE competition_id = '$competition_id' AND active = 'y';");
+
+		return $query->num_rows();
+	}
+
+	//delete competition by id
+	function delete_competition($competition_id)
+	{
+		//delete from the competition table
+		$this->db->query("DELETE FROM competition WHERE competition_id = '$competition_id';");
+
+		/*
+		//delete from the date_question table
+		$this->db->query("DELETE FROM date_question WHERE competition_id = '$competition_id';");
+
+		//delete from commitment table
+		$this->db->query("DELETE FROM commitment WHERE competition_id = '$competition_id';");
+
+		//delete from user_org_assoc table
+		$this->db->query("DELETE FROM user_org_assoc WHERE competition_id = '$competition_id';");
+		*/
+	}
+
+	function check_org_competition_assoc($competition_id, $org_id)
+	{
+		$query = $this->db->query("SELECT * FROM user_org_assoc WHERE competition_id = '$competition_id' AND org_id = '$org_id';");
+
+		return $query->num_rows();
+	}
 }
 
 ?>

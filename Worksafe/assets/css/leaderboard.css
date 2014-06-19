@@ -16,7 +16,7 @@ table {
     background:#fff; 
 }
 
-.bordered {
+.tablesorter {
     border: solid #ccc 1px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
@@ -26,7 +26,7 @@ table {
     box-shadow: 0 1px 1px #ccc;         
 }
 
-.bordered tr:hover {
+.tablesorter tr:hover {
     background: #fbf8e9;
     -o-transition: all 0.1s ease-in-out;
     -webkit-transition: all 0.1s ease-in-out;
@@ -35,14 +35,14 @@ table {
     transition: all 0.1s ease-in-out;     
 }    
     
-.bordered td, .bordered th {
+.tablesorter td, .tablesorter th {
     border-left: 1px solid #ccc;
     border-top: 1px solid #ccc;
     padding: 15px;
     text-align: left;    
 }
 
-.bordered th {
+.tablesorter th {
     background-color: #dce9f9;
     background-image: -webkit-gradient(linear, left top, left bottom, from(#ebf3fc), to(#dce9f9));
     background-image: -webkit-linear-gradient(top, #ebf3fc, #dce9f9);
@@ -57,40 +57,57 @@ table {
     text-shadow: 0 1px 0 rgba(255,255,255,.5); 
 }
 
-.bordered td:first-child, .bordered th:first-child {
+.tablesorter td:first-child, .tablesorter th:first-child {
     border-left: none;
 }
 
-.bordered th:first-child {
+.tablesorter th:first-child {
     -moz-border-radius: 6px 0 0 0;
     -webkit-border-radius: 6px 0 0 0;
     border-radius: 6px 0 0 0;
 }
 
-.bordered th:last-child {
+.tablesorter th:last-child {
     -moz-border-radius: 0 6px 0 0;
     -webkit-border-radius: 0 6px 0 0;
     border-radius: 0 6px 0 0;
 }
 
-.bordered th:only-child{
+.tablesorter th:only-child{
     -moz-border-radius: 6px 6px 0 0;
     -webkit-border-radius: 6px 6px 0 0;
     border-radius: 6px 6px 0 0;
 }
 
-.bordered tr:last-child td:first-child {
+.tablesorter tr:last-child td:first-child {
     -moz-border-radius: 0 0 0 6px;
     -webkit-border-radius: 0 0 0 6px;
     border-radius: 0 0 0 6px;
 }
 
-.bordered tr:last-child td:last-child {
+.tablesorter tr:last-child td:last-child {
     -moz-border-radius: 0 0 6px 0;
     -webkit-border-radius: 0 0 6px 0;
     border-radius: 0 0 6px 0;
 }
 
-#delete_competition{
-    color: red;
-}
+
+th.headerSortUp { 
+    background-image: url(http://www.predig.com/images/PD213/Digital_Pressure_Gauge_up.gif); 
+    background-color: #3399FF; 
+} 
+
+th.headerSortDown { 
+    background-image: url(http://www.web-bite.co.uk/images/arrow_small_down.png); 
+    background-color: #3399FF; 
+} 
+th.header { 
+    background-image: url(http://www2.psd100.com/icon/2013/08/2701/Up-arrow-down-arrow-icon-0827122212.png); 
+    cursor: pointer; 
+    font-weight: bold; 
+    background-repeat: no-repeat; 
+    background-position: center left; 
+    padding-left: 20px; 
+    border-right: 1px solid #dad9c7; 
+    margin-left: -1px; 
+} 

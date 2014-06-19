@@ -19,6 +19,7 @@
 <h1>Show Competition Page</h1>
 
 <?php
+	echo '<div id="delete_competition">'.$delete_competition.'</div>';
 	echo '<table class="bordered">';
 	echo "<thead>";
 	echo "<tr>";
@@ -28,7 +29,9 @@
 	echo "<th>Answers per questions</th>";
 	echo "<th>Start date</th>";
 	echo "<th>End date</th>";
-	echo "<th>active</th>";
+	echo "<th>Active</th>";
+	echo "<th>Set to Active?</th>";
+	echo "<th>Delete Competition</th>";
 	echo "</tr>";
 	echo "</thead>";
 	echo "<tbody>";
@@ -43,7 +46,11 @@
 		if($row->active == 'y')
 			echo "<td>yes</td>";
 		else
+		{
 			echo "<td>no</td>";
+		}
+		echo '<td><a href="'.base_url().'index.php/admin/activateCompetition/'.$row->competition_id.'">Activate</a></td>';
+		echo '<td><a href="'.base_url().'index.php/admin/deleteCompetition/'.$row->competition_id.'">Delete</a></td>';
 		echo "</tr>";
 	}
 	echo "</tbody>";
