@@ -21,7 +21,7 @@
 <div class="competition" id="links">
 <a href="<?= base_url();?>index.php/admin/newCompetition">Start New Competition</a>
 
-<a href="<?= base_url();?>index.php/admin/reviewCompetition">Review Current Competition</a>
+<a href="<?= base_url();?>index.php/admin/reviewCompetition">Review/Edit Current Competition</a>
 
 <a href="<?= base_url();?>index.php/admin/showCompetition">Show Competitions</a>
 

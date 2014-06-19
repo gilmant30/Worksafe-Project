@@ -10,7 +10,7 @@
 </head>
 <body>
 <h1>Information Page about the contest</h1>
-
+<div id="commitment"><?=$commitment?></div>
 <p>Information about the contest</p>
 <p>Formatted differently and styled but will show what the contest is about and why it's so great</p>
 

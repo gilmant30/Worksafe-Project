@@ -3,7 +3,7 @@
 <head>
 
 <style>@import url('<?=base_url()?>/assets/css/header.css'); </style>
-<style>@import url('<?=base_url()?>/assets/css/participant_question_page.css'); </style>
+<style>@import url('<?=base_url()?>/assets/css/participant_show_answer.css'); </style>
 
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -24,35 +24,46 @@ $('#toggle-login').click(function(){
 <?php 
 echo '<span class="button" id="toggle-login">'.$competition->name.' </span>';
 ?>
-<div id="question_page">
+<div id="answer_page">
   <div id="triangle"></div>
-  <h2>Worksafe Week Questions</h2>
+  <h2>Worksafe Week Answer</h2>
+  <div id = "answer_form">
 <?php
 
-  $label_attributes = array(
-    'id' => 'answer_label'
-    );
 
-  echo form_open('participant/answerQuestions');
-  
+  if($correct == TRUE)
+  {
+    echo '<p id="correct">CORRECT!</p>';
+  }
+  else
+  {
+    echo '<p id="wrong">Nice try! The correct answer is....</p>';
+  }
 
     //input the question into the form  
     echo '<p id = "question">'.$question->question.'</p>';
 
 
     foreach ($answer as $ans) {
+
         $radio_input = array('name' => 'answer', 'value' => $ans->answer_id);
-        echo form_radio($radio_input);
-        echo form_label($ans->answer,'question', $label_attributes);
-      echo "<br />";
+        if($ans->correct == 'y')
+        {
+          echo '<p class = "answer" id = "correct_answer">'.$ans->answer.'</p>';
+        }
+        else
+        {
+          echo '<p class = "answer">'.$ans->answer.'</p>';
+        }
+
       
     }
     echo "<br />";
 
+echo '<a href="'.base_url().'index.php/participant/questionPage">Next Question</a>';
 
-  echo form_submit('particpant_answer_question_submit', 'Submit Answers');
-  echo form_close();
 ?>
+</div>
 </div>
 
 

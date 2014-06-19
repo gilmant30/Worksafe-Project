@@ -324,9 +324,10 @@ class Admin extends CI_Controller {
 			redirect('admin/');
 		}
 
-		//puts update value if there is one
+		//puts update and error value if there is one
 		$data['update'] = $this->session->flashdata('update');
-
+		$data['error'] = $this->session->flashdata('error');
+		
 		//create object array to send to view
 		$data['review'] = new ArrayObject();
 
@@ -385,6 +386,7 @@ class Admin extends CI_Controller {
 		$this->load->view('admin/show_competition',$query);
 	}
 
+	//logic for editing competition
 	public function editCompetition()
 	{
 
@@ -393,6 +395,34 @@ class Admin extends CI_Controller {
 
 		//get all the questions for that competition with the competition id
 		$questions = $this->Admin_model->get_all_questions($competition_id);
+
+		foreach ($questions->result() as $row) {
+			//get question data for each question
+			$question_data = $this->Admin_model->get_question_data($row->question_id);
+
+			//get the input data from the form
+			$question_string = $this->security->xss_clean($this->input->post('q'.$question_data->question_id));
+			
+			//set form_validation rules
+			$this->form_validation->set_rules('q'.$question_data->question_id, 'Question', 'required');
+
+			//get answer
+			$answers = $this->Admin_model->get_all_answers($row->question_id);
+
+			foreach ($answers->result() as $ans) {
+				//get input from form
+				$answer_string = $this->security->xss_clean($this->input->post('a'.$ans->answer_id));
+				//set form validation rules
+				$this->form_validation->set_rules('a'.$ans->answer_id, 'Answer', 'required');
+			}
+		}
+
+		//if any fields are empty throw error
+		if($this->form_validation->run() === FALSE)
+		{
+			$this->session->set_flashdata('error', 'Must not leave any fields blank');
+			redirect('admin/reviewCompetition');
+		}
 
 		foreach ($questions->result() as $row) {
 			//get question data for each question

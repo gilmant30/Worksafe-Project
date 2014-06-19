@@ -231,5 +231,32 @@ class Participant_model extends CI_Model {
 
 		return $query;
 	}
+
+	function get_user_question_data($participant_id, $question_id)
+	{
+		$query = $this->db->query("SELECT * FROM user_question WHERE user_id = '$participant_id' AND question_id = '$question_id';");
+
+		return $query;
+	}
+
+	function insert_into_user_question($participant_id, $question_id, $answer_id)
+	{
+		$data = array(
+			'user_question_id' => 3,
+			'user_id' => $participant_id,
+			'question_id' => $question_id,
+			'answer_id' => $answer_id
+			);
+
+		//insert into db, throw error if data not inserted
+		if( $this->db->insert('user_question', $data) != TRUE)
+		{
+			throw new Exception("Cannot insert into user_question table");
+		}
+		else
+		{
+			return $this->db->affected_rows();
+		}
+	}
 }
 ?>

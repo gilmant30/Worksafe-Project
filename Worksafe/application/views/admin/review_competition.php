@@ -19,6 +19,7 @@
 <h1>Competition Review Page</h1>
 <div id = "review_competition">
 <div id="update"><?=$update?></div>
+<div id="error"><?=$error?></div>
 <h2>Questions and answers for competition</h2>
 
 <?php
