@@ -25,7 +25,7 @@ $('#toggle-login').click(function(){
 
 <div id="login">
   <div id="triangle"></div>
-  <h2>Worksafe Week Login</h2>
+  <h2>WorkSAFE Week Login</h2>
   <?php
 	$email = array('name' => 'email', 'placeholder' => 'Email');
 

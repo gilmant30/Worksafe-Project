@@ -609,4 +609,9 @@ class Admin extends CI_Controller {
 	{
 		$this->session->sess_destroy();
 	}
+
+	public function test()
+	{
+		$this->load->view('admin/test');
+	}
 }
