@@ -325,7 +325,7 @@ class Admin extends CI_Controller {
 		//redirect back to create question page and check whether there are more days or not
 		redirect("admin/createQuestion");
 	}
-*/
+	*/
 	//gets data and loads view that shows a review of the competition
 	public function reviewCompetition()
 	{
@@ -545,15 +545,15 @@ class Admin extends CI_Controller {
 		//go through each participant to get their commitments
 		foreach ($query->result() as $row) {
 			//get participant data
-			$participant_data = $this->Admin_model->get_participant_data($row->participant_id);
+			$participant_data = $this->Admin_model->get_participant_data($row->PARTICIPANT_ID);
 
 			//get # of commitments by participants so far
-			$commits = $this->Admin_model->commits_by_user($participant_data->user_id);
+			$commits = $this->Admin_model->commits_by_user($participant_data->USER_ID);
 
 			//put data into array
 			$participant_array = array(
-				'user_id' => $participant_data->user_id,
-				'email' => $participant_data->email,
+				'user_id' => $participant_data->USER_ID,
+				'email' => $participant_data->EMAIL,
 				'commit' => $commits
 				 );
 
@@ -633,13 +633,12 @@ class Admin extends CI_Controller {
 
 		//get all information from form
 		$question = $this->security->xss_clean($this->input->post('question'));
-		$question_type = $this->security->xss_clean($this->input->post('type'));
+		$question_type = $this->security->xss_clean($this->input->post('option_type'));
 		$category = $this->security->xss_clean($this->input->post('category'));
 		$question_date = $this->security->xss_clean($this->input->post('question_date'));
 
 		//get the competition id
 		$competition_id = $this->input->cookie('competition_id');
-
 
 		//send category name to insert_category function returns category id
 		$category_id = $this->Admin_model->insert_category($category);
@@ -662,7 +661,8 @@ class Admin extends CI_Controller {
 		} catch (Exception $e) {
 			echo 'Caught exception: ', $e->getMessage(), "\n";
 		}
-
+		
+		
 		//if the question type is true/false get true or false and insert into db
 		if($question_type == 'true_false')
 		{
@@ -677,7 +677,7 @@ class Admin extends CI_Controller {
 			}
 
 			$this->session->set_flashdata('added', 'True or false question added');
-			redirect('admin/test');
+			redirect('admin/createQuestion');
 
 		}
 
@@ -711,7 +711,7 @@ class Admin extends CI_Controller {
 			}
 
 			$this->session->set_flashdata('added', 'Multiple choice question added');
-			redirect('admin/test');
+			redirect('admin/createQuestion');
 		}
 
 		//if question type is multiple select insert all answers into db
@@ -725,11 +725,12 @@ class Admin extends CI_Controller {
 				//get answer string
 				$answer = $this->security->xss_clean($this->input->post('answer'.$a));
 				
-				//get radio button
+				//get checkbox button
 				$correct = $this->security->xss_clean($this->input->post('checkbox_answer'.$a));
-			
+		
+
 				if('correct_ans'.$a == $correct)
-				{
+				{	
 					$correct = 'y';
 				}
 				else
@@ -737,16 +738,12 @@ class Admin extends CI_Controller {
 					$correct = 'n';
 				}
 
-				$this->Admin_model->insert_answer($answer,$correct,$question_id);	
+				$this->Admin_model->insert_answer($answer,$correct,14);	
 			}
 
 			$this->session->set_flashdata('added', 'Multiple select question added');
-			redirect('admin/test');
-		}
-
-
-		
-		
+			redirect('admin/createQuestion');
+		}	
 	}
 
 	function oracleTest()

@@ -87,20 +87,22 @@ else if($question->QUESTION_TYPE == 'multiple_choice')
 else if($question->QUESTION_TYPE == 'multiple_select')
 {
 
-  echo form_open('participant/answerQuestions');
+  echo form_open('participant/answerMultipleSelectQuestion');
   echo '<p id="title">Select All That Apply</p>';  
 
     //input the question into the form  
     echo '<p id = "question">'.$question->QUESTION.'</p>';
 
-
+    $a=0;
     foreach ($answer as $ans) {
-        $checkbox_input = array('name' => 'answer', 'value' => $ans->ANSWER_ID);
+        $checkbox_input = array('name' => 'answer[]', 'value' => $ans->ANSWER_ID);
         echo form_checkbox($checkbox_input);
-        echo form_label($ans->ANSWER,'question', $label_attributes);
+        echo form_label($ans->ANSWER->load(),'question', $label_attributes);
       echo "<br />";
-      
+      $a++;
     }
+
+    echo form_hidden('num_answers', $a);
     echo "<br />";
 
 

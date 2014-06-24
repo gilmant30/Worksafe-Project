@@ -16,7 +16,7 @@
 <title>Competition</title>
 </head>
 <body>
-<h1>Show Participants for <?=$competition->name?></h1>
+<h1>Show Participants for <?=$competition->USER_NAME?></h1>
 
 <div id='org_table'>
 	<table class="bordered">

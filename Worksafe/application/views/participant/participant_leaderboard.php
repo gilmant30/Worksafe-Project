@@ -26,7 +26,7 @@ $(document).ready(function()
 <title>Competition</title>
 </head>
 <body>
-<h1><?= $competition->name ?> Leaderboard</h1>
+<h1><?= $competition->COMPETITION_NAME ?> Leaderboard</h1>
 
 
 <div id='org_table'>

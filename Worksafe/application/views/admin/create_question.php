@@ -34,7 +34,7 @@
   $options = array(
     'multiple_choice' => 'Multiple choice',
     'true_false' => 'True/False',
-    'muliple_select' => 'Select multiple'
+    'multiple_select' => 'Select multiple'
     );
   $options_id = 'id="options" onChange="create_answer_field();"';
 	$question = array('name' => 'question', 'placeholder' => 'Question');
@@ -47,7 +47,7 @@
   echo form_input($question);
   echo form_input($category);
   echo form_input($date);
-  echo form_dropdown('type', $options, 'multiple_choice', $options_id);
+  echo form_dropdown('option_type', $options, 'multiple_choice', $options_id);
   echo '<br />';
 
   echo '<div id="add_answer">';

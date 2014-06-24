@@ -146,7 +146,7 @@ class Participant_model extends CI_Model {
 	}
 
 	//get the question data for a single question by the question id
-	function get_questions($question_id)
+	function get_question($question_id)
 	{
 		$query = $this->db->query("SELECT * FROM question WHERE question_id = '$question_id'");
 

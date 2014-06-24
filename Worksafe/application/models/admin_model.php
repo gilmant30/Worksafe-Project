@@ -249,7 +249,7 @@ class Admin_model extends CI_Model {
 	//get the organization data by the org id
 	function get_org_data($org_id)
 	{
-		$query = $this->db->query("SELECT * FROM user WHERE user_id = '$org_id';");
+		$query = $this->db->query("SELECT * FROM user_table WHERE user_id = '$org_id'");
 
 		return $query->row();
 	}

@@ -210,7 +210,7 @@ class Participant extends CI_Controller {
 		
 		//$today_date = strtotime(date('d-m-Y'));
 		//for now \/ but ^ for actual competition
-		$today = strtotime('2014-07-10');
+		$today = strtotime('2014-07-09');
 		$today_date = date('d-m-Y', $today);
 
 		//switch to $today once testing is done
@@ -235,27 +235,20 @@ class Participant extends CI_Controller {
 				if($today_date == $date)
 				{
 					$noQuestions++;
+
 					//check if user has answered the question already
 					$user_question_data = $this->Participant_model->get_user_question_data($participant_id, $row->QUESTION_ID);
 
 					if($user_question_data->num_rows() == 0 && $flag == 0)
 					{
 						//get question data using the question id
-						$question_data = $this->Participant_model->get_questions($row->QUESTION_ID);
+						$question_data = $this->Participant_model->get_question($row->QUESTION_ID);
 
-						if($question_data->QUESTION_TYPE == 'true_false')
-						{
-							//add to the array of object in data['question']
-							$data['question'] = $question_data; 
-						}
-
-						else if($question_data->QUESTION_TYPE == 'multiple_choice')
-						{
-							$data['question'] = $question_data;
-						}
+						$data['question'] = $question_data; 
+					
 						$answer = $this->Participant_model->get_answers($question_data->QUESTION_ID);
 
-						//for each answer that coincides with the question just gottne
+						//for each answer that coincides with the question just gotten
 						foreach ($answer->result() as $ans_row) {
 							//put data into an array of objects
 							$data['answer']->append($ans_row);
@@ -269,7 +262,7 @@ class Participant extends CI_Controller {
 
 			}
 
-			/*
+			
 			if($noQuestions == 0)
 			{
 				redirect('participant/noQuestions');
@@ -281,7 +274,7 @@ class Participant extends CI_Controller {
 			{
 				redirect('participant/giveCommitment');
 			}
-		*/
+		
 		$this->load->view('participant/participant_question_page',$data);
 		
 		}		
@@ -304,9 +297,13 @@ class Participant extends CI_Controller {
 		$data['competition'] = $this->Participant_model->get_competition_data();
 		$data['question'] = new ArrayObject();
 		$data['answer'] = new ArrayObject();
-
+		$data['answer_type'] = 'multiple_choice';
+		
 		//get participant id from cookie
 		$participant_id = $this->input->cookie('participant_id');
+
+		//get competition id
+		$competition_id = $this->Participant_model->get_competition_id();
 
 		//grab the answer chosen id from the question 
 		$answer = $this->security->xss_clean($this->input->post('answer'));
@@ -315,13 +312,13 @@ class Participant extends CI_Controller {
 		$correct = $this->Participant_model->check_answer($answer);
 
 		//get the question by using the answer id
-		$question_data = $this->Participant_model->get_questions($correct->question_id);
+		$question_data = $this->Participant_model->get_question($correct->QUESTION_ID);
 
 		//put question data in object array to be sent to form
 		$data['question'] = $question_data;
 
 		//get all the answers for this question
-		$all_answers = $this->Participant_model->get_answers($question_data->question_id);
+		$all_answers = $this->Participant_model->get_answers($question_data->QUESTION_ID);
 	
 		//for each answer that coincides with the question just gotten
 		foreach ($all_answers->result() as $ans_row) {
@@ -329,12 +326,12 @@ class Participant extends CI_Controller {
 			$data['answer']->append($ans_row);
 		}
 		
-		
+
 		//add the participant and question in the user_question table
-		$this->Participant_model->insert_into_user_question($participant_id, $correct->question_id, $answer);
+		$this->Participant_model->insert_into_user_question($participant_id, $correct->QUESTION_ID, $competition_id, $answer);
 		
 		//display whether the answer is correct or not
-		if($correct->correct == 'y')
+		if($correct->CORRECT == 'y')
 		{
 			$data['correct'] = TRUE;
 		}
@@ -347,6 +344,71 @@ class Participant extends CI_Controller {
 		$this->load->view('participant/participant_show_answer',$data);
 	}
 
+	public function answerMultipleSelectQuestion()
+	{
+		if(!$this->session->userdata('isLoggedin'))
+		{
+			redirect('participant/');
+		}
+
+		$data['competition'] = $this->Participant_model->get_competition_data();
+		$data['question'] = new ArrayObject();
+		$data['answer'] = new ArrayObject();
+		$data['correct_answer'] = new ArrayObject();
+		$data['answer_type'] = 'multiple_choice';
+		
+		//get participant id from cookie
+		$participant_id = $this->input->cookie('participant_id');
+
+		//get competition id
+		$competition_id = $this->Participant_model->get_competition_id();
+
+		$num_answers = $this->security->xss_clean($this->input->post('num_answers'));
+
+		//grab the answer chosen id from the question 
+		$answer = $this->security->xss_clean($this->input->post('answer'));
+
+		//for each question selected see if it is right or wrong
+		foreach ($answer as $ans) 
+		{
+			//grab all information for the answer given by the answer_id
+			$correct = $this->Participant_model->check_answer($ans);
+
+			$answer_array = array(
+				'answer' => $ans,
+				'correct' => $correct->CORRECT
+				);
+
+			$data['correct_answer']->append($answer_array);
+
+			$this->Participant_model->insert_into_user_question($participant_id, $correct->QUESTION_ID, $competition_id, $ans);
+		}
+			
+
+		//get the question by using the answer id
+		$question_data = $this->Participant_model->get_question($correct->QUESTION_ID);
+
+		//get all the answers for this question
+		$all_answers = $this->Participant_model->get_answers($question_data->QUESTION_ID);
+
+		//for each answer that coincides with the question just gotten
+		foreach ($all_answers->result() as $ans_row) {
+			//put data into an array of objects
+			$data['answer']->append($ans_row);
+		}
+		
+	
+		//put question data in object array to be sent to form
+		$data['question'] = $question_data;
+
+		
+		//display whether the answer is correct or not
+
+		//load form
+		$this->load->view('participant/participant_show_answer',$data);		
+	}
+
+	//logic for checking the answers of true and false questions
 	public function answerTrueFalseQuestion()
 	{
 		if(!$this->session->userdata('isLoggedin'))
@@ -374,7 +436,7 @@ class Participant extends CI_Controller {
 		$correct = $this->Participant_model->check_answer($answer_id);
 
 		//get the question by using the answer id
-		$question_data = $this->Participant_model->get_questions($correct->QUESTION_ID);
+		$question_data = $this->Participant_model->get_question($correct->QUESTION_ID);
 
 		//put question data in object array to be sent to form
 		$data['question'] = $question_data;
@@ -394,7 +456,7 @@ class Participant extends CI_Controller {
 		$data['answer'] = $correct_answer;
 		
 		//add the participant and question in the user_question table
-		//$this->Participant_model->insert_into_user_question($participant_id, $correct->QUESTION_ID, $competition_id, $answer_id);
+		$this->Participant_model->insert_into_user_question($participant_id, $correct->QUESTION_ID, $competition_id, $answer_id);
 
 		//load form
 		$this->load->view('participant/participant_show_answer',$data);
@@ -470,29 +532,29 @@ class Participant extends CI_Controller {
 			$org_commits = 0;
 
 			//get all participants associated with a specific organization
-			$query = $this->Admin_model->get_participants_by_org($org->user_id);
+			$query = $this->Admin_model->get_participants_by_org($org->USER_ID);
 
 			//go through each array of participants to get individual commitments
 			foreach ($query->result() as $participant) {
 
 				//get participant data
-				$participant_data = $this->Admin_model->get_participant_data($participant->participant_id);
+				$participant_data = $this->Admin_model->get_participant_data($participant->PARTICIPANT_ID);
 
 				//get # of commitments by participants so far
-				$participant_commits = $this->Admin_model->commits_by_user($participant_data->user_id);
+				$participant_commits = $this->Admin_model->commits_by_user($participant_data->USER_ID);
 
 				$org_commits = $org_commits + $participant_commits;
 
 			}
 
-			$num_rows = $this->Admin_model->check_org_competition_assoc($competition_id, $org->user_id);
+			$num_rows = $this->Admin_model->check_org_competition_assoc($competition_id, $org->USER_ID);
 
 			if($num_rows > 0)
 			{
 				//upload everything into array
 				$total_commit_array = array(
-					'user_id' => $org->user_id,
-					'name' => $org->name,
+					'user_id' => $org->USER_ID,
+					'name' => $org->USER_NAME,
 					'total_commits' => $org_commits
 					);
 

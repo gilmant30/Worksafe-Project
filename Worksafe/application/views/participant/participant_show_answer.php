@@ -49,14 +49,15 @@ echo '<span class="button" id="toggle-login">'.$competition->COMPETITION_NAME.' 
     {
     foreach ($answer as $ans) {
 
-        $radio_input = array('name' => 'answer', 'value' => $ans->answer_id);
-        if($ans->correct == 'y')
+        $radio_input = array('name' => 'answer', 'value' => $ans->ANSWER_ID);
+        if($ans->CORRECT == 'y')
         {
-          echo '<p class = "answer" id = "correct_answer">'.$ans->answer.'</p>';
+          echo '<p>CORRECT!</p>';
+          echo '<p class = "answer" id = "correct_answer">'.$ans->ANSWER->load().'</p>';
         }
         else
         {
-          echo '<p class = "answer">'.$ans->answer.'</p>';
+          echo '<p class = "answer">'.$ans->ANSWER->load().'</p>';
         }
 
       

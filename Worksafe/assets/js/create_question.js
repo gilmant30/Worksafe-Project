@@ -15,7 +15,7 @@ $(function(){
 //add input fields when add answer box is pressed with multi select answers
 $(function(){
   $(document).on('click', '#add_multi_select_answer', function() {
-   $('<input type="text" id="answer'+ a +'" size="40" name="answer" value="" placeholder="Answer" required/><input type="checkbox" id="correct_ans" name="checkbox_answer'+a+'" value="correct_ans'+a+'"/><label>Correct answer</label>').appendTo($('#add_answer'));
+   $('<input type="text" id="answer" size="40" name="answer'+a+'" value="" placeholder="Answer" required/><input type="checkbox" id="correct_ans" name="checkbox_answer'+a+'" value="correct_ans'+a+'"/><label>Correct answer</label>').appendTo($('#add_answer'));
   
    $('#num_answers').val(a);
    a++;
@@ -43,7 +43,7 @@ function create_answer_field(){
   {
    displayTrueFalse();
   }
-  else if(value == 'muliple_select')
+  else if(value == 'multiple_select')
   {
     displayMultipleSelect();
   }
