@@ -11,7 +11,8 @@ class Participant_model extends CI_Model {
 	//get all the organizations that are active
 	function get_all_organizations()
 	{
-		$query = $this->db->query("SELECT user.name, user.user_id FROM user INNER JOIN user_role ON user.user_id = user_role.user_id INNER JOIN roles ON roles.role_id = user_role.role_id WHERE user_role.role_id = '2' AND user_role.status = 'active';");
+		$query = $this->db->query("SELECT user_table.user_name, user_table.user_id FROM user_table INNER JOIN user_role ON user_table.user_id = user_role.user_id INNER JOIN role_table ON role_table.role_id = user_role.role_id WHERE user_role.role_id = '2' AND user_role.status = 'active'");
+
 
 		//return entire query
 		return $query;
@@ -20,24 +21,20 @@ class Participant_model extends CI_Model {
 	//check to see if participant email is in the database and if so that they are a participant
 	function check_participant_email($email)
 	{
-		$query = $this->db->query("SELECT user.name, user.user_id FROM user INNER JOIN user_role ON user.user_id = user_role.user_id WHERE user.email = '$email' AND user_role.role_id = '3';");
+		$query = $this->db->query("SELECT user_table.user_name, user_table.user_id FROM user_table INNER JOIN user_role ON user_table.user_id = user_role.user_id WHERE user_table.email = '$email' AND user_role.role_id = '3'");
 
 		return $query;
 	}
 
 	//insert the participant into 'user' table with parameters given
-	function insert_participant($email,$zipcode)
+	function insert_participant($email)
 	{
 		$data = array(
-			//id just for testing, automatically put in with oracle tables
-			'user_id' => 9,
-			//*******
-			'email' => $email,
-			'zipcode' => $zipcode
+			'EMAIL' => $email,
 			);
 
 		//insert into db, throw error if data not inserted
-		if( $this->db->insert('user', $data) != TRUE)
+		if( $this->db->insert('USER_TABLE', $data) != TRUE)
 		{
 			throw new Exception("Cannot insert into user table");
 		}
@@ -51,12 +48,12 @@ class Participant_model extends CI_Model {
 	function get_participant_id($email,$zipcode)
 	{
 		//return query with user_id
-		$query = $this->db->query("SELECT user_id FROM user WHERE email = '$email' AND zipcode = '$zipcode';");
+		$query = $this->db->query("SELECT user_id FROM user_table WHERE email = '$email'");
 
 		if($query->num_rows() == 1)
 		{
 			$row = $query->row();
-			return $row->user_id;
+			return $row->USER_ID;
 		}
 		else
 		{
@@ -68,18 +65,13 @@ class Participant_model extends CI_Model {
 	function insert_participant_into_user_role($participant_id)
 	{
 		$data = array(
-			//id just for testing, automatically put in with oracle tables
-			'user_role_id' => 9,
-			//********
-			'role_id' => 3,
-			'user_id' => $participant_id,
-			'status' => 'active',
-			//creation date will be done when row is created
-			//'creation_date' => 'date()'
+			'ROLE_ID' => 3,
+			'USER_ID' => $participant_id,
+			'STATUS' => 'active',
 			);
 
 		//insert into db, throw error if data not inserted
-		if( $this->db->insert('user_role', $data) != TRUE)
+		if( $this->db->insert('USER_ROLE', $data) != TRUE)
 		{
 			throw new Exception("Cannot insert into user_role table");
 		}
@@ -95,16 +87,13 @@ class Participant_model extends CI_Model {
 		$competition_id = $this->get_competition_id();
 
 		$data = array(
-			//id just for testing, automatically put in with oracle tables
-			'user_org_assoc_id' => 5,
-			//*********
-			'org_id' => $org_id,
-			'participant_id' => $participant_id,
-			'competition_id' => $competition_id
+			'ORG_ID' => $org_id,
+			'PARTICIPANT_ID' => $participant_id,
+			'COMPETITION_ID' => $competition_id
 		);
 
 		//insert into db, throw error if data not inserted
-		if( $this->db->insert('user_org_assoc', $data) != TRUE)
+		if( $this->db->insert('USER_ORG_ASSOC', $data) != TRUE)
 		{
 			throw new Exception("Cannot insert into user_org_assoc table");
 		}
@@ -117,7 +106,7 @@ class Participant_model extends CI_Model {
 	//get competition data for the active competition
 	function get_competition_data()
 	{
-		$query = $this->db->query("SELECT * FROM competition WHERE active = 'y';");
+		$query = $this->db->query("SELECT * FROM competition WHERE active = 'y'");
 		
 		if($query->num_rows() == 1)
 		{
@@ -132,12 +121,12 @@ class Participant_model extends CI_Model {
 	//get competition id for the active competition
 	function get_competition_id()
 	{
-		$query = $this->db->query("SELECT * FROM competition WHERE active = 'y';");
+		$query = $this->db->query("SELECT * FROM competition WHERE active = 'y'");
 		
 		if($query->num_rows() == 1)
 		{
 			$row = $query->row();
-			return $row->competition_id;
+			return $row->COMPETITION_ID;
 		}
 		else
 		{
@@ -146,9 +135,9 @@ class Participant_model extends CI_Model {
 	}
 
 	//get the data for the questions for the particular day it is
-	function get_question_data_from_date_question($competition_id, $today_date)
+	function get_question_data_from_date_question($competition_id)
 	{
-		$query = $this->db->query("SELECT * FROM date_question WHERE competition_id = '$competition_id' AND question_date = '$today_date';");
+		$query = $this->db->query("SELECT * FROM date_question WHERE competition_id = '$competition_id'");
 
 		if($query->num_rows() > 0)
 			return $query;
@@ -159,7 +148,7 @@ class Participant_model extends CI_Model {
 	//get the question data for a single question by the question id
 	function get_questions($question_id)
 	{
-		$query = $this->db->query("SELECT * FROM question WHERE question_id = '$question_id';");
+		$query = $this->db->query("SELECT * FROM question WHERE question_id = '$question_id'");
 
 		if($query->num_rows() == 1)
 			return $query->row();
@@ -170,7 +159,7 @@ class Participant_model extends CI_Model {
 	//get all the answer data for a particular question
 	function get_answers($question_id)
 	{
-		$query = $this->db->query("SELECT * FROM answer WHERE question_id = '$question_id';");
+		$query = $this->db->query("SELECT * FROM answer WHERE question_id = '$question_id'");
 
 		if($query->num_rows() > 0)
 			return $query;
@@ -195,7 +184,7 @@ class Participant_model extends CI_Model {
 	//get all answer data for a single answer by the answer id
 	function check_answer($answer_id)
 	{
-		$query = $this->db->query("SELECT * FROM answer WHERE answer_id = '$answer_id';");
+		$query = $this->db->query("SELECT * FROM answer WHERE answer_id = '$answer_id'");
 
 		if($query->num_rows() == 1)
 		{
@@ -208,15 +197,14 @@ class Participant_model extends CI_Model {
 
 	function add_commitment($participant_id, $competition_id)
 	{
-		$data = array(
-			'commitment_id' => 1,
-			'user_id' => $participant_id,
-			'competition_id' => $competition_id,
-			'commitment_date' => date('Y-m-d')
-			);
+		$date = date('Y-m-d');
+
+		$this->db->set('USER_ID', $participant_id);
+		$this->db->set('COMPETITION_ID', $competition_id);
+		$this->db->set('COMMITMENT_DATE', "TO_DATE('$date','YYYY-MM-DD')",false);
 
 		//insert into db, throw error if data not inserted
-		if( $this->db->insert('commitment', $data) != TRUE)
+		if( $this->db->insert('COMMITMENT') != TRUE)
 		{
 			throw new Exception("Cannot insert into commitment table");
 		}
@@ -229,30 +217,41 @@ class Participant_model extends CI_Model {
 	//check to see if participant has already added a commitment for the day
 	function check_commitment($participant_id, $competition_id)
 	{
-		$date = date('Y-m-d');
-		$query = $this->db->query("SELECT * FROM commitment WHERE user_id = '$participant_id' AND competition_id = '$competition_id' AND commitment_date = '$date';");
+		$flag = 0;
+		$today_date = date('d-m-Y');
+		$query = $this->db->query("SELECT * FROM commitment WHERE user_id = '$participant_id' AND competition_id = '$competition_id'");
+
+		foreach ($query->result() as $commit) {
+			$date = date('d-m-Y',strtotime($commit->COMMITMENT_DATE));
+
+			if($today_date == $date)
+				{
+					$flag++;
+				}
+		}
+		return $flag;
 
 		return $query;
 	}
 
 	function get_user_question_data($participant_id, $question_id)
 	{
-		$query = $this->db->query("SELECT * FROM user_question WHERE user_id = '$participant_id' AND question_id = '$question_id';");
+		$query = $this->db->query("SELECT * FROM user_question WHERE user_id = '$participant_id' AND question_id = '$question_id'");
 
 		return $query;
 	}
 
-	function insert_into_user_question($participant_id, $question_id, $answer_id)
+	function insert_into_user_question($participant_id, $question_id, $competition_id, $answer_id)
 	{
 		$data = array(
-			'user_question_id' => 5,
-			'user_id' => $participant_id,
-			'question_id' => $question_id,
-			'answer_id' => $answer_id
+			'USER_ID' => $participant_id,
+			'QUESTION_ID' => $question_id,
+			'ANSWER_ID' => $answer_id,
+			'COMPETITION_ID' => $competition_id
 			);
 
 		//insert into db, throw error if data not inserted
-		if( $this->db->insert('user_question', $data) != TRUE)
+		if( $this->db->insert('USER_QUESTION', $data) != TRUE)
 		{
 			throw new Exception("Cannot insert into user_question table");
 		}

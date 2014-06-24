@@ -1,76 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
-        
-<style>@import url('<?=base_url()?>/assets/css/header.css'); </style>
-<style>@import url('<?=base_url()?>/assets/css/create_question.css'); </style>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<style>@import url('<?=base_url()?>/assets/css/header.css'); </style>
+<style>@import url('<?=base_url()?>/assets/css/new_competition2.css'); </style>
+
+
+<script type="text/javascript" src="<?= base_url();?>assets/js/jquery-1.11.1.min.js" ></script>
+<script type="text/javascript" src="<?= base_url();?>assets/js/create_question.js" ></script>
 <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 
-<style>
-
-
-</style>
+ <script>
+  $(function() {
+    $( "#question_date" ).datepicker();
+  });
+  </script>
 
 <title>Competition</title>
 </head>
 <body>
-<?php
-        $attributes = array('name' => 'create_question', 'onsubmit' => '');
+<h1>Admin Login Page</h1> 
 
-        echo "<h1>Create Questions for <strong>$title</strong> day $current_day out of $days_of_competition</h1>";
-        echo '<div id=create_qustion">';
-        echo '<h2>Create Questions</h2>';
+<span class="button" id="toggle-login">Login</span>
 
-        echo form_open('admin/uploadQuestions', $attributes);
+<div id="login">
+  <div id="triangle"></div>
+  <h2>WorkSAFE Week Admin Login</h2>
+  <?php
 
-        //dynamically create questions form based on user input from new_competition page
-        for($i=1;$i<($questions+1);$i++)
-        {
-                $question_input = array('name' => 'question'.$i, 'id' => 'question');
-                $category_input = array('name' => 'category'.$i, 'id' => 'category');
-                $type_input = array('name' => 'type'.$i, 'id' => 'type');
-                
-                echo "<p>Question $i:</p>";
-                echo form_label('Category: ','category'.$i);
-                echo form_input($category_input);
-                echo '<br />';
-                echo form_label('Type: ','type'.$i);
-                echo form_input($type_input);
-                echo '<br />';
-                echo form_textarea($question_input);
-               //echo '<textarea id = "question" name="question'.$i.'" required></textarea>';
-                echo '<br />';
+   echo '<div id="added">'.$added.'</div>';
 
-                //dynamically create answer input and radio buttons from data given on new_competition page
-                for($a=1;$a<($answers+1);$a++)
-                {
-                        $answer_input = array('name' => 'q'.$i.'answer'.$a, 'id' => 'answer');
-                        $radio_input = array('name' => 'correct_ans_q'.$i, 'value' => 'q'.$i.'a'.$a);
+  $options = array(
+    'multiple_choice' => 'Multiple choice',
+    'true_false' => 'True/False',
+    'muliple_select' => 'Select multiple'
+    );
+  $options_id = 'id="options" onChange="create_answer_field();"';
+	$question = array('name' => 'question', 'placeholder' => 'Question');
+	$category = array('name' => 'category', 'placeholder' => 'Category');
+  $date = array('name' => 'question_date', 'id' => 'question_date', 'placeholder' => 'Date');
 
-                        echo "<p>Answer $a:</p>";
-                        echo form_textarea($answer_input);
-                        echo form_label('Question '.$i.' answer '.$a.' correct  ','correct_ans_q'.$i.'a'.$a);
-                        echo form_radio($radio_input);
-                        echo '<br />';
-                }
-                echo '<br />';
-                echo '<br />';
-        }
+ 
 
-        if($current_day!=$days_of_competition)
-        {
-                echo form_submit('Submit', 'Continue to next day');
-        }
-        else
-                echo form_submit('Submit', 'Finish');
+  echo form_open('admin/uploadQuestion');
+  echo form_input($question);
+  echo form_input($category);
+  echo form_input($date);
+  echo form_dropdown('type', $options, 'multiple_choice', $options_id);
+  echo '<br />';
 
+  echo '<div id="add_answer">';
+  echo '<br />';
+  echo '<input type="hidden" name="num_answers" id="num_answers" value="0"/>';
+  echo '<a href="" id="add_multi_choice_answer">Add answer field</a>';
+  echo '</div>';
 
-        echo '</form>';
-        echo '</div>';
-?>
+  echo '<br />';
+  echo form_submit('admin_create_question', 'Create question');
+  echo form_close();
+
+  echo '<div id="error">'.$error.'</div>';
+  	
+  ?>
+</div>
 
 </body>
 </html>

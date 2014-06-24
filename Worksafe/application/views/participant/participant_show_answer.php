@@ -22,7 +22,7 @@ $('#toggle-login').click(function(){
 <!--<h1>Admin Login Page</h1> -->
 
 <?php 
-echo '<span class="button" id="toggle-login">'.$competition->name.' </span>';
+echo '<span class="button" id="toggle-login">'.$competition->COMPETITION_NAME.' </span>';
 ?>
 <div id="answer_page">
   <div id="triangle"></div>
@@ -30,20 +30,23 @@ echo '<span class="button" id="toggle-login">'.$competition->name.' </span>';
   <div id = "answer_form">
 <?php
 
-
-  if($correct == TRUE)
-  {
-    echo '<p id="correct">CORRECT!</p>';
-  }
-  else
-  {
-    echo '<p id="wrong">Nice try! The correct answer is....</p>';
-  }
-
     //input the question into the form  
-    echo '<p id = "question">'.$question->question.'</p>';
+    echo '<p id = "question">'.$question->QUESTION.'</p>';
 
+    if($answer_type == 'true_false')
+    {
+        if($correct == TRUE)
+        {
+          echo '<p id="correct">CORRECT! you selected <strong>'.$answer.'</strong></p>';
+        }
+        else
+        {
+          echo '<p id="wrong">Nice try!....the correct answer is <strong>'.$answer.'</strong></p>';
+        }
+    }
 
+    else if($answer_type == 'multiple_choice')
+    {
     foreach ($answer as $ans) {
 
         $radio_input = array('name' => 'answer', 'value' => $ans->answer_id);
@@ -57,6 +60,12 @@ echo '<span class="button" id="toggle-login">'.$competition->name.' </span>';
         }
 
       
+      }
+    }
+
+    else if($answer_type == 'multiple_select')
+    {
+
     }
     echo "<br />";
 

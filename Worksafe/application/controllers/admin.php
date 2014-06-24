@@ -106,8 +106,8 @@ class Admin extends CI_Controller {
 		//put required validation on all form fields
 		$this->form_validation->set_rules('from', 'From', 'required');
 		$this->form_validation->set_rules('to', 'To', 'required');
-		$this->form_validation->set_rules('num_questions_per_day', 'Number of questions', 'required');
-		$this->form_validation->set_rules('num_answers', 'Number of answers', 'required');
+		//$this->form_validation->set_rules('num_questions_per_day', 'Number of questions', 'required');
+		//$this->form_validation->set_rules('num_answers', 'Number of answers', 'required');
 		$this->form_validation->set_rules('title', 'Title', 'required');
 
 		//if any fields are empty throw error
@@ -131,8 +131,8 @@ class Admin extends CI_Controller {
 			$time_end = strtotime($end_date);
 
 			//get rest of form data
-			$num_question = $this->security->xss_clean($this->input->post('num_questions_per_day'));
-			$num_answers = $this->security->xss_clean($this->input->post('num_answers'));
+			//$num_question = $this->security->xss_clean($this->input->post('num_questions_per_day'));
+			//$num_answers = $this->security->xss_clean($this->input->post('num_answers'));
 			$title = $this->security->xss_clean($this->input->post('title'));
 
 			//check if the title name is already being used
@@ -151,7 +151,7 @@ class Admin extends CI_Controller {
 			//send to admin_model to run function insert_competition_format(), throw error if it didn't add to database
 			try
 			{
-				$this->Admin_model->insert_competition_format($start_date, $end_date, $days, $num_question, $num_answers, $title);
+				$this->Admin_model->insert_competition_format($start_date, $end_date, $days, $title);
 			} catch (Exception $e) {
 				echo 'Caught exception: ', $e->getMessage(), "\n";
 			}
@@ -163,15 +163,15 @@ class Admin extends CI_Controller {
 				'expire' => 86500,
 				);
 
-			//screate cookie
+			//create cookie
 			$this->input->set_cookie($cookie_question_day);
 
 			//redirect to createQuestion page
-			redirect("admin/createQuestion");
+			redirect("admin/test");
 		}
 	}
 
-
+/*
 	//page where question form is created
 	public function createQuestion()
 	{
@@ -224,7 +224,8 @@ class Admin extends CI_Controller {
 			$this->load->view('admin/create_question', $data);
 		}
 	}
-
+*/
+	/*
 	//upload questions into the database
 	public function uploadQuestions()
 	{
@@ -324,7 +325,7 @@ class Admin extends CI_Controller {
 		//redirect back to create question page and check whether there are more days or not
 		redirect("admin/createQuestion");
 	}
-
+*/
 	//gets data and loads view that shows a review of the competition
 	public function reviewCompetition()
 	{
@@ -478,8 +479,6 @@ class Admin extends CI_Controller {
 		$data['organization'] = new ArrayObject();
 		
 
-		$competition_id = $this->Admin_model->get_competition_id();
-
 		//get all the active organizations for the active competition
 		$org_data = $this->Admin_model->get_all_organizations($competition_id);
 
@@ -489,29 +488,29 @@ class Admin extends CI_Controller {
 			$org_commits = 0;
 
 			//get all participants associated with a specific organization
-			$query = $this->Admin_model->get_participants_by_org($org->user_id);
+			$query = $this->Admin_model->get_participants_by_org($org->USER_ID);
 
 			//go through each array of participants to get individual commitments
 			foreach ($query->result() as $participant) {
 
 				//get participant data
-				$participant_data = $this->Admin_model->get_participant_data($participant->participant_id);
+				$participant_data = $this->Admin_model->get_participant_data($participant->PARTICIPANT_ID);
 
 				//get # of commitments by participants so far
-				$participant_commits = $this->Admin_model->commits_by_user($participant_data->user_id);
+				$participant_commits = $this->Admin_model->commits_by_user($participant_data->USER_ID);
 
 				$org_commits = $org_commits + $participant_commits;
 
 			}
 
-			$num_rows = $this->Admin_model->check_org_competition_assoc($competition_id, $org->user_id);
+			$num_rows = $this->Admin_model->check_org_competition_assoc($competition_id, $org->USER_ID);
 
 			if($num_rows > 0)
 			{
 				//upload everything into array
 				$total_commit_array = array(
-					'user_id' => $org->user_id,
-					'name' => $org->name,
+					'user_id' => $org->USER_ID,
+					'name' => $org->USER_NAME,
 					'total_commits' => $org_commits
 					);
 
@@ -610,8 +609,153 @@ class Admin extends CI_Controller {
 		$this->session->sess_destroy();
 	}
 
-	public function test()
+	public function createQuestion()
 	{
-		$this->load->view('admin/test');
+		$data['error'] = $this->session->flashdata('error');
+		$data['added'] = $this->session->flashdata('added');
+		$this->load->view('admin/create_question',$data);
+	}
+
+
+	public function uploadQuestion()
+	{
+		//put validation on so all fields are required
+		$this->form_validation->set_rules('question', 'Question', 'required');
+		$this->form_validation->set_rules('category', 'Category', 'required');
+		$this->form_validation->set_rules('question_date', 'Question date', 'required');
+
+		//if email is empty returns error
+		if($this->form_validation->run() === FALSE)
+		{
+			$this->session->set_flashdata('error', 'Must not leave any field blank');
+			redirect('admin/test');
+		}
+
+		//get all information from form
+		$question = $this->security->xss_clean($this->input->post('question'));
+		$question_type = $this->security->xss_clean($this->input->post('type'));
+		$category = $this->security->xss_clean($this->input->post('category'));
+		$question_date = $this->security->xss_clean($this->input->post('question_date'));
+
+		//get the competition id
+		$competition_id = $this->input->cookie('competition_id');
+
+
+		//send category name to insert_category function returns category id
+		$category_id = $this->Admin_model->insert_category($category);
+
+		//send to admin_model to run function insert_question(), throw error if it didn't add to database
+		try
+		{
+			$this->Admin_model->insert_question($question,$category_id,$question_type);
+		} catch (Exception $e) {
+			echo 'Caught exception: ', $e->getMessage(), "\n";
+		}
+
+		//retrieve question_id
+		$question_id = $this->Admin_model->get_question_id($question,$category_id,$question_type,$competition_id);
+
+		//send to admin_model to run function insert_date_question(), throw error if it didn't add to database
+		try
+		{
+			$this->Admin_model->insert_date_question($question_id,$competition_id,$question_date);
+		} catch (Exception $e) {
+			echo 'Caught exception: ', $e->getMessage(), "\n";
+		}
+
+		//if the question type is true/false get true or false and insert into db
+		if($question_type == 'true_false')
+		{
+			$answer = $this->security->xss_clean($this->input->post('answer'));		
+
+			//send to admin_model to run function insert_true_false_answer
+			try
+			{
+				$this->Admin_model->insert_true_false_answer($question_id, $answer);
+			} catch (Exception $e) {
+				echo 'Caught exception: ', $e->getMessage(), "\n";
+			}
+
+			$this->session->set_flashdata('added', 'True or false question added');
+			redirect('admin/test');
+
+		}
+
+		//if question type is multiple choice insert all answers into db
+		else if($question_type == 'multiple_choice')
+		{
+			$num_answers = $this->security->xss_clean($this->input->post('num_answers'));
+
+			//get each answer for the question
+			for($a=0;$a<($num_answers+1);$a++)
+			{
+				//get answer string
+				$answer = $this->security->xss_clean($this->input->post('answer'.$a));
+				
+				//get radio button
+				$correct = $this->security->xss_clean($this->input->post('radio_answer'.$a));
+				
+				//check whether the answer is the correct one by checking the value of the radio button
+				if('correct_ans'.$a == $correct)
+				{
+					//if correct set var correct to 'y'				
+					$correct = 'y';
+				}
+				else
+				{
+					//if answer is wrong answer set var correct to 'n'
+					$correct = 'n';				
+				}
+
+				$this->Admin_model->insert_answer($answer,$correct,$question_id);	
+			}
+
+			$this->session->set_flashdata('added', 'Multiple choice question added');
+			redirect('admin/test');
+		}
+
+		//if question type is multiple select insert all answers into db
+		else if($question_type == 'multiple_select')
+		{
+			$num_answers = $this->security->xss_clean($this->input->post('num_answers'));
+
+			//get each answer for the question
+			for($a=0;$a<($num_answers+1);$a++)
+			{
+				//get answer string
+				$answer = $this->security->xss_clean($this->input->post('answer'.$a));
+				
+				//get radio button
+				$correct = $this->security->xss_clean($this->input->post('checkbox_answer'.$a));
+			
+				if('correct_ans'.$a == $correct)
+				{
+					$correct = 'y';
+				}
+				else
+				{
+					$correct = 'n';
+				}
+
+				$this->Admin_model->insert_answer($answer,$correct,$question_id);	
+			}
+
+			$this->session->set_flashdata('added', 'Multiple select question added');
+			redirect('admin/test');
+		}
+
+
+		
+		
+	}
+
+	function oracleTest()
+	{
+
+
+    $q = $this->Admin_model->oracletest();
+    var_dump($q->result());
+       
+
 	}
 }

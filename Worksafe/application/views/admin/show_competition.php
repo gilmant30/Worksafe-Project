@@ -25,8 +25,6 @@
 	echo "<tr>";
 	echo "<th>Id</th>";
 	echo "<th>Name</th>";
-	echo "<th>Questions per day</th>";
-	echo "<th>Answers per questions</th>";
 	echo "<th>Start date</th>";
 	echo "<th>End date</th>";
 	echo "<th>Active</th>";
@@ -37,20 +35,18 @@
 	echo "<tbody>";
 	foreach ($array->result() as $row) {
 		echo "<tr>";
-		echo "<td>$row->competition_id</td>";
-		echo "<td>$row->name</td>";
-		echo "<td>$row->question_per_day</td>";
-		echo "<td>$row->answers_per_day</td>";
-		echo "<td>$row->start_date</td>";
-		echo "<td>$row->end_date</td>";
-		if($row->active == 'y')
+		echo "<td>$row->COMPETITION_ID</td>";
+		echo "<td>$row->COMPETITION_NAME</td>";
+		echo "<td>$row->START_DATE</td>";
+		echo "<td>$row->END_DATE</td>";
+		if($row->ACTIVE == 'y')
 			echo "<td>yes</td>";
 		else
 		{
 			echo "<td>no</td>";
 		}
-		echo '<td><a href="'.base_url().'index.php/admin/activateCompetition/'.$row->competition_id.'">Activate</a></td>';
-		echo '<td><a href="'.base_url().'index.php/admin/deleteCompetition/'.$row->competition_id.'">Delete</a></td>';
+		echo '<td><a href="'.base_url().'index.php/admin/activateCompetition/'.$row->COMPETITION_ID.'">Activate</a></td>';
+		echo '<td><a href="'.base_url().'index.php/admin/deleteCompetition/'.$row->COMPETITION_ID.'">Delete</a></td>';
 		echo "</tr>";
 	}
 	echo "</tbody>";

@@ -61,6 +61,7 @@
       echo '<div id="comp_to"></div>';             
       echo '<br />';
 
+      /*
       echo form_label('Select number of questions per day: ', 'num_questions_per_day');
       echo form_input($question_input);
       echo '<div id="comp_question"></div>';
@@ -70,7 +71,8 @@
       echo form_input($answer_input);
       echo '<div id="comp_answer"></div>';
       echo '<br />';
-
+      */
+      
       echo form_label('Name of competition: ', 'title');
       echo form_input($title);
       echo '<br />';

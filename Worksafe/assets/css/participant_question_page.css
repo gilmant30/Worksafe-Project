@@ -9,7 +9,7 @@ body{
 
 .button{
   width:150px;
-  background:#3399cc;
+  background:#e98410;
   display:block;
   margin:0 auto;
   margin-top:1%;
@@ -39,13 +39,13 @@ body{
   width:0;
   border-top:12x solid transparent;
   border-right:12px solid transparent;
-  border-bottom:12px solid #3399cc;
+  border-bottom:12px solid #e98410;
   border-left:12px solid transparent;
   margin:0 auto;
 }
 
 #question_page h2{
-  background:#3399cc;
+  background:#e98410;
   padding:20px 0;
   font-size:140%;
   font-weight:300;
@@ -54,7 +54,7 @@ body{
 }
 
 form{
-  background:#f0f0f0;
+  background:#cac7b0;
   padding:6% 4%;
 }
 
@@ -71,7 +71,7 @@ input[type="text"],input[type="password"],#org_id{
 
 input[type="submit"]{
   width:100%;
-  background:#3399cc;
+  background:#e98410;
   border:0;
   padding:4%;
   font-family:'Open Sans',sans-serif;
@@ -83,9 +83,13 @@ input[type="submit"]{
 }
 
 input[type="submit"]:hover{
-  background:#2288bb;
+  background:#e98410;
 }
 
 #question,#answer_label{
   width:92%;
+}
+
+#title{
+  text-align: center;
 }

@@ -56,7 +56,7 @@ class Participant extends CI_Controller {
 				//set cookie for participant id
 				$cookie_participant_id = array(
 				'name' => 'participant_id',
-				'value' => $row->user_id,
+				'value' => $row->USER_ID,
 				'expire' => 86500,
 				);
 
@@ -106,7 +106,7 @@ class Participant extends CI_Controller {
 
 		//put validation on so email field is required
 		$this->form_validation->set_rules('email', 'Email', 'required');
-		$this->form_validation->set_rules('zipcode', 'Zipcode', 'required|min_length[5]|max_length[5]');
+		//$this->form_validation->set_rules('zipcode', 'Zipcode', 'required|min_length[5]|max_length[5]');
 
 		//if either email or zipcode is empty returns error
 		if($this->form_validation->run() === FALSE)
@@ -118,7 +118,8 @@ class Participant extends CI_Controller {
 		{
 			//check to make sure email is valid
 			$email = $this->security->xss_clean($this->input->post('email'));
-			$zipcode = $this->security->xss_clean($this->input->post('zipcode'));
+			
+			//$zipcode = $this->security->xss_clean($this->input->post('zipcode'));
 			$org_id = $this->security->xss_clean($this->input->post('organization'));
 
 			//query to see if email is already registered
@@ -138,13 +139,13 @@ class Participant extends CI_Controller {
 				try
 				{
 					//insert participant into db
-					$this->Participant_model->insert_participant($email,$zipcode);
+					$this->Participant_model->insert_participant($email);
 				} catch (Exception $e) {
 					echo 'Caught exception: ', $e->getMessage(), "\n";
 				}
 				
 				//grab participant id
-				$participant_id = $this->Participant_model->get_participant_id($email,$zipcode);
+				$participant_id = $this->Participant_model->get_participant_id($email);
 
 				//send to participant_model to run function insert_participant_into_user_role(), throw error if it didn't add to database
 				try
@@ -195,21 +196,23 @@ class Participant extends CI_Controller {
 		}
 
 		$flag = 0;
+		$noQuestions = 0;
 		$today = strtotime(date('Y-m-d'));
 		$data['competition'] = $this->Participant_model->get_competition_data();
 		$data['question'] = new ArrayObject();
 		$data['answer'] = new ArrayObject();
 		
 
-		$competition_id = $data['competition']->competition_id;
-		$start_date = strtotime($data['competition']->start_date);
-		$end_date = strtotime($data['competition']->end_date);
-		$name = $data['competition']->name;
+		$competition_id = $data['competition']->COMPETITION_ID;
+		$start_date = strtotime($data['competition']->START_DATE);
+		$end_date = strtotime($data['competition']->END_DATE);
+		$name = $data['competition']->COMPETITION_NAME;
 		
-		//for testing purposes only
-		$today_date = '2014-06-16';
+		//$today_date = strtotime(date('d-m-Y'));
+		//for now \/ but ^ for actual competition
+		$today = strtotime('2014-07-10');
+		$today_date = date('d-m-Y', $today);
 
-		/*
 		//switch to $today once testing is done
 		if($today < $start_date)
 		{
@@ -219,51 +222,78 @@ class Participant extends CI_Controller {
 			echo "competition has already ended";
 		}
 		else
-		{*/
+		{
 			//get question for the specific date
-			$query = $this->Participant_model->get_question_data_from_date_question($competition_id,$today_date);
+			$query = $this->Participant_model->get_question_data_from_date_question($competition_id);
 		
 			$participant_id = $this->input->cookie('participant_id');
 
 			//for each question 
 			foreach($query->result() as $row)
 			{
-
-				//check if user has answered the question already
-				$user_question_data = $this->Participant_model->get_user_question_data($participant_id, $row->question_id);
-
-				if($user_question_data->num_rows() == 0 && $flag == 0)
+				$date = date('d-m-Y',strtotime($row->QUESTION_DATE));
+				if($today_date == $date)
 				{
-					//get question data using the question id
-					$question_data = $this->Participant_model->get_questions($row->question_id);
+					$noQuestions++;
+					//check if user has answered the question already
+					$user_question_data = $this->Participant_model->get_user_question_data($participant_id, $row->QUESTION_ID);
 
-					//add to the array of object in data['question']
-					$data['question'] = $question_data; 
+					if($user_question_data->num_rows() == 0 && $flag == 0)
+					{
+						//get question data using the question id
+						$question_data = $this->Participant_model->get_questions($row->QUESTION_ID);
 
-					$answer = $this->Participant_model->get_answers($question_data->question_id);
-					//for each answer that coincides with the question just gottne
-					foreach ($answer->result() as $ans_row) {
-						//put data into an array of objects
-						$data['answer']->append($ans_row);
+						if($question_data->QUESTION_TYPE == 'true_false')
+						{
+							//add to the array of object in data['question']
+							$data['question'] = $question_data; 
+						}
+
+						else if($question_data->QUESTION_TYPE == 'multiple_choice')
+						{
+							$data['question'] = $question_data;
+						}
+						$answer = $this->Participant_model->get_answers($question_data->QUESTION_ID);
+
+						//for each answer that coincides with the question just gottne
+						foreach ($answer->result() as $ans_row) {
+							//put data into an array of objects
+							$data['answer']->append($ans_row);
+						}
+						
+
+						$flag++;
 					}
-
-					$flag++;
+					
 				}
+
+			}
+
+			/*
+			if($noQuestions == 0)
+			{
+				redirect('participant/noQuestions');
 			}
 
 			$data['flag'] = $flag;
-
+			
 			if($flag == 0)
 			{
 				redirect('participant/giveCommitment');
 			}
-
+		*/
 		$this->load->view('participant/participant_question_page',$data);
-		//}		
+		
+		}		
+	}
+
+	public function noQuestions()
+	{
+		echo "no questions for today";
 	}
 
 	//logic for checking the answers submitted from the question page and giving commitments
-	public function answerQuestions()
+	public function answerMultipleChoiceQuestion()
 	{
 
 		if(!$this->session->userdata('isLoggedin'))
@@ -317,6 +347,59 @@ class Participant extends CI_Controller {
 		$this->load->view('participant/participant_show_answer',$data);
 	}
 
+	public function answerTrueFalseQuestion()
+	{
+		if(!$this->session->userdata('isLoggedin'))
+		{
+			redirect('participant/');
+		}
+
+		$data['competition'] = $this->Participant_model->get_competition_data();
+		$data['question'] = new ArrayObject();
+		$data['answer_type'] = 'true_false';
+
+		//get participant id from cookie
+		$participant_id = $this->input->cookie('participant_id');
+
+		//get competition id
+		$competition_id = $this->Participant_model->get_competition_id();
+
+		//grab the answer chosen id from the question 
+		$answer_id = $this->security->xss_clean($this->input->post('answer_id'));
+
+		//grab the answer from the input
+		$answer = $this->security->xss_clean($this->input->post('answer'));
+
+		//grab all information for the answer given by the answer_id
+		$correct = $this->Participant_model->check_answer($answer_id);
+
+		//get the question by using the answer id
+		$question_data = $this->Participant_model->get_questions($correct->QUESTION_ID);
+
+		//put question data in object array to be sent to form
+		$data['question'] = $question_data;
+
+		//convert the clob to a string
+		$correct_answer = $correct->ANSWER->load();
+
+		if($correct_answer == $answer)
+		{
+			$data['correct'] = TRUE;
+		}
+		else
+		{
+			$data['correct'] = FALSE;
+		}
+
+		$data['answer'] = $correct_answer;
+		
+		//add the participant and question in the user_question table
+		//$this->Participant_model->insert_into_user_question($participant_id, $correct->QUESTION_ID, $competition_id, $answer_id);
+
+		//load form
+		$this->load->view('participant/participant_show_answer',$data);
+	}
+
 	//give the commitment to the participant
 	public function giveCommitment()
 	{
@@ -327,7 +410,7 @@ class Participant extends CI_Controller {
 		$commit = $this->Participant_model->check_commitment($participant_id, $competition_id);
 
 		//if commitment has been given already don't give another, redirect to message page
-		if($commit->num_rows() > 0)
+		if($commit > 0)
 		{
 			$this->session->set_flashdata('commitment', 'You have already recieved your commitment for the day');
 			redirect('participant/info');

@@ -48,6 +48,33 @@
 $active_group = 'default';
 $active_record = TRUE;
 
+$tnsnames = '(DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(Host = itdev_db)(Port = 1560))
+    (ADDRESS = (PROTOCOL = TCP)(Host = itdev_db)(Port = 1679))
+    (CONNECT_DATA = (SID = itdev)
+    (SERVICE_NAME = itdev)
+    (INSTANCE_NAME = itdev)))';
+
+$db['default']['hostname'] = $tnsnames;
+$db['default']['username'] = 'OPS$TGILMAN';
+$db['default']['password'] = 'memi2013';
+$db['default']['database'] = 'OPS$TGILMAN';
+$db['default']['dbdriver'] = 'oci8';
+$db['default']['dbprefix'] = '';
+$db['default']['pconnect'] = TRUE;
+$db['default']['db_debug'] = TRUE;
+$db['default']['cache_on'] = FALSE;
+$db['default']['cachedir'] = '';
+$db['default']['char_set'] = 'utf8';
+$db['default']['dbcollat'] = 'utf8_general_ci';
+$db['default']['swap_pre'] = '';
+$db['default']['autoinit'] = TRUE;
+$db['default']['stricton'] = FALSE;
+
+/*
+$active_group = 'default';
+$active_record = TRUE;
+
 $db['default']['hostname'] = 'localhost';
 $db['default']['username'] = 'tgilman';
 $db['default']['password'] = 'Mizzou30';
@@ -63,6 +90,6 @@ $db['default']['dbcollat'] = 'utf8_general_ci';
 $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
-
+*/
 /* End of file database.php */
 /* Location: ./application/config/database.php */
