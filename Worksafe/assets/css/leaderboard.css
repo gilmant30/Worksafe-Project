@@ -43,7 +43,7 @@ table {
 }
 
 .tablesorter th {
-    background-color: #dce9f9;
+    background-color: #e98410;
     background-image: -webkit-gradient(linear, left top, left bottom, from(#ebf3fc), to(#dce9f9));
     background-image: -webkit-linear-gradient(top, #ebf3fc, #dce9f9);
     background-image:    -moz-linear-gradient(top, #ebf3fc, #dce9f9);
@@ -111,3 +111,15 @@ th.header {
     border-right: 1px solid #dad9c7; 
     margin-left: -1px; 
 } 
+
+.button{
+    background:#eee;
+    text-decoration:none;
+    color:#333;
+    font-family:Arial, sans-serif;
+    font-size:25px;
+    font-weight:bold;
+    padding:3px 5px;
+    border:1px solid #aaa;
+    border-radius:3px;
+}

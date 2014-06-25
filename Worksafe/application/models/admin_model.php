@@ -265,7 +265,7 @@ class Admin_model extends CI_Model {
 	//get all the questions for a specific comeptition by competition id
 	function get_all_questions($competition_id)
 	{
-		$query = $this->db->query("SELECT * FROM date_question WHERE competition_id = '$competition_id';");
+		$query = $this->db->query("SELECT * FROM date_question WHERE competition_id = '$competition_id'");
 
 		if($query->num_rows() > 0)
 			return $query;
@@ -276,7 +276,7 @@ class Admin_model extends CI_Model {
 	//get all the question data by the question id
 	function get_question_data($question_id)
 	{
-		$query = $this->db->query("SELECT * FROM question WHERE question_id = '$question_id';");
+		$query = $this->db->query("SELECT * FROM question WHERE question_id = '$question_id'");
 
 		if($query->num_rows == 1)
 		{
@@ -291,7 +291,7 @@ class Admin_model extends CI_Model {
 	//get all the answer data for a particular question
 	function get_all_answers($question_id)
 	{
-		$query = $this->db->query("SELECT * FROM answer WHERE question_id = '$question_id';");
+		$query = $this->db->query("SELECT * FROM answer WHERE question_id = '$question_id'");
 
 		if($query->num_rows() > 0)
 			return $query;
@@ -302,7 +302,7 @@ class Admin_model extends CI_Model {
 	//check to see if question has changed at all
 	function check_question($question_id, $question)
 	{
-		$query = $this->db->query("SELECT * FROM question WHERE question_id = '$question_id' AND question = '$question';");
+		$query = $this->db->query("SELECT * FROM question WHERE question_id = '$question_id' AND question = '$question'");
 
 		//if number of rows returned is 0 then update the question field
 		if($query->num_rows() == 0)
@@ -383,13 +383,6 @@ class Admin_model extends CI_Model {
 		$query = $this->db->query("SELECT * FROM user_org_assoc WHERE competition_id = '$competition_id' AND org_id = '$org_id'");
 
 		return $query->num_rows();
-	}
-
-	function oracletest()
-	{
-		$q = $this->db->query("SELECT email FROM user_table");
-
-		return $q;
 	}
 
 }

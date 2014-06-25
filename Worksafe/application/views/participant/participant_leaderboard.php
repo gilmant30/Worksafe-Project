@@ -2,7 +2,7 @@
 <html>
 <head>
 
-<style>@import url('<?=base_url()?>/assets/css/header.css'); </style>
+
 <style>@import url('<?=base_url()?>/assets/css/leaderboard.css'); </style>
 <script type="text/javascript" src="<?= base_url();?>assets/js/jquery-latest.js" ></script>
 <script type="text/javascript" src="<?= base_url();?>assets/js/jquery.tablesorter.js"></script>
@@ -50,7 +50,7 @@ $(document).ready(function()
 </table>
 
 <br />
-<a href="<?= base_url();?>index.php/participant">Back to info page</a>
+<a class="button" href="<?= base_url();?>index.php/participant">Back to info page</a>
 
 </div>
 

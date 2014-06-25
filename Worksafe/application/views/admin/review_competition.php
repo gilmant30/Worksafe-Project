@@ -29,15 +29,16 @@ foreach ($review as $question) {
 	$array = array('name' => 'q'.$question['question_id'], 'value' => $question['question_name'] );
 	echo form_input($array);
 	echo '<p id="date">Date: '.$question['question_date'].'</p>';
+	echo '<p id="type">Type of question: '.$question['question_type'].'</p>';
 	echo '<p>Answers:</p>';
 	foreach ($question['answer_data'] as $value) {
-		if($value->correct == 'y')
+		if($value->CORRECT == 'y')
 		{
-			$answer = array('name' => 'a'.$value->answer_id, 'value' => $value->answer, 'id' => 'correct');
+			$answer = array('name' => 'a'.$value->ANSWER_ID, 'value' => $value->ANSWER->load(), 'id' => 'correct');
 		}
 		else
 		{
-			$answer = array('name' => 'a'.$value->answer_id, 'value' => $value->answer);
+			$answer = array('name' => 'a'.$value->ANSWER_ID, 'value' => $value->ANSWER->load());
 		}
 		echo form_input($answer);
 	}

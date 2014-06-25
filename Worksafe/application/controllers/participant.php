@@ -210,7 +210,7 @@ class Participant extends CI_Controller {
 		
 		//$today_date = strtotime(date('d-m-Y'));
 		//for now \/ but ^ for actual competition
-		$today = strtotime('2014-07-09');
+		$today = strtotime('2014-07-07');
 		$today_date = date('d-m-Y', $today);
 
 		//switch to $today once testing is done
@@ -274,7 +274,7 @@ class Participant extends CI_Controller {
 			{
 				redirect('participant/giveCommitment');
 			}
-		
+		$this->load->view('template/header');
 		$this->load->view('participant/participant_question_page',$data);
 		
 		}		
@@ -501,7 +501,20 @@ class Participant extends CI_Controller {
 		}
 
 		$data['commitment'] = $this->session->flashdata('commitment');
+		$this->load->view('template/header');
 		$this->load->view('participant/participant_info_page',$data);
+	}
+
+	public function about()
+	{
+		$this->load->view('template/header');
+		$this->load->view('participant/participant_about');
+	}
+
+	public function contact()
+	{
+		$this->load->view('template/header');
+		$this->load->view('participant/participant_contact');
 	}
 
 	public function leaderboard()
@@ -564,7 +577,7 @@ class Participant extends CI_Controller {
 		}
 
 
-
+		$this->load->view('template/header');
 		$this->load->view('participant/participant_leaderboard',$data);
 	}
 

@@ -19,7 +19,7 @@ body{
 
 
 #review_competition h2{
-  background:#3399cc;
+  background:#e98410;
   padding:20px 0;
   font-size:140%;
   font-weight:300;
@@ -27,12 +27,8 @@ body{
   color:#fff;
 }
 
-div{
-  background:#f0f0f0;
-  padding:6% 4%;
-}
 
-#date,input[type="text"]{
+#date,input[type="text"],#type{
   width:92%;
   background:#fff;
   margin-bottom:4%;
@@ -45,7 +41,11 @@ div{
 
 #date{
   background:#ffd;
+}
 
+form{
+  background:#cac7b0;
+  padding:6% 4%;
 }
 
 #correct_answer{
@@ -55,7 +55,7 @@ div{
 
 input[type="submit"]{
   width:100%;
-  background:#3399cc;
+  background:#e98410;
   border:0;
   padding:4%;
   font-family:'Open Sans',sans-serif;

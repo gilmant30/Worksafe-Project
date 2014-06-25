@@ -2,19 +2,11 @@
 <html>
 <head>
 
-<style>@import url('<?=base_url()?>/assets/css/header.css'); </style>
 <style>@import url('<?=base_url()?>/assets/css/participant_question_page.css'); </style>
 
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script type="text/javascript">
 
-$('#toggle-login').click(function(){
-  $('#login').toggle();
-});
-
-
-</script>
 
 <title>Competition</title>
 </head>
@@ -23,7 +15,7 @@ $('#toggle-login').click(function(){
 
 <?php 
 
-echo '<span class="button" id="toggle-login">'.$competition->COMPETITION_NAME.' </span>';
+echo '<span class="button">'.$competition->COMPETITION_NAME.' </span>';
 ?>
 <div id="question_page">
   <div id="triangle"></div>

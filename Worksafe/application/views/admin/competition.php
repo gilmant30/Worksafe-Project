@@ -23,6 +23,8 @@
 
 <a href="<?= base_url();?>index.php/admin/reviewCompetition">Review/Edit Current Competition</a>
 
+<a href="<?= base_url();?>index.php/admin/createQuestion">Create Question</a>
+
 <a href="<?= base_url();?>index.php/admin/showCompetition">Show Competitions</a>
 
 <a href="<?= base_url();?>index.php/admin/showOrganization">Show Organizations</a>
