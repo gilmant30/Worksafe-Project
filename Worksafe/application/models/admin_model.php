@@ -148,7 +148,7 @@ class Admin_model extends CI_Model {
 
 		//insert data for date_questino one field at a time
 		$this->db->set('QUESTION_ID', $question_id);
-		$this->db->set('COMPETITION_ID', 2);
+		$this->db->set('COMPETITION_ID', $competition_id);
 		$this->db->set('QUESTION_DATE', "TO_DATE('$date_question_asked','MM/DD/YYYY')",false);
 
 		//insert into db, throw error if data not inserted

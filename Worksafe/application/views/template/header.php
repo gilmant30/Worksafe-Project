@@ -1,7 +1,7 @@
 <style>@import url('<?=base_url()?>/assets/css/template_header.css'); </style>
 
 <div id="header">
-<a href="http://www.worksafecenter.com/safety/home.page?" id="logo"></a>
+<a href="http://www.worksafecenter.com/safety/home.page?"><img id="logo" src="<?=base_url();?>/assets/img/worksafe_img.png"></a>
 
 <div id="nav_menu">
 	<ul>

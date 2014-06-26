@@ -260,5 +260,14 @@ class Participant_model extends CI_Model {
 			return $this->db->affected_rows();
 		}
 	}
+
+	function get_category_name($category_id)
+	{
+		$query = $this->db->query("SELECT * FROM CATEGORY_TABLE WHERE CATEGORY_ID = '$category_id'");
+
+		$query = $query->row();
+
+		return $query->CATEGORY_NAME;
+	}
 }
 ?>

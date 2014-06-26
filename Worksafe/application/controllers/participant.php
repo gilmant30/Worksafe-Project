@@ -9,6 +9,7 @@ class Participant extends CI_Controller {
 		$this->load->helper(array('form', 'url', 'string', 'cookie'));  //load a form and the base_url
         $this->load->library(array('form_validation', 'security', 'session')); //set form_validation rules and xss_cleaning
         $this->load->model('Participant_model');
+        
 	}
 
 	//index page
@@ -210,7 +211,7 @@ class Participant extends CI_Controller {
 		
 		//$today_date = strtotime(date('d-m-Y'));
 		//for now \/ but ^ for actual competition
-		$today = strtotime('2014-07-07');
+		$today = strtotime('2014-06-30');
 		$today_date = date('d-m-Y', $today);
 
 		//switch to $today once testing is done
@@ -244,6 +245,8 @@ class Participant extends CI_Controller {
 						//get question data using the question id
 						$question_data = $this->Participant_model->get_question($row->QUESTION_ID);
 
+						$data['category'] = $this->Participant_model->get_category_name($question_data->CATEGORY_ID);
+
 						$data['question'] = $question_data; 
 					
 						$answer = $this->Participant_model->get_answers($question_data->QUESTION_ID);
@@ -262,7 +265,6 @@ class Participant extends CI_Controller {
 
 			}
 
-			
 			if($noQuestions == 0)
 			{
 				redirect('participant/noQuestions');
@@ -313,6 +315,9 @@ class Participant extends CI_Controller {
 
 		//get the question by using the answer id
 		$question_data = $this->Participant_model->get_question($correct->QUESTION_ID);
+
+		//get the category name by the question data
+		$data['category'] = $this->Participant_model->get_category_name($question_data->CATEGORY_ID);
 
 		//put question data in object array to be sent to form
 		$data['question'] = $question_data;
@@ -388,6 +393,9 @@ class Participant extends CI_Controller {
 		//get the question by using the answer id
 		$question_data = $this->Participant_model->get_question($correct->QUESTION_ID);
 
+		//get the category name by the question data
+		$data['category'] = $this->Participant_model->get_category_name($question_data->CATEGORY_ID);
+
 		//get all the answers for this question
 		$all_answers = $this->Participant_model->get_answers($question_data->QUESTION_ID);
 
@@ -437,6 +445,9 @@ class Participant extends CI_Controller {
 
 		//get the question by using the answer id
 		$question_data = $this->Participant_model->get_question($correct->QUESTION_ID);
+
+		//get the category name by the question data
+		$data['category'] = $this->Participant_model->get_category_name($question_data->CATEGORY_ID);
 
 		//put question data in object array to be sent to form
 		$data['question'] = $question_data;

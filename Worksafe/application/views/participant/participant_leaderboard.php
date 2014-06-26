@@ -26,6 +26,7 @@ $(document).ready(function()
 <title>Competition</title>
 </head>
 <body>
+<br />
 <h1><?= $competition->COMPETITION_NAME ?> Leaderboard</h1>
 
 

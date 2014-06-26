@@ -7,14 +7,6 @@
 
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script type="text/javascript">
-
-$('#toggle-login').click(function(){
-  $('#login').toggle();
-});
-
-
-</script>
 
 <title>Competition</title>
 </head>
@@ -22,7 +14,7 @@ $('#toggle-login').click(function(){
 <!--<h1>Admin Login Page</h1> -->
 
 <?php 
-echo '<span class="button" id="toggle-login">'.$competition->COMPETITION_NAME.' </span>';
+echo '<span class="button" style="width:350px;">'.$category.' </span>';
 ?>
 <div id="answer_page">
   <div id="triangle"></div>
@@ -47,6 +39,10 @@ echo '<span class="button" id="toggle-login">'.$competition->COMPETITION_NAME.' 
 
     else if($answer_type == 'multiple_choice')
     {
+      if($correct == FALSE)
+      {
+        echo '<p>I am sorry that is incorrect, the correct answer is shown below</p>';
+      }
     foreach ($answer as $ans) {
 
         $radio_input = array('name' => 'answer', 'value' => $ans->ANSWER_ID);

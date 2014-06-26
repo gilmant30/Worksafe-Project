@@ -12,6 +12,7 @@
 
 
 <div id="body">
+<br />
 <div id="commitment"><?=$commitment?></div>
 <h1>Welcome to this years workSAFE week online competition!</h1>
 <p>This competition will help improve peoples awareness of safety as well as be a competitive competition between departments</p>

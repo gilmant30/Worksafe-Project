@@ -5,11 +5,13 @@
 body{
   background:#f6f5f1;
   font-family:'Open Sans',sans-serif;
+  background: url(../img/background_img.jpg) no-repeat;
+  background-size: 100%;
 }
 
 
 .button{
-  width:150px;
+  width:250px;
   background:#e98410;
   display:block;
   margin:0 auto;
@@ -27,7 +29,7 @@ body{
 }
 
 #answer_page{
-  width:400px;
+  width:450px;
   margin:0 auto;
   margin-top:8px;
   margin-bottom:2%;

@@ -15,7 +15,7 @@
 
 <?php 
 
-echo '<span class="button">'.$competition->COMPETITION_NAME.' </span>';
+echo '<span class="button">'.$category.' </span>';
 ?>
 <div id="question_page">
   <div id="triangle"></div>
