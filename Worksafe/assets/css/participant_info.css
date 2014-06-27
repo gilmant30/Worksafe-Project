@@ -5,7 +5,7 @@
 body{
   background:#f6f5f1;
   font-family:'Open Sans',sans-serif;
-  background: url(../img/background_img.jpg) no-repeat;
+  background: url(../img/background_img.jpg);
   background-size: 100%;
 }
 
@@ -19,4 +19,48 @@ body{
 
 #body{
   text-align: center;
+}
+
+.button{
+	border-radius:10px;
+    box-shadow: 5px 5px 5px #888888;
+    margin-right: 10px;
+}
+
+.about{
+  margin: 0 auto;
+}
+
+#about_body{
+  color: black;
+  font-weight: 600; 
+  font-size: 18px;
+
+}
+
+#about{
+  text-align: center;
+  font-size: 32px;
+  color: black;
+
+}
+
+#red{
+  color: red;
+}
+
+#blue{
+  color: blue;
+}
+
+#orange{
+  color: #d68516;
+}
+
+#yellow{
+  color: yellow;
+}
+
+#green{
+  color: green;
 }

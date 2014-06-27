@@ -25,7 +25,7 @@
 		<tr>
 			<th>Organization id</th>
 			<th>Organization name</th>
-      <th>Total Commitments</th>
+      <th>Total Participation</th>
 		</tr>
   </thead>
       <tbody>

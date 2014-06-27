@@ -276,9 +276,10 @@ class Participant extends CI_Controller {
 			{
 				redirect('participant/giveCommitment');
 			}
+
+		//load forms
 		$this->load->view('template/header');
 		$this->load->view('participant/participant_question_page',$data);
-		
 		}		
 	}
 

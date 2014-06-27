@@ -319,12 +319,12 @@ class Admin_model extends CI_Model {
 	//update the question
 	function update_qustion($question_id, $question)
 	{
-		$this->db->query("UPDATE question SET question = '$question' WHERE question_id = '$question_id';");
+		$this->db->query("UPDATE question SET question = '$question' WHERE question_id = '$question_id'");
 	}
 
 	function check_answer($answer_id, $answer)
 	{
-		$query = $this->db->query("SELECT * FROM answer WHERE answer_id = '$answer_id' AND answer = '$answer';");
+		$query = $this->db->query("SELECT * FROM answer WHERE answer_id = '$answer_id' AND to_char(answer) = '$answer'");
 
 		//if number of rows returned is 0 then update the answer field
 		if($query->num_rows() == 0)
@@ -340,17 +340,17 @@ class Admin_model extends CI_Model {
 
 	function update_answer($answer_id, $answer)
 	{
-		$this->db->query("UPDATE answer SET answer = '$answer' WHERE answer_id = '$answer_id';");
+		$this->db->query("UPDATE answer SET answer = '$answer' WHERE answer_id = '$answer_id'");
 	}
 
 	//sets the active competition 
 	function activate_competition($competition_id)
 	{
 		//set all competitions active column to n
-		$data = array('active' => 'n');
-		$this->db->update('competition', $data);
+		$this->db->query("UPDATE COMPETITION SET active = 'n'");
 
-		$this->db->query("UPDATE competition SET active = 'y' WHERE competition_id = '$competition_id';");
+		//set the one clicked to active
+		$this->db->query("UPDATE competition SET active = 'y' WHERE competition_id = '$competition_id'");
 	}
 
 	function check_if_active($competition_id)

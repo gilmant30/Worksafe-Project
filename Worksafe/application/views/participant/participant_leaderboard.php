@@ -23,9 +23,10 @@ $(document).ready(function()
 
 </script>
 
-<title>Competition</title>
+<title>Leaderboard</title>
 </head>
 <body>
+<br />
 <br />
 <h1><?= $competition->COMPETITION_NAME ?> Leaderboard</h1>
 

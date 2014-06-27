@@ -258,22 +258,22 @@ class Admin extends CI_Controller {
 
 		foreach ($questions->result() as $row) {
 			//get question data for each question
-			$question_data = $this->Admin_model->get_question_data($row->question_id);
+			$question_data = $this->Admin_model->get_question_data($row->QUESTION_ID);
 
 			//get the input data from the form
-			$question_string = $this->security->xss_clean($this->input->post('q'.$question_data->question_id));
+			$question_string = $this->security->xss_clean($this->input->post('q'.$question_data->QUESTION_ID));
 			
 			//set form_validation rules
-			$this->form_validation->set_rules('q'.$question_data->question_id, 'Question', 'required');
+			$this->form_validation->set_rules('q'.$question_data->QUESTION_ID, 'Question', 'required');
 
 			//get answer
-			$answers = $this->Admin_model->get_all_answers($row->question_id);
+			$answers = $this->Admin_model->get_all_answers($row->QUESTION_ID);
 
 			foreach ($answers->result() as $ans) {
 				//get input from form
-				$answer_string = $this->security->xss_clean($this->input->post('a'.$ans->answer_id));
+				$answer_string = $this->security->xss_clean($this->input->post('a'.$ans->ANSWER_ID));
 				//set form validation rules
-				$this->form_validation->set_rules('a'.$ans->answer_id, 'Answer', 'required');
+				$this->form_validation->set_rules('a'.$ans->ANSWER_ID, 'Answer', 'required');
 			}
 		}
 
@@ -286,21 +286,21 @@ class Admin extends CI_Controller {
 
 		foreach ($questions->result() as $row) {
 			//get question data for each question
-			$question_data = $this->Admin_model->get_question_data($row->question_id);
+			$question_data = $this->Admin_model->get_question_data($row->QUESTION_ID);
 
 			//get the input data from the form
-			$question_string = $this->security->xss_clean($this->input->post('q'.$question_data->question_id));
+			$question_string = $this->security->xss_clean($this->input->post('q'.$question_data->QUESTION_ID));
 
 			//update or do nothing to the question
-			$this->Admin_model->check_question($question_data->question_id, $question_string);
+			$this->Admin_model->check_question($question_data->QUESTION_ID, $question_string);
 			
-			$answers = $this->Admin_model->get_all_answers($row->question_id);
+			$answers = $this->Admin_model->get_all_answers($row->QUESTION_ID);
 
 			foreach ($answers->result() as $ans) {
-				$answer_string = $this->security->xss_clean($this->input->post('a'.$ans->answer_id));
+				$answer_string = $this->security->xss_clean($this->input->post('a'.$ans->ANSWER_ID));
 
 				//update or do nothing to the answer
-				$this->Admin_model->check_answer($ans->answer_id, $answer_string);
+				$this->Admin_model->check_answer($ans->ANSWER_ID, $answer_string);
 			}
 		}
 

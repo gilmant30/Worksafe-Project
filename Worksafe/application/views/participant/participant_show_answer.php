@@ -45,7 +45,7 @@ echo '<span class="button" style="width:350px;">'.$category.' </span>';
       }
     foreach ($answer as $ans) {
 
-        $radio_input = array('name' => 'answer', 'value' => $ans->ANSWER_ID);
+        //$radio_input = array('name' => 'answer', 'value' => $ans->ANSWER_ID);
         if($ans->CORRECT == 'y')
         {
           echo '<p>CORRECT!</p>';

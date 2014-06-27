@@ -7,14 +7,7 @@
 
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script type="text/javascript">
 
-$('#toggle-login').click(function(){
-  $('#login').toggle();
-});
-
-
-</script>
 
 <title>Competition</title>
 </head>

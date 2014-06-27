@@ -24,7 +24,7 @@
 		<tr>
 			<th>Participant id</th>
 			<th>Participant email</th>
-      <th>Commitment count</th>
+      <th>Participation count</th>
 		</tr>
   </thead>
   <tbody>
