@@ -33,7 +33,7 @@ $('#toggle-login').click(function(){
 	echo form_open('participant/enroll');
 	echo form_input($email);
 	//echo form_input($zip);
-  echo form_label('Organization: ','org_id');
+  echo form_label('Team: ','org_id');
   echo '<select id="org_id" name="organization">';
   foreach ($organization->result() as $row) {
     echo "<option value=$row->USER_ID>$row->USER_NAME</option>";

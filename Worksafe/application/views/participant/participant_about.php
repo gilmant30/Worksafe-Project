@@ -16,10 +16,9 @@
 <br />
 <br />
 <h1 class="about" id="about">Learn More</h1>
-<p class="about" id="about_body">Each year during WorkSAFE Week, MEM employees are divided into teams for a little friendly competition. This year, the competition is electronic. IT Intern Tim Gilman, 
-IT Resource and Performance Manager Mike Teter and members of the MEM Safety Fanatic team, created a quiz series to be taken each day during WorkSAFE week. 
-For every day you answers the series of questions about workplace safety, you earn two (2) raffle tickets. These tickets can then be used during a mini-raffle held the Friday of WorkSAFE Week. 
-Each employee is assigned to a team (Team Red, Orange, Yellow, Blue or Green).
+<p class="about" id="about_body">Each year during WorkSAFE Week, MEM employees are divided into teams for a little friendly competition. This year, the competition is electronic. 
+The MEM Safety Fanatic team created a quiz series to be taken each day during WorkSAFE week. For every day you answers the series of questions about workplace safety, you earn two (2) raffle tickets. 
+These tickets can then be used during a mini-raffle held the Friday of WorkSAFE Week. Each employee is assigned to a team (Team Red, Orange, Yellow, Blue or Green).
 The team that has the most participation at the end of the day on Thursday, will receive bonus raffle tickets. See &quot;Leaderboard&quot; for more information.</p>
 
 <br />

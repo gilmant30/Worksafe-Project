@@ -12,9 +12,6 @@
 
 <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />-->
 
-
-
-
 <script type="text/javascript">
 $(document).ready(function() 
     { 
@@ -35,8 +32,8 @@ $(document).ready(function()
 	<table id="myTable" class="tablesorter">
     <thead>
 		<tr>
-			<th>Organization name</th>
-      <th>Total Commitments</th>
+			<th>Team name</th>
+      <th>Total Points</th>
 		</tr>
   </thead>
       <tbody>
@@ -50,10 +47,6 @@ $(document).ready(function()
   ?>
 </tbody>
 </table>
-
-<br />
-<a class="button" href="<?= base_url();?>index.php/participant">Back to info page</a>
-
 </div>
 
 </body>

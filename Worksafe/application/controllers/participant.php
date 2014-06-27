@@ -486,7 +486,7 @@ class Participant extends CI_Controller {
 		//if commitment has been given already don't give another, redirect to message page
 		if($commit > 0)
 		{
-			$this->session->set_flashdata('commitment', 'You have already recieved your commitment for the day');
+			$this->session->set_flashdata('commitment', 'You have already received your point for the day');
 			redirect('participant/info');
 		}
 		else
@@ -499,7 +499,7 @@ class Participant extends CI_Controller {
 			} catch (Exception $e) {
 				echo 'Caught exception: ', $e->getMessage(), "\n";
 			}
-			$this->session->set_flashdata('commitment', 'Congratulations you recieved your commitment for the day!');
+			$this->session->set_flashdata('commitment', 'Congratulations you recieved your point for the day!');
 			redirect('participant/info');
 		}
 	}
