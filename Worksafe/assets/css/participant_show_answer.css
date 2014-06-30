@@ -9,6 +9,10 @@ body{
   background-size: 100%;
 }
 
+#incorrect_multi{
+  font-weight: bold;
+}
+
 
 .button{
   width:250px;

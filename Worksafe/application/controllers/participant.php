@@ -209,10 +209,11 @@ class Participant extends CI_Controller {
 		$end_date = strtotime($data['competition']->END_DATE);
 		$name = $data['competition']->COMPETITION_NAME;
 		
-		//$today_date = strtotime(date('d-m-Y'));
+		$today = strtotime(date('d-m-Y'));
+		$today_date = date('d-m-Y');
 		//for now \/ but ^ for actual competition
-		$today = strtotime('2014-06-30');
-		$today_date = date('d-m-Y', $today);
+		//$today = strtotime('2014-06-30');
+		//$today_date = date('d-m-Y', $today);
 
 		//switch to $today once testing is done
 		if($today < $start_date)

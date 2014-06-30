@@ -5,6 +5,8 @@
 body{
   background:#f6f5f1;
   font-family:'Open Sans',sans-serif;
+  background: url(../img/background_img.jpg);
+  background-size: 100%;
 }
 
 .button{

@@ -182,7 +182,7 @@ The team that has the most participation at the end of the day on Thursday, will
       		<td>Tettleton, Rene</td>
       	</tr> 
       	<tr>
-      		<td>Bias, Emily</td>
+      		<td>Bhojwani, Pavan</td>
       		<td>Flippin, Greg</td>
       		<td>Kramel, Karen</td>
       		<td>Porter, Marilyn</td>
