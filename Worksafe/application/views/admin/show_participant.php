@@ -25,6 +25,7 @@
 			<th>Participant id</th>
 			<th>Participant email</th>
       <th>Participation count</th>
+      <th>Correct questions (%)</th>
 		</tr>
   </thead>
   <tbody>
@@ -35,6 +36,7 @@
     	echo '<td>'.$row['user_id'].'</td>';
     	echo '<td>'.$row['email'].'</td>';
       echo '<td>'.$row['commit'].'</td>';
+      echo '<td>'.$row['percent_correct'].'</td>';
     	echo "</tr>";
   }
   ?>

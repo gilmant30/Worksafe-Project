@@ -16,16 +16,18 @@
 <title>Competition</title>
 </head>
 <body>
-<h1>Competition Front Page</h1>
+<h1>Event Front Page</h1>
 
 <div class="competition" id="links">
-<a href="<?= base_url();?>index.php/admin/newCompetition">Start New Competition</a>
+<a href="<?= base_url();?>index.php/admin/selectEventType">Start New Event</a>
 
 <a href="<?= base_url();?>index.php/admin/reviewCompetition">Review/Edit Current Competition</a>
 
-<a href="<?= base_url();?>index.php/admin/createQuestion">Create Question</a>
+<a href="#">Review/Edit A Course</a>
 
-<a href="<?= base_url();?>index.php/admin/showCompetition">Show Competitions</a>
+<a href="<?= base_url();?>index.php/admin/questionEvent">Create Question</a>
+
+<a href="<?= base_url();?>index.php/admin/showEvent">Show Events</a>
 
 <a href="<?= base_url();?>index.php/admin/showOrganization">Show Organizations</a>
 

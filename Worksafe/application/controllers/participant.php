@@ -196,6 +196,8 @@ class Participant extends CI_Controller {
 			redirect('participant/');
 		}
 
+		$data['error'] = $this->session->flashdata('error');
+
 		$flag = 0;
 		$noQuestions = 0;
 		$today = strtotime(date('Y-m-d'));
@@ -215,7 +217,7 @@ class Participant extends CI_Controller {
 		//$today = strtotime('2014-06-30');
 		//$today_date = date('d-m-Y', $today);
 
-		//switch to $today once testing is done
+		//check whether the competition has started yet
 		if($today < $start_date)
 		{
 			echo "competition has not yet started";
@@ -298,6 +300,17 @@ class Participant extends CI_Controller {
 			redirect('participant/');
 		}
 
+		//put validation on so email field is required
+		$this->form_validation->set_rules('answer', 'Answer', 'required');
+
+		//if email is empty returns error
+		if($this->form_validation->run() === FALSE)
+		{
+			$this->session->set_flashdata('error', 'Must select an answer');
+			redirect('participant/questionPage');
+		}
+
+
 		$data['competition'] = $this->Participant_model->get_competition_data();
 		$data['question'] = new ArrayObject();
 		$data['answer'] = new ArrayObject();
@@ -335,7 +348,7 @@ class Participant extends CI_Controller {
 		
 
 		//add the participant and question in the user_question table
-		$this->Participant_model->insert_into_user_question($participant_id, $correct->QUESTION_ID, $competition_id, $answer);
+		$this->Participant_model->insert_into_user_question($participant_id, $correct->QUESTION_ID, $competition_id, $answer, $correct->CORRECT);
 		
 		//display whether the answer is correct or not
 		if($correct->CORRECT == 'y')
@@ -358,12 +371,22 @@ class Participant extends CI_Controller {
 			redirect('participant/');
 		}
 
+		//put validation on so email field is required
+		$this->form_validation->set_rules('answer', 'Answer', 'required');
+
+		//if email is empty returns error
+		if($this->form_validation->run() === FALSE)
+		{
+			$this->session->set_flashdata('error', 'Must select an answer');
+			redirect('participant/questionPage');
+		}
+
 		$data['competition'] = $this->Participant_model->get_competition_data();
 		$data['question'] = new ArrayObject();
 		$data['answer'] = new ArrayObject();
 		$data['correct_answer'] = new ArrayObject();
 		$data['answer_type'] = 'multiple_choice';
-		
+		$data['correct'] = TRUE;
 		//get participant id from cookie
 		$participant_id = $this->input->cookie('participant_id');
 
@@ -386,9 +409,14 @@ class Participant extends CI_Controller {
 				'correct' => $correct->CORRECT
 				);
 
+			if($correct->CORRECT == 'n')
+			{
+				$data['correct'] = FALSE;
+			}
+
 			$data['correct_answer']->append($answer_array);
 
-			$this->Participant_model->insert_into_user_question($participant_id, $correct->QUESTION_ID, $competition_id, $ans);
+			$this->Participant_model->insert_into_user_question($participant_id, $correct->QUESTION_ID, $competition_id, $ans, $correct->CORRECT);
 		}
 			
 
@@ -424,6 +452,16 @@ class Participant extends CI_Controller {
 		if(!$this->session->userdata('isLoggedin'))
 		{
 			redirect('participant/');
+		}
+
+		//put validation on so email field is required
+		$this->form_validation->set_rules('answer', 'Answer', 'required');
+
+		//if email is empty returns error
+		if($this->form_validation->run() === FALSE)
+		{
+			$this->session->set_flashdata('error', 'Must select an answer');
+			redirect('participant/questionPage');
 		}
 
 		$data['competition'] = $this->Participant_model->get_competition_data();
@@ -469,7 +507,7 @@ class Participant extends CI_Controller {
 		$data['answer'] = $correct_answer;
 		
 		//add the participant and question in the user_question table
-		$this->Participant_model->insert_into_user_question($participant_id, $correct->QUESTION_ID, $competition_id, $answer_id);
+		$this->Participant_model->insert_into_user_question($participant_id, $correct->QUESTION_ID, $competition_id, $answer_id, $correct->CORRECT);
 
 		//load form
 		$this->load->view('participant/participant_show_answer',$data);
@@ -557,6 +595,11 @@ class Participant extends CI_Controller {
 			//reset the org commits
 			$org_commits = 0;
 
+			$correct = $this->Admin_model->get_org_correct_ans($org->USER_ID);
+			$total = $this->Admin_model->get_org_total_ans($org->USER_ID);
+			$percent_correct = (intval($correct)/intval($total)) * 100;
+			$percent_correct = number_format($percent_correct, 2, '.', '');
+
 			//get all participants associated with a specific organization
 			$query = $this->Admin_model->get_participants_by_org($org->USER_ID);
 
@@ -581,7 +624,8 @@ class Participant extends CI_Controller {
 				$total_commit_array = array(
 					'user_id' => $org->USER_ID,
 					'name' => $org->USER_NAME,
-					'total_commits' => $org_commits
+					'total_commits' => $org_commits,
+					'percent_correct' => $percent_correct
 					);
 
 				//add array to array of objects

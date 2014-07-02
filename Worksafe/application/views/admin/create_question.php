@@ -22,11 +22,11 @@
 <body>
 <h1>Admin Login Page</h1> 
 
-<span class="button" id="toggle-login">Login</span>
+<span class="button" id="toggle-login">Create</span>
 
 <div id="login">
   <div id="triangle"></div>
-  <h2>WorkSAFE Week Admin Login</h2>
+  <h2>Create Question</h2>
   <?php
 
    echo '<div id="added">'.$added.'</div>';
@@ -40,13 +40,18 @@
 	$question = array('name' => 'question', 'placeholder' => 'Question');
 	$category = array('name' => 'category', 'placeholder' => 'Category');
   $date = array('name' => 'question_date', 'id' => 'question_date', 'placeholder' => 'Date');
+  $source = array('name' => 'source', 'id' => 'source', 'placeholder' => 'Source link');
 
- 
 
   echo form_open('admin/uploadQuestion');
+  echo form_hidden('competition_id', $competition->COMPETITION_ID);
   echo form_input($question);
   echo form_input($category);
-  echo form_input($date);
+  if($competition->EVENT_TYPE_ID == '1')
+  {
+    echo form_input($date);
+  }
+  echo form_input($source);
   echo form_dropdown('option_type', $options, 'multiple_choice', $options_id);
   echo '<br />';
 

@@ -50,6 +50,8 @@
 
     echo form_open('admin/createCompetition', $attributes);
     
+      //event_type_id of 1 for competition
+      echo form_hidden('event_type_id','1');
       echo "<h2>Create a new competition</h2>";
       echo '<p id="dates">Select dates of competition:</p>';
       echo form_label('From:','from');
@@ -60,18 +62,6 @@
       echo form_input($to_input);    
       echo '<div id="comp_to"></div>';             
       echo '<br />';
-
-      /*
-      echo form_label('Select number of questions per day: ', 'num_questions_per_day');
-      echo form_input($question_input);
-      echo '<div id="comp_question"></div>';
-      echo '<br />';
-
-      echo form_label('Select number of answers per question: ', 'num_answers');
-      echo form_input($answer_input);
-      echo '<div id="comp_answer"></div>';
-      echo '<br />';
-      */
       
       echo form_label('Name of competition: ', 'title');
       echo form_input($title);

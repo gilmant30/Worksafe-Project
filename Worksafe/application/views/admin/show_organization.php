@@ -25,7 +25,8 @@
 		<tr>
 			<th>Organization id</th>
 			<th>Organization name</th>
-      <th>Total Participation</th>
+      <th>Total participation</th>
+      <th>Correct questions (%)</th>
 		</tr>
   </thead>
       <tbody>
@@ -35,6 +36,7 @@
     	echo '<td><a href ="'.base_url().'index.php/admin/showParticipants/'.$row['user_id'].'" id="org_id_link">'.$row['user_id'].'</a></td>';
     	echo '<td>'.$row['name'].'</td>';
       echo '<td>'.$row['total_commits'].'</td>';
+      echo '<td>'.$row['percent_correct'].'</td>';
     	echo "</tr>";
   }
   ?>

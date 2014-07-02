@@ -1,6 +1,9 @@
 <?php
 class Participant_model extends CI_Model {
 
+	public $competition = '1';
+	public $course = '2';
+
 	//parent function that loads database	
 	function __construct()
 	{
@@ -106,7 +109,7 @@ class Participant_model extends CI_Model {
 	//get competition data for the active competition
 	function get_competition_data()
 	{
-		$query = $this->db->query("SELECT * FROM competition WHERE active = 'y'");
+		$query = $this->db->query("SELECT * FROM competition WHERE active = 'y' AND event_type_id = '$this->competition'");
 		
 		if($query->num_rows() == 1)
 		{
@@ -114,14 +117,43 @@ class Participant_model extends CI_Model {
 		}
 		else
 		{
-			echo "error with retrieving competition id";
+			return 0;
+		}
+	}
+
+	//get competition data for the active competition
+	function get_competitions()
+	{
+		$query = $this->db->query("SELECT * FROM competition WHERE active = 'y' AND event_type_id = '$this->competition'");
+		
+		if($query->num_rows() == 1)
+		{
+			return 1;
+		}
+		else
+		{
+			return 0;
+		}
+	}	
+
+	function get_courses()
+	{
+		$query = $this->db->query("SELECT * FROM competition WHERE active = 'y' AND event_type_id = '$this->course'");
+
+		if($query->num_rows() > 0)
+		{
+			return 1;
+		}
+		else
+		{
+			return 0;
 		}
 	}
 
 	//get competition id for the active competition
 	function get_competition_id()
 	{
-		$query = $this->db->query("SELECT * FROM competition WHERE active = 'y'");
+		$query = $this->db->query("SELECT * FROM competition WHERE active = 'y' AND event_type_id = '$this->competition'");
 		
 		if($query->num_rows() == 1)
 		{
@@ -241,13 +273,14 @@ class Participant_model extends CI_Model {
 		return $query;
 	}
 
-	function insert_into_user_question($participant_id, $question_id, $competition_id, $answer_id)
+	function insert_into_user_question($participant_id, $question_id, $competition_id, $answer_id, $correct)
 	{
 		$data = array(
 			'USER_ID' => $participant_id,
 			'QUESTION_ID' => $question_id,
 			'ANSWER_ID' => $answer_id,
-			'COMPETITION_ID' => $competition_id
+			'COMPETITION_ID' => $competition_id, 
+			'CORRECT' => $correct
 			);
 
 		//insert into db, throw error if data not inserted

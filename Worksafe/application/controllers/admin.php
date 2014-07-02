@@ -2,6 +2,9 @@
 
 class Admin extends CI_Controller {
 
+	public $competition = '1';
+	public $course = '2';
+
 	//parent function
 	function __construct()
 	{
@@ -79,6 +82,41 @@ class Admin extends CI_Controller {
 		$this->load->view('admin/competition');
 	}
 
+	public function selectEventType()
+	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
+
+		$data['event_type'] = $this->Admin_model->get_event_types();
+
+		$this->load->view('admin/select_event',$data);
+	}
+
+	public function createNewEvent($event_type_id)
+	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
+
+		if($event_type_id == $this->competition)
+		{
+			redirect('admin/newCompetition');
+		}
+		else if($event_type_id == $this->course)
+		{
+			redirect('admin/newCourse');
+		}
+		else
+		{
+			echo 'must enter a valid event type';
+		}
+	}
+
 	//load view that has form for a new competition
 	public function newCompetition()
 	{
@@ -91,6 +129,7 @@ class Admin extends CI_Controller {
 		$data['error_title'] = $this->session->flashdata('error_title');
 		$this->load->view('admin/new_competition',$data);
 	}
+
 
 	//logic for creating a new competition
 	public function createCompetition()
@@ -106,8 +145,6 @@ class Admin extends CI_Controller {
 		//put required validation on all form fields
 		$this->form_validation->set_rules('from', 'From', 'required');
 		$this->form_validation->set_rules('to', 'To', 'required');
-		//$this->form_validation->set_rules('num_questions_per_day', 'Number of questions', 'required');
-		//$this->form_validation->set_rules('num_answers', 'Number of answers', 'required');
 		$this->form_validation->set_rules('title', 'Title', 'required');
 
 		//if any fields are empty throw error
@@ -131,9 +168,8 @@ class Admin extends CI_Controller {
 			$time_end = strtotime($end_date);
 
 			//get rest of form data
-			//$num_question = $this->security->xss_clean($this->input->post('num_questions_per_day'));
-			//$num_answers = $this->security->xss_clean($this->input->post('num_answers'));
 			$title = $this->security->xss_clean($this->input->post('title'));
+			$event_type_id = $this->security->xss_clean($this->input->post('event_type_id'));
 
 			//check if the title name is already being used
 			$query = $this->Admin_model->check_competition_title($title);
@@ -151,7 +187,7 @@ class Admin extends CI_Controller {
 			//send to admin_model to run function insert_competition_format(), throw error if it didn't add to database
 			try
 			{
-				$this->Admin_model->insert_competition_format($start_date, $end_date, $days, $title);
+				$this->Admin_model->insert_competition_format($start_date, $end_date, $days, $title, $event_type_id);
 			} catch (Exception $e) {
 				echo 'Caught exception: ', $e->getMessage(), "\n";
 			}
@@ -169,6 +205,53 @@ class Admin extends CI_Controller {
 			//redirect to createQuestion page
 			redirect("admin/index");
 		}
+	}
+
+
+	//load view that has form for new course
+	public function newCourse()
+	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
+		$data['error'] = $this->session->flashdata('error');
+		$data['error_title'] = $this->session->flashdata('error_title');
+		$this->load->view('admin/new_course',$data);
+	}
+
+	public function createCourse()
+	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
+		
+		//put required validation on all form fields
+		$this->form_validation->set_rules('title', 'Title', 'required');
+
+		//if any fields are empty throw error
+		if($this->form_validation->run() === FALSE)
+		{
+			$this->session->set_flashdata('error', 'Must not leave name field blank');
+			redirect('admin/newCourse');
+		}
+
+		//get rest of form data
+		$title = $this->security->xss_clean($this->input->post('title'));
+		$event_type_id = $this->security->xss_clean($this->input->post('event_type_id'));
+
+		//send to admin_model to run function insert_competition_format(), throw error if it didn't add to database
+		try
+		{
+			$this->Admin_model->insert_course($title, $event_type_id);
+		} catch (Exception $e) {
+			echo 'Caught exception: ', $e->getMessage(), "\n";
+		}
+
+		redirect('admin/index');
 	}
 
 
@@ -231,8 +314,16 @@ class Admin extends CI_Controller {
 		$this->load->view('admin/review_competition',$data);
 	}
 
+	public function deleteQuestionAssoc($question_id)
+	{
+		$this->Admin_model->delete_question($question_id);
+
+		$this->session->set_flashdata('update','question has been deleted');
+		redirect('admin/reviewCompetition',$data);
+	}
+
 	//show all competitions that are in the db
-	public function showCompetition()
+	public function showEvent()
 	{
 		//if user is not logged in redirect to login page
 		if(!$this->session->userdata('adminLoggedin'))
@@ -243,7 +334,8 @@ class Admin extends CI_Controller {
 		$data['delete_competition'] = $this->session->flashdata('delete_competition');
 		//get all data for competitions
 		$data['array'] = $this->Admin_model->get_all_competitions();
-		$this->load->view('admin/show_competition',$data);
+		$data['event_type'] = $this->Admin_model->get_event_types();
+		$this->load->view('admin/show_event',$data);
 	}
 
 	//logic for editing competition
@@ -334,6 +426,11 @@ class Admin extends CI_Controller {
 			//reset the org commits
 			$org_commits = 0;
 
+			$correct = $this->Admin_model->get_org_correct_ans($org->USER_ID);
+			$total = $this->Admin_model->get_org_total_ans($org->USER_ID);
+			$percent_correct = (intval($correct)/intval($total)) * 100;
+			$percent_correct = number_format($percent_correct, 2, '.', '');
+
 			//get all participants associated with a specific organization
 			$query = $this->Admin_model->get_participants_by_org($org->USER_ID);
 
@@ -358,7 +455,8 @@ class Admin extends CI_Controller {
 				$total_commit_array = array(
 					'user_id' => $org->USER_ID,
 					'name' => $org->USER_NAME,
-					'total_commits' => $org_commits
+					'total_commits' => $org_commits,
+					'percent_correct' => $percent_correct
 					);
 
 				//add array to array of objects
@@ -394,6 +492,23 @@ class Admin extends CI_Controller {
 			//get participant data
 			$participant_data = $this->Admin_model->get_participant_data($row->PARTICIPANT_ID);
 
+			//get the # of correct answers for each participant
+			$correct = $this->Admin_model->get_participant_correct_ans($row->PARTICIPANT_ID);
+			
+			//get the total number of answers for each participant
+			$total = $this->Admin_model->get_participant_total_ans($row->PARTICIPANT_ID);
+			if($total == 0)
+			{
+				$percent_correct = '0.00';
+			}
+			else
+			{
+				//calculate the percentage correct
+				$percent_correct = (intval($correct)/intval($total)) * 100;
+				$percent_correct = number_format($percent_correct, 2, '.', '');				
+			}
+
+
 			//get # of commitments by participants so far
 			$commits = $this->Admin_model->commits_by_user($participant_data->USER_ID);
 
@@ -401,7 +516,8 @@ class Admin extends CI_Controller {
 			$participant_array = array(
 				'user_id' => $participant_data->USER_ID,
 				'email' => $participant_data->EMAIL,
-				'commit' => $commits
+				'commit' => $commits,
+				'percent_correct' => $percent_correct
 				 );
 
 			//append to end of object array
@@ -422,7 +538,20 @@ class Admin extends CI_Controller {
 		}
 
 		$this->Admin_model->activate_competition($competition_id);
-		redirect('admin/showCompetition');
+		redirect('admin/showEvent');
+	}
+
+	//logic for switching the active course
+	public function activateCourse($competition_id)
+	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
+
+		$this->Admin_model->activate_course($competition_id);
+		redirect('admin/showEvent');
 	}
 
 	public function deleteCompetition($competition_id)
@@ -440,13 +569,13 @@ class Admin extends CI_Controller {
 		if($num_rows == 0)
 		{
 			$this->Admin_model->delete_competition($competition_id);
-			redirect('admin/showCompetition');
+			redirect('admin/showEvent');
 		}
 		//if the competition is active throw an error
 		else
 		{
 			$this->session->set_flashdata('delete_competition', 'You cannot delete the active competition');
-			redirect('admin/showCompetition');
+			redirect('admin/showEvent');
 		}
 	}
 
@@ -456,44 +585,95 @@ class Admin extends CI_Controller {
 		$this->session->sess_destroy();
 	}
 
+	public function questionEvent()
+	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
+
+		$data['events'] =  $this->Admin_model->get_all_competitions();
+		$data['error'] = $this->session->flashdata('error');
+		if($data['events'] == NULL)
+		{
+			$data['error'] = 'Add an event to add questions to it';
+		}
+		$this->load->view('admin/question_event', $data);
+	}
+
+
 	public function createQuestion()
 	{
 		$data['error'] = $this->session->flashdata('error');
 		$data['added'] = $this->session->flashdata('added');
+		$competition_id = $this->security->xss_clean($this->input->post('competition_id'));
+
+		$query = $this->Admin_model->get_competition_data($competition_id);
+
+		$data['competition'] = $query->row();
 		$this->load->view('admin/create_question',$data);
 	}
 
-
+	//uploads all question information from the create question form
 	public function uploadQuestion()
 	{
+		//get the event type for the event
+		$competition_id = $this->input->post('competition_id');
+		$event_type_id = $this->Admin_model->get_event_type_id($competition_id);
+
+
 		//put validation on so all fields are required
 		$this->form_validation->set_rules('question', 'Question', 'required');
 		$this->form_validation->set_rules('category', 'Category', 'required');
-		$this->form_validation->set_rules('question_date', 'Question date', 'required');
+
+		if($event_type_id == $this->competition)
+			$this->form_validation->set_rules('question_date', 'Question date', 'required');
 
 		//if email is empty returns error
 		if($this->form_validation->run() === FALSE)
 		{
 			$this->session->set_flashdata('error', 'Must not leave any field blank');
-			redirect('admin/test');
+			redirect('admin/createQuestion');
 		}
 
 		//get all information from form
 		$question = $this->security->xss_clean($this->input->post('question'));
 		$question_type = $this->security->xss_clean($this->input->post('option_type'));
 		$category = $this->security->xss_clean($this->input->post('category'));
-		$question_date = $this->security->xss_clean($this->input->post('question_date'));
+		$source = $this->security->xss_clean($this->input->post('source'));
 
-		//get the competition id
-		$competition_id = $this->Admin_model->get_competition_id();
+		if(empty($source))
+		{
+			$source = NULL;
+		}
 
+		if($event_type_id == $this->competition)
+		{
+			$question_date = $this->security->xss_clean($this->input->post('question_date'));
+			$competition = $this->Admin_model->get_competition_data($competition_id);
+			$competition = $competition->row();
+
+			$start_date = strtotime($competition->START_DATE);
+			$end_date = strtotime($competition->END_DATE);
+			
+			$today = strtotime(date('d-m-Y'));
+
+			//check whether the competition has started yet
+			if($today < $start_date || $today > $end_date)
+			{
+				$this->session->set_flashdata('error', 'The date must be within the competition dates');
+				redirect('admin/questionEvent');
+			}
+
+		}
 		//send category name to insert_category function returns category id
 		$category_id = $this->Admin_model->insert_category($category);
 
 		//send to admin_model to run function insert_question(), throw error if it didn't add to database
 		try
 		{
-			$this->Admin_model->insert_question($question,$category_id,$question_type);
+			$this->Admin_model->insert_question($question,$category_id,$question_type,$source);
 		} catch (Exception $e) {
 			echo 'Caught exception: ', $e->getMessage(), "\n";
 		}
@@ -501,14 +681,27 @@ class Admin extends CI_Controller {
 		//retrieve question_id
 		$question_id = $this->Admin_model->get_question_id($question,$category_id,$question_type,$competition_id);
 
-		//send to admin_model to run function insert_date_question(), throw error if it didn't add to database
-		try
+
+		if($event_type_id == $this->competition)
 		{
-			$this->Admin_model->insert_date_question($question_id,$competition_id,$question_date);
-		} catch (Exception $e) {
-			echo 'Caught exception: ', $e->getMessage(), "\n";
+			//send to admin_model to run function insert_date_question(), throw error if it didn't add to database
+			try
+			{
+				$this->Admin_model->insert_date_question($question_id,$competition_id,$question_date);
+			} catch (Exception $e) {
+				echo 'Caught exception: ', $e->getMessage(), "\n";
+			}
 		}
-		
+		else if($event_type_id == $this->course)
+		{
+			//send data to course question to be inserted
+			try
+			{
+				$this->Admin_model->insert_course_question($question_id,$competition_id);
+			} catch (Exception $e) {
+				echo 'Caught exception: ', $e->getMessage(), "\n";
+			}
+		}
 		
 		//if the question type is true/false get true or false and insert into db
 		if($question_type == 'true_false')
@@ -524,7 +717,7 @@ class Admin extends CI_Controller {
 			}
 
 			$this->session->set_flashdata('added', 'True or false question added');
-			redirect('admin/createQuestion');
+			redirect('admin/questionEvent');
 
 		}
 
@@ -558,7 +751,7 @@ class Admin extends CI_Controller {
 			}
 
 			$this->session->set_flashdata('added', 'Multiple choice question added');
-			redirect('admin/createQuestion');
+			redirect('admin/questionEvent');
 		}
 
 		//if question type is multiple select insert all answers into db
@@ -589,9 +782,11 @@ class Admin extends CI_Controller {
 			}
 
 			$this->session->set_flashdata('added', 'Multiple select question added');
-			redirect('admin/createQuestion');
+			redirect('admin/questionEvent');
 		}	
 	}
+
+
 
 
 }

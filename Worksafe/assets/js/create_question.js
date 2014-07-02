@@ -53,7 +53,8 @@ function create_answer_field(){
   }
 }
 
-$('#options').change(function(){
-    alert("it changed");
 
-});
+
+
+
+

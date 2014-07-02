@@ -1,6 +1,9 @@
 <?php
 class Admin_model extends CI_Model {
 	
+	public $competition = '1';
+	public $course = '2';
+
 	//parent function that loads database
 	function __construct()
 	{
@@ -26,13 +29,9 @@ class Admin_model extends CI_Model {
 	}
 
 	//insert the format of the competition into the 'competition' table
-	function insert_competition_format($start, $end, $days, $title)
+	function insert_competition_format($start, $end, $days, $title, $event_type_id)
 	{
-		//unblock when real db is used
-		
-		//update all competitions so the one created is active
-		$data = array('ACTIVE' => 'n');
-		$this->db->update('COMPETITION', $data);
+		$this->db->query("UPDATE competition SET active = 'n' WHERE event_type_id = '$this->competition'");
 		
 		//insert data for competition one field at a time
 		$this->db->set('COMPETITION_YEAR', 2014);
@@ -41,6 +40,24 @@ class Admin_model extends CI_Model {
 		$this->db->set('END_DATE', "TO_DATE('$end','YYYY-MM-DD')",false);
 		$this->db->set('DAYS_OF_COMPETITION', $days);
 		$this->db->set('ACTIVE', 'y');
+		$this->db->set('EVENT_TYPE_ID', $event_type_id);
+
+		//insert into db, throw error if data not inserted
+		if( $this->db->insert('COMPETITION') != TRUE)
+		{
+			throw new Exception("Cannot insert");
+		}
+		else
+		{
+			return $this->db->affected_rows();
+		}
+	}
+
+	function insert_course($title, $event_type_id)
+	{
+		$this->db->set('COMPETITION_NAME', $title);
+		$this->db->set('ACTIVE', 'y');
+		$this->db->set('EVENT_TYPE_ID', $event_type_id);
 
 		//insert into db, throw error if data not inserted
 		if( $this->db->insert('COMPETITION') != TRUE)
@@ -56,7 +73,7 @@ class Admin_model extends CI_Model {
 	//get competition id by active competition
 	function get_competition_id()
 	{
-		$query = $this->db->query("SELECT * FROM COMPETITION WHERE ACTIVE = 'y'");
+		$query = $this->db->query("SELECT * FROM COMPETITION WHERE ACTIVE = 'y' AND EVENT_TYPE_ID = '$this->competition'");
 		if($query->num_rows() == 1)
 		{
 			$query = $query->row();
@@ -105,13 +122,14 @@ class Admin_model extends CI_Model {
 	}
 
 	//insert the question data into the 'question' table
-	function insert_question($question,$category_id,$type)
+	function insert_question($question,$category_id,$type,$source)
 	{
 		//put question info into an array
 		$data = array(
 			'CATEGORY_ID' => $category_id,
 			'QUESTION' => $question,
 			'QUESTION_TYPE' => $type,
+			'SOURCE_LINK' => $source
 		);
 
 		//insert into db, throw error if data not inserted
@@ -347,15 +365,34 @@ class Admin_model extends CI_Model {
 	function activate_competition($competition_id)
 	{
 		//set all competitions active column to n
-		$this->db->query("UPDATE COMPETITION SET active = 'n'");
+		$this->db->query("UPDATE COMPETITION SET active = 'n' WHERE event_type_id = '$this->competition'");
 
 		//set the one clicked to active
 		$this->db->query("UPDATE competition SET active = 'y' WHERE competition_id = '$competition_id'");
 	}
 
+	//either set the course selected as active or inactive
+	function activate_course($competition_id)
+	{
+		$query = $this->get_competition_data($competition_id);
+
+		$query = $query->row();
+
+		$active = $query->ACTIVE;
+
+		if($active == 'y')
+		{
+			$this->db->query("UPDATE competition SET active = 'n' WHERE event_type_id = '$this->course' AND competition_id = '$competition_id'");
+		}
+		else if($active == 'n')
+		{
+			$this->db->query("UPDATE competition SET active = 'y' WHERE event_type_id = '$this->course' AND competition_id = '$competition_id'");
+		}
+	}
+
 	function check_if_active($competition_id)
 	{
-		$query = $this->db->query("SELECT * FROM competition WHERE competition_id = '$competition_id' AND active = 'y';");
+		$query = $this->db->query("SELECT * FROM competition WHERE competition_id = '$competition_id' AND active = 'y' AND event_type_id = '$this->competition'");
 
 		return $query->num_rows();
 	}
@@ -364,7 +401,7 @@ class Admin_model extends CI_Model {
 	function delete_competition($competition_id)
 	{
 		//delete from the competition table
-		$this->db->query("DELETE FROM competition WHERE competition_id = '$competition_id';");
+		$this->db->query("DELETE FROM competition WHERE competition_id = '$competition_id'");
 
 		/*
 		//delete from the date_question table
@@ -378,6 +415,7 @@ class Admin_model extends CI_Model {
 		*/
 	}
 
+	//check whether an organization is associated with a competition
 	function check_org_competition_assoc($competition_id, $org_id)
 	{
 		$query = $this->db->query("SELECT * FROM user_org_assoc WHERE competition_id = '$competition_id' AND org_id = '$org_id'");
@@ -385,6 +423,107 @@ class Admin_model extends CI_Model {
 		return $query->num_rows();
 	}
 
+	//delete a question from date_question which deletes it from a certain competition
+	function delete_question($question_id)
+	{
+		$this->db->query("DELETE FROM date_question WHERE question_id = '$question_id'");
+	}
+
+	//get all the event types
+	function get_event_types()
+	{
+		$query = $this->db->query("SELECT * FROM event_type");
+
+		if($query->num_rows() > 0)
+		{
+			return $query;
+		}
+		else
+		{
+			echo "error with retrieving competition data";
+		}
+	}
+
+	//get the event type id by the competition id
+	function get_event_type_id($competition_id)
+	{
+		$query = $this->db->query("SELECT * FROM competition WHERE competition_id = '$competition_id'");
+
+		if($query->num_rows() == 1)
+		{
+			$query = $query->row();
+			return $query->EVENT_TYPE_ID;
+		}
+		else
+		{
+			echo "error with retrieving event type id data";
+		}
+	}
+
+	//get the event name by the event id
+	function get_event_by_id($event_type_id)
+	{
+		$query = $this->db->query("SELECT * FROM event_type WHERE event_type_id = '$event_type_id'");
+
+		if($query->num_rows() == 1)
+		{
+			return $query;
+		}
+		else
+		{
+			echo "error with retrieving event type data";
+		}
+	}
+
+	//insert course questions
+	function insert_course_question($question_id,$competition_id)
+	{
+		//insert data for date_questino one field at a time
+		$this->db->set('QUESTION_ID', $question_id);
+		$this->db->set('COMPETITION_ID', $competition_id);
+
+		//insert into db, throw error if data not inserted
+		if( $this->db->insert('COURSE_QUESTION') != TRUE)
+		{
+			throw new Exception("Cannot insert course_question");
+		}
+		else
+		{
+			return $this->db->affected_rows();
+		}
+	}
+
+	//get the # of correct answers from an organization
+	function get_org_correct_ans($org_id)
+	{
+		$query = $this->db->query("SELECT user_question.CORRECT FROM user_question JOIN user_org_assoc ON user_question.USER_ID = user_org_assoc.PARTICIPANT_ID WHERE user_org_assoc.ORG_ID = '$org_id' AND user_question.CORRECT = 'y'");
+	
+		return $query->num_rows();
+	}
+
+	//get the total # of answers from an organization
+	function get_org_total_ans($org_id)
+	{
+		$query = $this->db->query("SELECT user_question.CORRECT FROM user_question JOIN user_org_assoc ON user_question.USER_ID = user_org_assoc.PARTICIPANT_ID WHERE user_org_assoc.ORG_ID = '$org_id'");
+	
+		return $query->num_rows();		
+	}
+
+	//get the # of correct answers from a participant
+	function get_participant_correct_ans($participant_id)
+	{
+		$query = $this->db->query("SELECT CORRECT FROM user_question WHERE user_id = '$participant_id' AND user_question.CORRECT = 'y'");
+	
+		return $query->num_rows();
+	}
+
+	//get the total # of answers from a participant
+	function get_participant_total_ans($participant_id)
+	{
+		$query = $this->db->query("SELECT CORRECT FROM user_question WHERE user_id = '$participant_id'");
+	
+		return $query->num_rows();
+	}
 }
 
 ?>

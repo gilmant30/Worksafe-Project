@@ -34,6 +34,7 @@ $(document).ready(function()
 		<tr>
 			<th>Team name</th>
       <th>Total Points</th>
+      <th>Correct questions (%)</th>
 		</tr>
   </thead>
       <tbody>
@@ -42,6 +43,7 @@ $(document).ready(function()
     	echo "<tr>";
     	echo '<td>'.$row['name'].'</td>';
       echo '<td>'.$row['total_commits'].'</td>';
+      echo '<td>'.$row['percent_correct'].'</td>';
     	echo "</tr>";
   }
   ?>

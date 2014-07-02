@@ -25,6 +25,8 @@ echo '<span class="button">'.$category.' </span>';
     'id' => 'answer_label'
     );
 
+   echo '<p>'.$error.'</p>';
+
 //if the question is true or false print out this form   
 if($question->QUESTION_TYPE == 'true_false')
 {
@@ -41,17 +43,13 @@ if($question->QUESTION_TYPE == 'true_false')
   echo form_radio($radio_input_true);
   echo form_label('True','question', $label_attributes);
   echo '<br />';
-  if($question->QUESTION_ID == 41)
-  {
-    echo form_radio($radio_input_true);
-    echo form_label('True','question', $label_attributes);
-  }
-  else
-  {
-    echo form_radio($radio_input_false);
-    echo form_label('False','question', $label_attributes);
-  }
+  echo form_radio($radio_input_false);
+  echo form_label('False','question', $label_attributes);
   echo '<br />';
+  if($question->SOURCE_LINK != NULL)
+  {
+    echo '<p>Source: <a href ="'.$question->SOURCE_LINK.'">Source link</a></p>';
+  }
   echo '<br />';
   echo form_submit('particpant_answer_question_submit', 'Submit Answer');
   echo form_close();
@@ -75,6 +73,10 @@ else if($question->QUESTION_TYPE == 'multiple_choice')
         echo form_label($ans->ANSWER->load(),'question', $label_attributes);
       echo "<br />";
       
+    }
+    if($question->SOURCE_LINK != NULL)
+    {
+      echo '<p>Source: <a href ="'.$question->SOURCE_LINK.'">Source link</a></p>';
     }
     echo "<br />";
 
@@ -104,6 +106,11 @@ else if($question->QUESTION_TYPE == 'multiple_select')
     }
 
     echo form_hidden('num_answers', $a);
+    echo "<br />";
+    if($question->SOURCE_LINK != NULL)
+    {
+      echo '<p>Source: <a href ="'.$question->SOURCE_LINK.'">Source link</a></p>';
+    }   
     echo "<br />";
 
 
