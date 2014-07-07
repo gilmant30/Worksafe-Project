@@ -16,7 +16,7 @@
 <title>Competition</title>
 </head>
 <body>
-<h1>Show Organizations for <?= $competition->COMPETITION_NAME ?> - only ones with at least one commitment show up</h1>
+<h1>Show Organizations for <?= $competition->EVENT_NAME ?> - only ones with at least one commitment show up</h1>
 
 
 <div id='org_table'>

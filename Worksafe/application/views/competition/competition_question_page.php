@@ -31,9 +31,9 @@ echo '<span class="button">'.$category.' </span>';
 if($question->QUESTION_TYPE == 'true_false')
 {
   echo "<h2>True or False</h2>";
-  echo form_open('participant/answerTrueFalseQuestion');
+  echo form_open('competition/answerTrueFalseQuestion');
   //input the question into the form  
-  echo '<p id = "question">'.$question->QUESTION.'</p>';
+  echo '<p id = "question">'.$question->QUESTION->load().'</p>';
   echo '<br />';
 
   $radio_input_true = array('name' => 'answer', 'value' => 'true');
@@ -61,10 +61,10 @@ if($question->QUESTION_TYPE == 'true_false')
 else if($question->QUESTION_TYPE == 'multiple_choice')
 {
   echo "<h2>Multiple Choice</h2>";
-  echo form_open('participant/answerMultipleChoiceQuestion');
+  echo form_open('competition/answerMultipleChoiceQuestion');
 
     //input the question into the form  
-    echo '<p id = "question">'.$question->QUESTION.'</p>';
+    echo '<p id = "question">'.$question->QUESTION->load().'</p>';
     echo '<br />';
 
     foreach ($answer as $ans) {
@@ -90,11 +90,11 @@ else if($question->QUESTION_TYPE == 'multiple_choice')
 else if($question->QUESTION_TYPE == 'multiple_select')
 {
   echo "<h2>Multiple Select</h2>";
-  echo form_open('participant/answerMultipleSelectQuestion');
+  echo form_open('competition/answerMultipleSelectQuestion');
   echo '<p id="title">Select All That Apply</p>';  
 
     //input the question into the form  
-    echo '<p id = "question">'.$question->QUESTION.'</p>';
+    echo '<p id = "question">'.$question->QUESTION->load().'</p>';
     echo '<br />';
     $a=0;
     foreach ($answer as $ans) {
@@ -114,7 +114,7 @@ else if($question->QUESTION_TYPE == 'multiple_select')
     echo "<br />";
 
 
-  echo form_submit('particpant_answer_question_submit', 'Submit Answers');
+  echo form_submit('competition_answer_question_submit', 'Submit Answers');
   echo form_close();
 }
 ?>

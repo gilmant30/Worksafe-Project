@@ -59,7 +59,7 @@ form{
   padding:6% 4%;
 }
 
-input[type="text"],input[type="password"],#org_id{
+input[type="text"],input[type="password"],#comp_id,#org_id{
   width:92%;
   background:#fff;
   margin-bottom:4%;

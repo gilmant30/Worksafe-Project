@@ -12,22 +12,26 @@
 
 </script>
 
-<title>Event</title>
+<title>Training home page</title>
 </head>
 <body>
 	<br />
 
-<h1>Choose Event page</h1>
+<h1>Training home page</h1>
 	
 <?php
-	foreach($event_type->result() as $event)
-	{
-		echo '<a href="'.base_url().'index.php/'.$event->EVENT_TYPE.'">'.$event->EVENT_TYPE.'</a>';
+$email = array('name' => 'email', 'placeholder' => 'Email');
+$password = array('name' => 'password', 'placeholder' => 'Password');
 
-		echo '<br />';
-	}
+echo form_open('training/login');
+echo form_input($email);
+echo form_password($password);
+echo form_submit('training_login', 'Log in');
+echo form_close();
+
 ?>
 
+<div id="error"><?=$error?></div>
 
 <br />
 

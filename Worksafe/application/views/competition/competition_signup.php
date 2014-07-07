@@ -30,7 +30,7 @@ $('#toggle-login').click(function(){
 	$email = array('name' => 'email', 'placeholder' => 'Email');
 	$zip = array('name' => 'zipcode', 'placeholder' => 'Zipcode');
   
-	echo form_open('participant/enroll');
+	echo form_open('competition/enroll');
 	echo form_input($email);
 	//echo form_input($zip);
   echo form_label('Team: ','org_id');
@@ -40,7 +40,7 @@ $('#toggle-login').click(function(){
   }
   echo '</select>';
 
-  echo '<a href="'.base_url().'index.php/participant">Already a user?</a>';
+  echo '<a href="'.base_url().'index.php/competition">Already a user?</a>';
   echo '<br />';
   echo '<br />';
 	echo form_submit('particpant_signup_submit', 'Register');

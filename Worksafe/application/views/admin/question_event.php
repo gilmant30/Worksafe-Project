@@ -20,7 +20,7 @@
 <title>Competition</title>
 </head>
 <body>
-<h1>Admin Login Page</h1> 
+<h1>Admin Select Event Page</h1> 
 
 <span class="button" id="toggle-login">Event</span>
 
@@ -35,7 +35,7 @@
   echo '<select id="options" name="competition_id">';
   foreach($events->result() as $type)
   {
-    echo '<option value ="'.$type->COMPETITION_ID.'">'.$type->COMPETITION_NAME.'</option>';
+    echo '<option value ="'.$type->EVENT_ID.'">'.$type->EVENT_NAME.'</option>';
   }
   echo '</select>';
 

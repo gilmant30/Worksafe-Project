@@ -9,7 +9,6 @@
 		<li><a href="<?=base_url();?>index.php/competition/about">Learn more</a></li>
 		<li><a href="<?=base_url();?>index.php/competition/leaderboard">Leaderboard</a></li>
 		<li><a href="<?=base_url();?>index.php/competition/contact">Contact</a></li>
-		<li><a href="<?=base_url();?>index.php/competition/logout">Logout</a></li>
 	</ul>
 </div>
 </div>

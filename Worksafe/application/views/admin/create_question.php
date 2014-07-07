@@ -20,7 +20,7 @@
 <title>Competition</title>
 </head>
 <body>
-<h1>Admin Login Page</h1> 
+<h1>Admin Create Question Page</h1> 
 
 <span class="button" id="toggle-login">Create</span>
 
@@ -44,7 +44,7 @@
 
 
   echo form_open('admin/uploadQuestion');
-  echo form_hidden('competition_id', $competition->COMPETITION_ID);
+  echo form_hidden('competition_id', $competition->EVENT_ID);
   echo form_input($question);
   echo form_input($category);
   if($competition->EVENT_TYPE_ID == '1')

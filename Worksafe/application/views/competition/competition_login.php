@@ -21,17 +21,18 @@ $('#toggle-login').click(function(){
 <body>
 <!--<h1>Admin Login Page</h1> -->
 
-<span class="button" id="toggle-login">Login</span>
+
 
 <div id="login">
-  <div id="triangle"></div>
-  <h2>WorkSAFE Week Login</h2>
+
+  <h2>Login</h2>
   <?php
 	$email = array('name' => 'email', 'placeholder' => 'Email');
 
-	echo form_open('participant/login');
+	echo form_open('competition/login');
+  echo form_hidden('competition_id',$competition_id);
 	echo form_input($email);
-	echo '<a href="'.base_url().'index.php/participant/signup">Signup</a>';
+	echo '<a href="'.base_url().'index.php/competition/signup">Signup</a>';
   echo '<br />';
   echo '<br />';
 	echo form_submit('participant_login_submit', 'Log in');

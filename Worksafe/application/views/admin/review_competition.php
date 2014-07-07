@@ -26,7 +26,7 @@
 echo form_open('admin/editCompetition');
 foreach ($review as $question) {
 	echo '<p>Question: <a href="'.base_url().'index.php/admin/deleteQuestionAssoc/'.$question['question_id'].'">Delete Question</a></p>';
-	$array = array('name' => 'q'.$question['question_id'], 'value' => $question['question_name'] );
+	$array = array('name' => 'q'.$question['question_id'], 'value' => $question['question_name']->load() );
 	echo form_input($array);
 	echo '<p id="date">Date: '.$question['question_date'].'</p>';
 	echo '<p id="type">Type of question: '.$question['question_type'].'</p>';

@@ -1,6 +1,7 @@
 <?php
-class Participant_model extends CI_Model {
+class Competition_model extends CI_Model {
 
+	//these are the event_type id's gotten from the db
 	public $competition = '1';
 	public $course = '2';
 
@@ -16,7 +17,6 @@ class Participant_model extends CI_Model {
 	{
 		$query = $this->db->query("SELECT user_table.user_name, user_table.user_id FROM user_table INNER JOIN user_role ON user_table.user_id = user_role.user_id INNER JOIN role_table ON role_table.role_id = user_role.role_id WHERE user_role.role_id = '2' AND user_role.status = 'active'");
 
-
 		//return entire query
 		return $query;
 	}
@@ -25,6 +25,14 @@ class Participant_model extends CI_Model {
 	function check_participant_email($email)
 	{
 		$query = $this->db->query("SELECT user_table.user_name, user_table.user_id FROM user_table INNER JOIN user_role ON user_table.user_id = user_role.user_id WHERE user_table.email = '$email' AND user_role.role_id = '3'");
+
+		return $query;
+	}
+
+	//check to see if participant email is in the database and if so that they are a participant
+	function check_participant_email_with_comp($email,$competition_id)
+	{
+		$query = $this->db->query("SELECT user_table.user_name, user_table.user_id FROM user_table INNER JOIN user_role ON user_table.user_id = user_role.user_id INNER JOIN user_org_assoc ON user_org_assoc.participant_id = user_table.user_id WHERE user_table.email = '$email' AND user_role.role_id = '3' AND user_org_assoc.event_id = '$competition_id'");
 
 		return $query;
 	}
@@ -85,14 +93,12 @@ class Participant_model extends CI_Model {
 	}
 
 	//insert into the 'user_org_assoc' table to associate the participant with the organization they will represent
-	function assoc_user_org($participant_id, $org_id)
+	function assoc_user_org($participant_id, $org_id, $competition_id)
 	{
-		$competition_id = $this->get_competition_id();
-
 		$data = array(
 			'ORG_ID' => $org_id,
 			'PARTICIPANT_ID' => $participant_id,
-			'COMPETITION_ID' => $competition_id
+			'EVENT_ID' => $competition_id
 		);
 
 		//insert into db, throw error if data not inserted
@@ -107,9 +113,9 @@ class Participant_model extends CI_Model {
 	}
 
 	//get competition data for the active competition
-	function get_competition_data()
+	function get_competition_data($competition_id)
 	{
-		$query = $this->db->query("SELECT * FROM competition WHERE active = 'y' AND event_type_id = '$this->competition'");
+		$query = $this->db->query("SELECT * FROM event WHERE active = 'y' AND event_type_id = '$this->competition' AND event_id = '$competition_id'");
 		
 		if($query->num_rows() == 1)
 		{
@@ -124,7 +130,7 @@ class Participant_model extends CI_Model {
 	//get competition data for the active competition
 	function get_competitions()
 	{
-		$query = $this->db->query("SELECT * FROM competition WHERE active = 'y' AND event_type_id = '$this->competition'");
+		$query = $this->db->query("SELECT * FROM event WHERE active = 'y' AND event_type_id = '$this->competition'");
 		
 		if($query->num_rows() == 1)
 		{
@@ -138,7 +144,7 @@ class Participant_model extends CI_Model {
 
 	function get_courses()
 	{
-		$query = $this->db->query("SELECT * FROM competition WHERE active = 'y' AND event_type_id = '$this->course'");
+		$query = $this->db->query("SELECT * FROM event WHERE active = 'y' AND event_type_id = '$this->course'");
 
 		if($query->num_rows() > 0)
 		{
@@ -153,12 +159,12 @@ class Participant_model extends CI_Model {
 	//get competition id for the active competition
 	function get_competition_id()
 	{
-		$query = $this->db->query("SELECT * FROM competition WHERE active = 'y' AND event_type_id = '$this->competition'");
+		$query = $this->db->query("SELECT * FROM event WHERE active = 'y' AND event_type_id = '$this->competition'");
 		
 		if($query->num_rows() == 1)
 		{
 			$row = $query->row();
-			return $row->COMPETITION_ID;
+			return $row->EVENT_ID;
 		}
 		else
 		{
@@ -169,7 +175,7 @@ class Participant_model extends CI_Model {
 	//get the data for the questions for the particular day it is
 	function get_question_data_from_date_question($competition_id)
 	{
-		$query = $this->db->query("SELECT * FROM date_question WHERE competition_id = '$competition_id'");
+		$query = $this->db->query("SELECT * FROM date_question WHERE event_id = '$competition_id'");
 
 		if($query->num_rows() > 0)
 			return $query;
@@ -202,7 +208,7 @@ class Participant_model extends CI_Model {
 	//get the number of questions in the competition per day
 	function get_questions_per_day_in_competition()
 	{
-		$query = $this->db->query("SELECT question_per_day FROM competition WHERE active = 'y';");
+		$query = $this->db->query("SELECT question_per_day FROM event WHERE active = 'y';");
 
 		if($query->num_rows() == 1)
 		{
@@ -232,7 +238,7 @@ class Participant_model extends CI_Model {
 		$date = date('Y-m-d');
 
 		$this->db->set('USER_ID', $participant_id);
-		$this->db->set('COMPETITION_ID', $competition_id);
+		$this->db->set('EVENT_ID', $competition_id);
 		$this->db->set('COMMITMENT_DATE', "TO_DATE('$date','YYYY-MM-DD')",false);
 
 		//insert into db, throw error if data not inserted
@@ -251,7 +257,7 @@ class Participant_model extends CI_Model {
 	{
 		$flag = 0;
 		$today_date = date('d-m-Y');
-		$query = $this->db->query("SELECT * FROM commitment WHERE user_id = '$participant_id' AND competition_id = '$competition_id'");
+		$query = $this->db->query("SELECT * FROM commitment WHERE user_id = '$participant_id' AND event_id = '$competition_id'");
 
 		foreach ($query->result() as $commit) {
 			$date = date('d-m-Y',strtotime($commit->COMMITMENT_DATE));
@@ -279,7 +285,7 @@ class Participant_model extends CI_Model {
 			'USER_ID' => $participant_id,
 			'QUESTION_ID' => $question_id,
 			'ANSWER_ID' => $answer_id,
-			'COMPETITION_ID' => $competition_id, 
+			'EVENT_ID' => $competition_id, 
 			'CORRECT' => $correct
 			);
 
@@ -301,6 +307,22 @@ class Participant_model extends CI_Model {
 		$query = $query->row();
 
 		return $query->CATEGORY_NAME;
+	}
+
+	function get_all_org_competition($competition_id)
+	{
+		$query = $this->db->query("SELECT user_table.user_name, user_table.user_id FROM user_table INNER JOIN user_role ON user_table.user_id = user_role.user_id INNER JOIN role_table ON role_table.role_id = user_role.role_id INNER JOIN org_comp ON org_comp.ORG_ID = user_table.USER_ID WHERE user_role.role_id = '2' AND user_role.status = 'active' AND org_comp.EVENT_ID = '$competition_id'");
+		
+		return $query;
+	}
+
+	function competition_exists($competition_id)
+	{
+		$query = $this->db->query("SELECT * FROM event WHERE event_id = '$competition_id'");
+
+		$query = $query->num_rows();
+
+		return $query;
 	}
 }
 ?>

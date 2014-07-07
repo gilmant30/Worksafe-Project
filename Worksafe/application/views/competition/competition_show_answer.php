@@ -23,7 +23,7 @@ echo '<span class="button" style="width:350px;">'.$category.' </span>';
 <?php
 
     //input the question into the form  
-    echo '<p id = "question">'.$question->QUESTION.'</p>';
+    echo '<p id = "question">'.$question->QUESTION->load().'</p>';
 
     if($answer_type == 'true_false')
     {
@@ -80,7 +80,7 @@ echo '<span class="button" style="width:350px;">'.$category.' </span>';
     }
     echo "<br />";
 
-echo '<a href="'.base_url().'index.php/participant/questionPage">Next Question</a>';
+echo '<a href="'.base_url().'index.php/competition/questionPage">Next Question</a>';
 
 ?>
 </div>

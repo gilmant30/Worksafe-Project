@@ -36,8 +36,8 @@
 	echo "<tbody>";
 	foreach ($array->result() as $row) {
 		echo "<tr>";
-		echo "<td>$row->COMPETITION_ID</td>";
-		echo "<td>$row->COMPETITION_NAME</td>";
+		echo "<td>$row->EVENT_ID</td>";
+		echo "<td>$row->EVENT_NAME</td>";
 		echo "<td>$row->START_DATE</td>";
 		echo "<td>$row->END_DATE</td>";
 		if($row->ACTIVE == 'y')
@@ -56,18 +56,18 @@
 		if($row->EVENT_TYPE_ID == '1')
 		{
 			if($row->ACTIVE == 'n')
-				echo '<td><a href="'.base_url().'index.php/admin/activateCompetition/'.$row->COMPETITION_ID.'">Activate</a></td>';
+				echo '<td><a href="'.base_url().'index.php/admin/activateCompetition/'.$row->EVENT_ID.'">Activate</a></td>';
 			else
 				echo '<td></td>';
 		}
 		else if($row->EVENT_TYPE_ID == '2')
 		{
 			if($row->ACTIVE == 'n')
-				echo '<td><a href="'.base_url().'index.php/admin/activateCourse/'.$row->COMPETITION_ID.'">Activate</a></td>';
+				echo '<td><a href="'.base_url().'index.php/admin/activateCourse/'.$row->EVENT_ID.'">Activate</a></td>';
 			else
-				echo '<td><a href="'.base_url().'index.php/admin/activateCourse/'.$row->COMPETITION_ID.'">Deactivate</a></td>';
+				echo '<td><a href="'.base_url().'index.php/admin/activateCourse/'.$row->EVENT_ID.'">Deactivate</a></td>';
 		}
-		echo '<td><a href="'.base_url().'index.php/admin/deleteCompetition/'.$row->COMPETITION_ID.'">Delete</a></td>';
+		echo '<td><a href="'.base_url().'index.php/admin/deleteCompetition/'.$row->EVENT_ID.'">Delete</a></td>';
 		echo "</tr>";
 	}
 	echo "</tbody>";

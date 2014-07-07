@@ -1,6 +1,7 @@
 <?php
 class Admin_model extends CI_Model {
 	
+	//these are the event_type_id's gotten from the db
 	public $competition = '1';
 	public $course = '2';
 
@@ -23,19 +24,17 @@ class Admin_model extends CI_Model {
 	//check if the title name is being used returns 0 if it isn't being used
 	function check_competition_title($title)
 	{
-		$query = $this->db->query("SELECT * FROM competition WHERE competition_name = '$title'");
+		$query = $this->db->query("SELECT * FROM event WHERE event_name = '$title'");
 
 		return $query->num_rows();
 	}
 
 	//insert the format of the competition into the 'competition' table
 	function insert_competition_format($start, $end, $days, $title, $event_type_id)
-	{
-		$this->db->query("UPDATE competition SET active = 'n' WHERE event_type_id = '$this->competition'");
-		
+	{	
 		//insert data for competition one field at a time
-		$this->db->set('COMPETITION_YEAR', 2014);
-		$this->db->set('COMPETITION_NAME', $title);
+		$this->db->set('EVENT_YEAR', 2014);
+		$this->db->set('EVENT_NAME', $title);
 		$this->db->set('START_DATE', "TO_DATE('$start','YYYY-MM-DD')",false);
 		$this->db->set('END_DATE', "TO_DATE('$end','YYYY-MM-DD')",false);
 		$this->db->set('DAYS_OF_COMPETITION', $days);
@@ -43,7 +42,7 @@ class Admin_model extends CI_Model {
 		$this->db->set('EVENT_TYPE_ID', $event_type_id);
 
 		//insert into db, throw error if data not inserted
-		if( $this->db->insert('COMPETITION') != TRUE)
+		if( $this->db->insert('EVENT') != TRUE)
 		{
 			throw new Exception("Cannot insert");
 		}
@@ -55,12 +54,12 @@ class Admin_model extends CI_Model {
 
 	function insert_course($title, $event_type_id)
 	{
-		$this->db->set('COMPETITION_NAME', $title);
+		$this->db->set('EVENT_NAME', $title);
 		$this->db->set('ACTIVE', 'y');
 		$this->db->set('EVENT_TYPE_ID', $event_type_id);
 
 		//insert into db, throw error if data not inserted
-		if( $this->db->insert('COMPETITION') != TRUE)
+		if( $this->db->insert('EVENT') != TRUE)
 		{
 			throw new Exception("Cannot insert");
 		}
@@ -73,11 +72,11 @@ class Admin_model extends CI_Model {
 	//get competition id by active competition
 	function get_competition_id()
 	{
-		$query = $this->db->query("SELECT * FROM COMPETITION WHERE ACTIVE = 'y' AND EVENT_TYPE_ID = '$this->competition'");
+		$query = $this->db->query("SELECT * FROM event WHERE active = 'y' AND event_type_id = '$this->competition'");
 		if($query->num_rows() == 1)
 		{
 			$query = $query->row();
-			return $query->COMPETITION_ID;
+			return $query->EVENT_ID;
 		}
 		else
 		{
@@ -88,7 +87,7 @@ class Admin_model extends CI_Model {
 	//get all competition data by id
 	function get_competition_data($id)
 	{
-		$query = $this->db->query("SELECT * FROM COMPETITION WHERE COMPETITION_ID = '$id'");
+		$query = $this->db->query("SELECT * FROM event WHERE event_id = '$id'");
 		return $query;
 	}
 
@@ -147,7 +146,7 @@ class Admin_model extends CI_Model {
 	function get_question_id($question,$category_id,$type,$competition_id)
 	{
 		//query question table to get question_id
-		$query = $this->db->query("SELECT * FROM QUESTION WHERE QUESTION = '$question' AND CATEGORY_ID = '$category_id' AND QUESTION_TYPE = '$type'");
+		$query = $this->db->query("SELECT * FROM QUESTION WHERE to_char(QUESTION) = '$question' AND CATEGORY_ID = '$category_id' AND QUESTION_TYPE = '$type'");
 
 		if($query->num_rows() == 1)
 		{
@@ -166,7 +165,7 @@ class Admin_model extends CI_Model {
 
 		//insert data for date_questino one field at a time
 		$this->db->set('QUESTION_ID', $question_id);
-		$this->db->set('COMPETITION_ID', $competition_id);
+		$this->db->set('EVENT_ID', $competition_id);
 		$this->db->set('QUESTION_DATE', "TO_DATE('$date_question_asked','MM/DD/YYYY')",false);
 
 		//insert into db, throw error if data not inserted
@@ -219,7 +218,7 @@ class Admin_model extends CI_Model {
 	//get all competitions from the 'competitions' table
 	function get_all_competitions()
 	{
-		$query = $this->db->query("SELECT * FROM COMPETITION");
+		$query = $this->db->query("SELECT * FROM event WHERE event_type_id = '$this->competition'");
 
 		if($query->num_rows() > 0)
 		{
@@ -283,7 +282,7 @@ class Admin_model extends CI_Model {
 	//get all the questions for a specific comeptition by competition id
 	function get_all_questions($competition_id)
 	{
-		$query = $this->db->query("SELECT * FROM date_question WHERE competition_id = '$competition_id'");
+		$query = $this->db->query("SELECT * FROM date_question WHERE event_id = '$competition_id'");
 
 		if($query->num_rows() > 0)
 			return $query;
@@ -365,10 +364,10 @@ class Admin_model extends CI_Model {
 	function activate_competition($competition_id)
 	{
 		//set all competitions active column to n
-		$this->db->query("UPDATE COMPETITION SET active = 'n' WHERE event_type_id = '$this->competition'");
+		$this->db->query("UPDATE event SET active = 'n' WHERE event_type_id = '$this->competition'");
 
 		//set the one clicked to active
-		$this->db->query("UPDATE competition SET active = 'y' WHERE competition_id = '$competition_id'");
+		$this->db->query("UPDATE event SET active = 'y' WHERE event_id = '$competition_id'");
 	}
 
 	//either set the course selected as active or inactive
@@ -382,17 +381,17 @@ class Admin_model extends CI_Model {
 
 		if($active == 'y')
 		{
-			$this->db->query("UPDATE competition SET active = 'n' WHERE event_type_id = '$this->course' AND competition_id = '$competition_id'");
+			$this->db->query("UPDATE event SET active = 'n' WHERE event_type_id = '$this->course' AND event_id = '$competition_id'");
 		}
 		else if($active == 'n')
 		{
-			$this->db->query("UPDATE competition SET active = 'y' WHERE event_type_id = '$this->course' AND competition_id = '$competition_id'");
+			$this->db->query("UPDATE event SET active = 'y' WHERE event_type_id = '$this->course' AND event_id = '$competition_id'");
 		}
 	}
 
 	function check_if_active($competition_id)
 	{
-		$query = $this->db->query("SELECT * FROM competition WHERE competition_id = '$competition_id' AND active = 'y' AND event_type_id = '$this->competition'");
+		$query = $this->db->query("SELECT * FROM event WHERE event_id = '$competition_id' AND active = 'y' AND event_type_id = '$this->competition'");
 
 		return $query->num_rows();
 	}
@@ -401,7 +400,7 @@ class Admin_model extends CI_Model {
 	function delete_competition($competition_id)
 	{
 		//delete from the competition table
-		$this->db->query("DELETE FROM competition WHERE competition_id = '$competition_id'");
+		$this->db->query("DELETE FROM event WHERE event_id = '$competition_id'");
 
 		/*
 		//delete from the date_question table
@@ -418,7 +417,7 @@ class Admin_model extends CI_Model {
 	//check whether an organization is associated with a competition
 	function check_org_competition_assoc($competition_id, $org_id)
 	{
-		$query = $this->db->query("SELECT * FROM user_org_assoc WHERE competition_id = '$competition_id' AND org_id = '$org_id'");
+		$query = $this->db->query("SELECT * FROM user_org_assoc WHERE event_id = '$competition_id' AND org_id = '$org_id'");
 
 		return $query->num_rows();
 	}
@@ -447,7 +446,7 @@ class Admin_model extends CI_Model {
 	//get the event type id by the competition id
 	function get_event_type_id($competition_id)
 	{
-		$query = $this->db->query("SELECT * FROM competition WHERE competition_id = '$competition_id'");
+		$query = $this->db->query("SELECT * FROM event WHERE event_id = '$competition_id'");
 
 		if($query->num_rows() == 1)
 		{
@@ -480,7 +479,7 @@ class Admin_model extends CI_Model {
 	{
 		//insert data for date_questino one field at a time
 		$this->db->set('QUESTION_ID', $question_id);
-		$this->db->set('COMPETITION_ID', $competition_id);
+		$this->db->set('EVENT_ID', $competition_id);
 
 		//insert into db, throw error if data not inserted
 		if( $this->db->insert('COURSE_QUESTION') != TRUE)
