@@ -57,6 +57,7 @@ class Admin_model extends CI_Model {
 		$this->db->set('EVENT_NAME', $title);
 		$this->db->set('ACTIVE', 'y');
 		$this->db->set('EVENT_TYPE_ID', $event_type_id);
+		$this->db->set('EVENT_YEAR', '2014');
 
 		//insert into db, throw error if data not inserted
 		if( $this->db->insert('EVENT') != TRUE)
@@ -215,6 +216,20 @@ class Admin_model extends CI_Model {
 		}
 	}
 
+	function get_all_events()
+	{
+		$query = $this->db->query("SELECT * FROM event");
+
+		if($query->num_rows() > 0)
+		{
+			return $query;
+		}
+		else
+		{
+			echo "error with retrieving competition data";
+		}
+	}
+
 	//get all competitions from the 'competitions' table
 	function get_all_competitions()
 	{
@@ -319,7 +334,7 @@ class Admin_model extends CI_Model {
 	//check to see if question has changed at all
 	function check_question($question_id, $question)
 	{
-		$query = $this->db->query("SELECT * FROM question WHERE question_id = '$question_id' AND question = '$question'");
+		$query = $this->db->query("SELECT * FROM question WHERE question_id = '$question_id' AND to_char(question) = '$question'");
 
 		//if number of rows returned is 0 then update the question field
 		if($query->num_rows() == 0)
@@ -360,18 +375,8 @@ class Admin_model extends CI_Model {
 		$this->db->query("UPDATE answer SET answer = '$answer' WHERE answer_id = '$answer_id'");
 	}
 
-	//sets the active competition 
-	function activate_competition($competition_id)
-	{
-		//set all competitions active column to n
-		$this->db->query("UPDATE event SET active = 'n' WHERE event_type_id = '$this->competition'");
-
-		//set the one clicked to active
-		$this->db->query("UPDATE event SET active = 'y' WHERE event_id = '$competition_id'");
-	}
-
 	//either set the course selected as active or inactive
-	function activate_course($competition_id)
+	function activate_event($competition_id)
 	{
 		$query = $this->get_competition_data($competition_id);
 
@@ -381,11 +386,11 @@ class Admin_model extends CI_Model {
 
 		if($active == 'y')
 		{
-			$this->db->query("UPDATE event SET active = 'n' WHERE event_type_id = '$this->course' AND event_id = '$competition_id'");
+			$this->db->query("UPDATE event SET active = 'n' WHERE event_id = '$competition_id'");
 		}
 		else if($active == 'n')
 		{
-			$this->db->query("UPDATE event SET active = 'y' WHERE event_type_id = '$this->course' AND event_id = '$competition_id'");
+			$this->db->query("UPDATE event SET active = 'y' WHERE event_id = '$competition_id'");
 		}
 	}
 

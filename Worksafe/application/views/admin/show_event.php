@@ -29,6 +29,7 @@
 	echo "<th>End date</th>";
 	echo "<th>Active</th>";
 	echo "<th>Type</th>";
+	echo "<th>Show Organization</th>";
 	echo "<th>Set to Active?</th>";
 	echo "<th>Delete Competition</th>";
 	echo "</tr>";
@@ -46,6 +47,8 @@
 		{
 			echo "<td>no</td>";
 		}
+
+		//go through and figure out what event type each
 		foreach($event_type->result() as $type)
 		{
 			if($row->EVENT_TYPE_ID == $type->EVENT_TYPE_ID)
@@ -53,20 +56,22 @@
 				echo '<td>'.$type->EVENT_TYPE.'</td>';
 			}
 		}
-		if($row->EVENT_TYPE_ID == '1')
+
+		$competition_event_type_id = '1';
+		if($row->EVENT_TYPE_ID == $competition_event_type_id)
 		{
-			if($row->ACTIVE == 'n')
-				echo '<td><a href="'.base_url().'index.php/admin/activateCompetition/'.$row->EVENT_ID.'">Activate</a></td>';
-			else
-				echo '<td></td>';
+			echo '<td><a href="'.base_url().'index.php/admin/showOrganization/'.$row->EVENT_ID.'">Show Organization</a></td>';
 		}
-		else if($row->EVENT_TYPE_ID == '2')
+		else
 		{
-			if($row->ACTIVE == 'n')
-				echo '<td><a href="'.base_url().'index.php/admin/activateCourse/'.$row->EVENT_ID.'">Activate</a></td>';
-			else
-				echo '<td><a href="'.base_url().'index.php/admin/activateCourse/'.$row->EVENT_ID.'">Deactivate</a></td>';
+			echo '<td>No Organizations for courses</td>';
 		}
+
+		if($row->ACTIVE == 'n')
+			echo '<td><a href="'.base_url().'index.php/admin/activateEvent/'.$row->EVENT_ID.'">Activate</a></td>';
+		else
+			echo '<td><a href="'.base_url().'index.php/admin/activateEvent/'.$row->EVENT_ID.'">Deactivate</a></td>';
+		
 		echo '<td><a href="'.base_url().'index.php/admin/deleteCompetition/'.$row->EVENT_ID.'">Delete</a></td>';
 		echo "</tr>";
 	}

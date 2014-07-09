@@ -32,7 +32,7 @@
   
   echo form_open('admin/createQuestion');
 
-  echo '<select id="options" name="competition_id">';
+  echo '<select id="options" name="event_id">';
   foreach($events->result() as $type)
   {
     echo '<option value ="'.$type->EVENT_ID.'">'.$type->EVENT_NAME.'</option>';

@@ -16,7 +16,7 @@
 <title>Competition</title>
 </head>
 <body>
-<h1>Show Participants for <?=$competition->USER_NAME?></h1>
+<h1>Show Participants for <?=$org->USER_NAME?></h1>
 
 <div id='org_table'>
 	<table class="bordered">
@@ -39,14 +39,14 @@
       echo '<td>'.$row['percent_correct'].'</td>';
     	echo "</tr>";
   }
-  ?>
-</tbody>
-	</table>
+  
+echo '</tbody>';
+echo 	'</table>';
 
-<br />
-<a href="<?= base_url();?>index.php/admin/competition">Home page</a>
-<a href="<?= base_url();?>index.php/admin/showOrganization">Back to organizations</a>
-
+echo '<br />';
+echo '<a href="'.base_url().'index.php/admin/competition">Home page</a>';
+echo '<a href="'.base_url().'index.php/admin/showOrganization/'.$competition_id.'">Back to organizations</a>';
+?>
 
 </div>
 

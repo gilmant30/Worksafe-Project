@@ -13,23 +13,30 @@
 
 </script>
 
-<title>Competition</title>
+<title>Choose competition</title>
 </head>
 <body>
-<h1>Event Front Page</h1>
-
-<div class="competition" id="links">
-<a href="<?= base_url();?>index.php/admin/selectEventType">Start New Event</a>
-
-<a href="<?= base_url();?>index.php/admin/selectCompetition">Review/Edit Competition</a>
-
-<a href="#">Review/Edit A Course</a>
-
-<a href="<?= base_url();?>index.php/admin/questionEvent">Create Question</a>
-
-<a href="<?= base_url();?>index.php/admin/showEvent">Show Events</a>
+<h1>Choose the Competition</h1>
 
 
+<div id='org_table'>
+	<table class="bordered">
+    <thead>
+		<tr>
+			<th>Competition Name</th>
+		</tr>
+  </thead>
+      <tbody>
+  <?php
+
+foreach($competition->result() as $comp){
+    	echo "<tr>";
+    	echo '<td><a href="'.base_url().'index.php/admin/reviewCompetition/'.$comp->EVENT_ID.'"">'.$comp->EVENT_NAME.'</a></td>';
+    	echo "</tr>";
+  }
+	echo '</tbody>';
+	echo '</table>';
+?>
 </div>
 
 </body>

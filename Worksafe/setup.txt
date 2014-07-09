@@ -1,0 +1,14 @@
+To install onto your local machine first download xampp from online.
+Once installed move the entire worksafe folder into xampp then the htdocs folder.
+After you must open the xampp control panel and in the "Apache" row click on "config" then PHP(php.ini).
+Search for these two lines of code...
+
+;extension=php_oci8.dll      ; Use with Oracle 10gR2 Instant Client
+;extension=php_oci8_11g.dll  ; Use with Oracle 11gR2 Instant Client
+
+and remove the front semi-colons which will allow the oracle database access in the apache server.
+You should then be able to go to....
+
+http://localhost/worksafe/index.php/competition/index/1
+
+And it will take you to the home page for competition 1.

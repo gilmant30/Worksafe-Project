@@ -24,6 +24,7 @@
 
 <?php
 echo form_open('admin/editCompetition');
+echo form_hidden('competition_id', $competition_id);
 foreach ($review as $question) {
 	echo '<p>Question: <a href="'.base_url().'index.php/admin/deleteQuestionAssoc/'.$question['question_id'].'">Delete Question</a></p>';
 	$array = array('name' => 'q'.$question['question_id'], 'value' => $question['question_name']->load() );

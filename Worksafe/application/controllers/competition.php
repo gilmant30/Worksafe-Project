@@ -31,15 +31,6 @@ class Competition extends CI_Controller {
 		{
 			redirect('competition/fail');
 		}
-
-		//set cookie for participant id
-		$cookie_competition_id = array(
-		'name' => 'competition_id',
-		'value' => $competition_id,
-		'expire' => 86500,
-		);
-
-		$this->input->set_cookie($cookie_competition_id);
 	
 		$data['error'] = $this->session->flashdata('error');
 		$data['competition_id'] = $competition_id;
@@ -47,6 +38,14 @@ class Competition extends CI_Controller {
 
 		if(empty($this->input->cookie('participant_id')))
 		{
+			//set cookie for competition id
+			$cookie_competition_id = array(
+			'name' => 'competition_id',
+			'value' => $competition_id,
+			'expire' => 86500,
+			);
+
+			$this->input->set_cookie($cookie_competition_id);
 			$this->load->view('template/login_header', $data);
 			$data['signup'] = TRUE;
 		}
@@ -106,7 +105,7 @@ class Competition extends CI_Controller {
 				'expire' => 86500,
 				);
 
-				//set cookie for participant id
+				//set cookie for competition id
 				$cookie_competition_id = array(
 				'name' => 'competition_id',
 				'value' => $competition_id,
@@ -207,13 +206,17 @@ class Competition extends CI_Controller {
 				//grab participant id
 				$participant_id = $this->Competition_model->get_participant_id($email);
 
-				//send to Competition_model to run function insert_participant_into_user_role(), throw error if it didn't add to database
-				try
+				//if user is not insert
+				if($query->num_rows() == 0)
 				{
-					//insert participant into db
-					$this->Competition_model->insert_participant_into_user_role($participant_id);
-				} catch (Exception $e) {
-					echo 'Caught exception: ', $e->getMessage(), "\n";
+					//send to Competition_model to run function insert_participant_into_user_role(), throw error if it didn't add to database
+					try
+					{
+						//insert participant into db
+						$this->Competition_model->insert_participant_into_user_role($participant_id);
+					} catch (Exception $e) {
+						echo 'Caught exception: ', $e->getMessage(), "\n";
+					}
 				}
 				
 				//send to Competition_model to run function assoc_user_org(), throw error if it didn't add to database
@@ -329,13 +332,15 @@ class Competition extends CI_Controller {
 
 			if($noQuestions == 0)
 			{
-				redirect('competition/noQuestions');
+				$this->session->set_flashdata('commitment', 'No questions for today');
+				redirect('competition/index/'.$competition_id.'');
 			}
 
 			$data['flag'] = $flag;
 			
 			if($flag == 0)
 			{
+				$this->session->set_flashdata('giveCommitment', 'TRUE');
 				redirect('competition/giveCommitment');
 			}
 
@@ -343,11 +348,6 @@ class Competition extends CI_Controller {
 		$this->load->view('template/header');
 		$this->load->view('competition/competition_question_page',$data);
 		}		
-	}
-
-	public function noQuestions()
-	{
-		echo "no questions for today";
 	}
 
 	//about page
@@ -678,6 +678,13 @@ class Competition extends CI_Controller {
 	{
 		$participant_id = $this->input->cookie('participant_id');
 		$competition_id = $this->input->cookie('competition_id');
+
+		//if someone tries to access this page with out answering question this error is thrown
+		if($this->session->flashdata('giveCommitment') != 'TRUE')
+		{
+			$this->session->set_flashdata('commitment', 'Nice try ya cheater!');
+			redirect('competition/index/'.$competition_id.'');
+		}
 
 		//check to see if a commitment has been added that day for the participant
 		$commit = $this->Competition_model->check_commitment($participant_id, $competition_id);

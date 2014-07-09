@@ -44,10 +44,10 @@
 
 
   echo form_open('admin/uploadQuestion');
-  echo form_hidden('competition_id', $competition->EVENT_ID);
+  echo form_hidden('event_id', $event->EVENT_ID);
   echo form_input($question);
   echo form_input($category);
-  if($competition->EVENT_TYPE_ID == '1')
+  if($event->EVENT_TYPE_ID == '1')
   {
     echo form_input($date);
   }

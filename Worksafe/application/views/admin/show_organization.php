@@ -33,7 +33,7 @@
   <?php
   	foreach ($organization as $row) {
     	echo "<tr>";
-    	echo '<td><a href ="'.base_url().'index.php/admin/showParticipants/'.$row['user_id'].'" id="org_id_link">'.$row['user_id'].'</a></td>';
+    	echo '<td><a href ="'.base_url().'index.php/admin/showParticipants/'.$competition->EVENT_ID.'/'.$row['user_id'].'" id="org_id_link">'.$row['user_id'].'</a></td>';
     	echo '<td>'.$row['name'].'</td>';
       echo '<td>'.$row['total_commits'].'</td>';
       echo '<td>'.$row['percent_correct'].'</td>';

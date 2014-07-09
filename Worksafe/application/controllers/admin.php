@@ -192,16 +192,6 @@ class Admin extends CI_Controller {
 				echo 'Caught exception: ', $e->getMessage(), "\n";
 			}
 
-			//set cookie for the question day for creating questions
-			$cookie_question_day = array(
-				'name' => 'question_day',
-				'value' => 1,
-				'expire' => 86500,
-				);
-
-			//create cookie
-			$this->input->set_cookie($cookie_question_day);
-
 			//redirect to createQuestion page
 			redirect("admin/index");
 		}
@@ -254,9 +244,16 @@ class Admin extends CI_Controller {
 		redirect('admin/index');
 	}
 
+	public function selectCompetition()
+	{
+		$data['competition'] = $this->Admin_model->get_all_competitions();
+
+		$this->load->view('admin/choose_competition',$data);
+	}
+
 
 	//gets data and loads view that shows a review of the competition
-	public function reviewCompetition()
+	public function reviewCompetition($competition_id)
 	{
 		//if user is not logged in redirect to login page
 		if(!$this->session->userdata('adminLoggedin'))
@@ -267,12 +264,9 @@ class Admin extends CI_Controller {
 		//puts update and error value if there is one
 		$data['update'] = $this->session->flashdata('update');
 		$data['error'] = $this->session->flashdata('error');
-		
+		$data['competition_id'] = $competition_id;
 		//create object array to send to view
 		$data['review'] = new ArrayObject();
-
-		//get active competition
-		$competition_id = $this->Admin_model->get_competition_id();
 		
 		//grab all questions that have to do with the specific competition id
 		$question = $this->Admin_model->get_all_questions($competition_id);
@@ -333,7 +327,7 @@ class Admin extends CI_Controller {
 
 		$data['delete_competition'] = $this->session->flashdata('delete_competition');
 		//get all data for competitions
-		$data['array'] = $this->Admin_model->get_all_competitions();
+		$data['array'] = $this->Admin_model->get_all_events();
 		$data['event_type'] = $this->Admin_model->get_event_types();
 		$this->load->view('admin/show_event',$data);
 	}
@@ -343,7 +337,7 @@ class Admin extends CI_Controller {
 	{
 
 		//get the competition id
-		$competition_id = $this->Admin_model->get_competition_id();
+		$competition_id = $this->input->post('competition_id');
 
 		//get all the questions for that competition with the competition id
 		$questions = $this->Admin_model->get_all_questions($competition_id);
@@ -373,7 +367,7 @@ class Admin extends CI_Controller {
 		if($this->form_validation->run() === FALSE)
 		{
 			$this->session->set_flashdata('error', 'Must not leave any fields blank');
-			redirect('admin/reviewCompetition');
+			redirect('admin/reviewCompetition/'.$competition_id.'');
 		}
 
 		foreach ($questions->result() as $row) {
@@ -397,11 +391,11 @@ class Admin extends CI_Controller {
 		}
 
 		$this->session->set_flashdata('update', 'Questions and answers have been updated');
-		redirect('admin/reviewCompetition');
+		redirect('admin/reviewCompetition/'.$competition_id.'');
 	}
 
 	//show all active organizations for the active competition
-	public function showOrganization()
+	public function showOrganization($competition_id)
 	{
 		//if user is not logged in redirect to login page
 		if(!$this->session->userdata('adminLoggedin'))
@@ -410,7 +404,6 @@ class Admin extends CI_Controller {
 		}
 
 		//get competition data for active competition and put in object array to send to view
-		$competition_id = $this->Admin_model->get_competition_id();
 		$query = $this->Admin_model->get_competition_data($competition_id);
 		$data['competition'] = $query->row();
 
@@ -428,8 +421,15 @@ class Admin extends CI_Controller {
 
 			$correct = $this->Admin_model->get_org_correct_ans($org->USER_ID);
 			$total = $this->Admin_model->get_org_total_ans($org->USER_ID);
-			$percent_correct = (intval($correct)/intval($total)) * 100;
-			$percent_correct = number_format($percent_correct, 2, '.', '');
+			if($total == 0)
+			{
+				$percent_correct = '0.00';
+			}
+			else
+			{
+				$percent_correct = (intval($correct)/intval($total)) * 100;
+				$percent_correct = number_format($percent_correct, 2, '.', '');
+			}
 
 			//get all participants associated with a specific organization
 			$query = $this->Admin_model->get_participants_by_org($org->USER_ID);
@@ -470,7 +470,7 @@ class Admin extends CI_Controller {
 	}
 
 	//show all participants associated with a specific user
-	public function showParticipants($org_id)
+	public function showParticipants($competition_id, $org_id)
 	{
 		//if user is not logged in redirect to login page
 		if(!$this->session->userdata('adminLoggedin'))
@@ -479,7 +479,10 @@ class Admin extends CI_Controller {
 		}
 
 		//get the organization data to send to view
-		$data['competition'] = $this->Admin_model->get_org_data($org_id);
+		$data['org'] = $this->Admin_model->get_org_data($org_id);
+
+		//get competition id
+		$data['competition_id'] = $competition_id;
 
 		//create object array to send to view
 		$data['participant'] = new ArrayObject();
@@ -528,21 +531,9 @@ class Admin extends CI_Controller {
 		$this->load->view('admin/show_participant',$data);
 	}
 
-	//logic for switching the active competition
-	public function activateCompetition($competition_id)
-	{
-		//if user is not logged in redirect to login page
-		if(!$this->session->userdata('adminLoggedin'))
-		{
-			redirect('admin/');
-		}
-
-		$this->Admin_model->activate_competition($competition_id);
-		redirect('admin/showEvent');
-	}
 
 	//logic for switching the active course
-	public function activateCourse($competition_id)
+	public function activateEvent($event_id)
 	{
 		//if user is not logged in redirect to login page
 		if(!$this->session->userdata('adminLoggedin'))
@@ -550,7 +541,7 @@ class Admin extends CI_Controller {
 			redirect('admin/');
 		}
 
-		$this->Admin_model->activate_course($competition_id);
+		$this->Admin_model->activate_event($event_id);
 		redirect('admin/showEvent');
 	}
 
@@ -562,21 +553,9 @@ class Admin extends CI_Controller {
 			redirect('admin/');
 		}
 
-		//check to see if the competition to be deleted is the active one
-		$num_rows = $this->Admin_model->check_if_active($competition_id);
-
-		//if the competition is not active delete it
-		if($num_rows == 0)
-		{
 			$this->Admin_model->delete_competition($competition_id);
 			redirect('admin/showEvent');
-		}
-		//if the competition is active throw an error
-		else
-		{
-			$this->session->set_flashdata('delete_competition', 'You cannot delete the active competition');
-			redirect('admin/showEvent');
-		}
+
 	}
 
 	//for testing to destroy session
@@ -605,13 +584,19 @@ class Admin extends CI_Controller {
 
 	public function createQuestion()
 	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
+
 		$data['error'] = $this->session->flashdata('error');
 		$data['added'] = $this->session->flashdata('added');
-		$competition_id = $this->security->xss_clean($this->input->post('competition_id'));
+		$event_id = $this->security->xss_clean($this->input->post('event_id'));
 
-		$query = $this->Admin_model->get_competition_data($competition_id);
+		$query = $this->Admin_model->get_competition_data($event_id);
 
-		$data['competition'] = $query->row();
+		$data['event'] = $query->row();
 		$this->load->view('admin/create_question',$data);
 	}
 
@@ -619,9 +604,7 @@ class Admin extends CI_Controller {
 	public function uploadQuestion()
 	{
 		//get the event type for the event
-		$competition_id = $this->input->post('competition_id');
-		$event_type_id = $this->Admin_model->get_event_type_id($competition_id);
-
+		$event_type_id = $this->input->post('event_id');
 
 		//put validation on so all fields are required
 		$this->form_validation->set_rules('question', 'Question', 'required');
@@ -651,7 +634,7 @@ class Admin extends CI_Controller {
 		if($event_type_id == $this->competition)
 		{
 			$question_date = $this->security->xss_clean($this->input->post('question_date'));
-			$competition = $this->Admin_model->get_competition_data($competition_id);
+			$competition = $this->Admin_model->get_competition_data($event_type_id);
 			$competition = $competition->row();
 
 			$start_date = strtotime($competition->START_DATE);
@@ -679,7 +662,7 @@ class Admin extends CI_Controller {
 		}
 
 		//retrieve question_id
-		$question_id = $this->Admin_model->get_question_id($question,$category_id,$question_type,$competition_id);
+		$question_id = $this->Admin_model->get_question_id($question,$category_id,$question_type,$event_type_id);
 
 
 		if($event_type_id == $this->competition)
@@ -687,7 +670,7 @@ class Admin extends CI_Controller {
 			//send to admin_model to run function insert_date_question(), throw error if it didn't add to database
 			try
 			{
-				$this->Admin_model->insert_date_question($question_id,$competition_id,$question_date);
+				$this->Admin_model->insert_date_question($question_id,$event_type_id,$question_date);
 			} catch (Exception $e) {
 				echo 'Caught exception: ', $e->getMessage(), "\n";
 			}
@@ -697,7 +680,7 @@ class Admin extends CI_Controller {
 			//send data to course question to be inserted
 			try
 			{
-				$this->Admin_model->insert_course_question($question_id,$competition_id);
+				$this->Admin_model->insert_course_question($question_id,$event_type_id);
 			} catch (Exception $e) {
 				echo 'Caught exception: ', $e->getMessage(), "\n";
 			}
