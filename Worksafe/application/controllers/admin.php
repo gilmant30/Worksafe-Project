@@ -12,6 +12,7 @@ class Admin extends CI_Controller {
 		$this->load->helper(array('form', 'url', 'string', 'cookie'));  //load a form and the base_url
         $this->load->library(array('form_validation', 'security', 'session')); //set form_validation rules and xss_cleaning
         $this->load->model('Admin_model');
+        date_default_timezone_set('America/Chicago');
 	}
 
 	//gets user to login page
@@ -246,11 +247,16 @@ class Admin extends CI_Controller {
 
 	public function selectCompetition()
 	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
+
 		$data['competition'] = $this->Admin_model->get_all_competitions();
 
 		$this->load->view('admin/choose_competition',$data);
 	}
-
 
 	//gets data and loads view that shows a review of the competition
 	public function reviewCompetition($competition_id)
@@ -271,45 +277,57 @@ class Admin extends CI_Controller {
 		//grab all questions that have to do with the specific competition id
 		$question = $this->Admin_model->get_all_questions($competition_id);
 
-		//loop through all questions
-		foreach ($question->result() as $question) {
-			$answer = new ArrayObject();
-			
-			$question_date = $question->QUESTION_DATE;
-
-			//get all the question data
-			$question_data = $this->Admin_model->get_question_data($question->QUESTION_ID);
-
-			//get all the answers for a specific question
-			$answer_array = $this->Admin_model->get_all_answers($question_data->QUESTION_ID);
-
-			//loop through each answer
-			foreach ($answer_array->result() as $row) {
-				
-				//add all the answer data to the answer array
-				$answer->append($row);
-			}
-
-			//put question and answers in a review array
-			$review_array = array(
-				'question_id' => $question_data->QUESTION_ID,
-				'question_name' => $question_data->QUESTION,
-				'question_type' => $question_data->QUESTION_TYPE,
-				'question_date' => $question_date,
-				'answer_data' => $answer
-				);
-
-			//append array to object array to be sent to view
-			$data['review']->append($review_array);
-
+		if($question->num_rows() == 0)
+		{
+			$data['no_questions'] = 'not empty';
 		}
+		else
+		{
+			//loop through all questions
+			foreach ($question->result() as $question) {
+				$answer = new ArrayObject();
+				
+				$question_date = $question->QUESTION_DATE;
 
+				//get all the question data
+				$question_data = $this->Admin_model->get_question_data($question->QUESTION_ID);
+
+				//get all the answers for a specific question
+				$answer_array = $this->Admin_model->get_all_answers($question_data->QUESTION_ID);
+
+				//loop through each answer
+				foreach ($answer_array->result() as $row) {
+					
+					//add all the answer data to the answer array
+					$answer->append($row);
+				}
+
+				//put question and answers in a review array
+				$review_array = array(
+					'question_id' => $question_data->QUESTION_ID,
+					'question_name' => $question_data->QUESTION,
+					'question_type' => $question_data->QUESTION_TYPE,
+					'question_date' => $question_date,
+					'answer_data' => $answer
+					);
+
+				//append array to object array to be sent to view
+				$data['review']->append($review_array);
+
+			}
+		}
 		//load review page
 		$this->load->view('admin/review_competition',$data);
 	}
 
 	public function deleteQuestionAssoc($question_id)
 	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
+
 		$this->Admin_model->delete_question($question_id);
 
 		$this->session->set_flashdata('update','question has been deleted');
@@ -335,6 +353,11 @@ class Admin extends CI_Controller {
 	//logic for editing competition
 	public function editCompetition()
 	{
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
 
 		//get the competition id
 		$competition_id = $this->input->post('competition_id');
@@ -559,11 +582,12 @@ class Admin extends CI_Controller {
 	}
 
 	//for testing to destroy session
-	public function destroy_session()
+	public function logout()
 	{
 		$this->session->sess_destroy();
 	}
 
+	//get all events so you can associate an event when creating a question
 	public function questionEvent()
 	{
 		//if user is not logged in redirect to login page
@@ -572,7 +596,7 @@ class Admin extends CI_Controller {
 			redirect('admin/');
 		}
 
-		$data['events'] =  $this->Admin_model->get_all_competitions();
+		$data['events'] =  $this->Admin_model->get_all_events();
 		$data['error'] = $this->session->flashdata('error');
 		if($data['events'] == NULL)
 		{
@@ -581,7 +605,7 @@ class Admin extends CI_Controller {
 		$this->load->view('admin/question_event', $data);
 	}
 
-
+	//get info for creating a question
 	public function createQuestion()
 	{
 		//if user is not logged in redirect to login page
@@ -603,8 +627,15 @@ class Admin extends CI_Controller {
 	//uploads all question information from the create question form
 	public function uploadQuestion()
 	{
-		//get the event type for the event
-		$event_type_id = $this->input->post('event_id');
+		//if user is not logged in redirect to login page
+		if(!$this->session->userdata('adminLoggedin'))
+		{
+			redirect('admin/');
+		}
+
+		//get the event id for the event
+		$event_id = $this->input->post('event_id');
+		$event_type_id = $this->Admin_model->get_event_type_id($event_id);
 
 		//put validation on so all fields are required
 		$this->form_validation->set_rules('question', 'Question', 'required');
@@ -634,7 +665,7 @@ class Admin extends CI_Controller {
 		if($event_type_id == $this->competition)
 		{
 			$question_date = $this->security->xss_clean($this->input->post('question_date'));
-			$competition = $this->Admin_model->get_competition_data($event_type_id);
+			$competition = $this->Admin_model->get_competition_data($event_id);
 			$competition = $competition->row();
 
 			$start_date = strtotime($competition->START_DATE);
@@ -645,7 +676,7 @@ class Admin extends CI_Controller {
 			//check whether the competition has started yet
 			if($today < $start_date || $today > $end_date)
 			{
-				$this->session->set_flashdata('error', 'The date must be within the competition dates');
+				$this->session->set_flashdata('error', 'date must be within the competition timeline');
 				redirect('admin/questionEvent');
 			}
 
@@ -662,15 +693,14 @@ class Admin extends CI_Controller {
 		}
 
 		//retrieve question_id
-		$question_id = $this->Admin_model->get_question_id($question,$category_id,$question_type,$event_type_id);
-
+		$question_id = $this->Admin_model->get_question_id($question,$category_id,$question_type,$event_id);
 
 		if($event_type_id == $this->competition)
 		{
 			//send to admin_model to run function insert_date_question(), throw error if it didn't add to database
 			try
 			{
-				$this->Admin_model->insert_date_question($question_id,$event_type_id,$question_date);
+				$this->Admin_model->insert_date_question($question_id,$event_id,$question_date);
 			} catch (Exception $e) {
 				echo 'Caught exception: ', $e->getMessage(), "\n";
 			}
@@ -680,7 +710,7 @@ class Admin extends CI_Controller {
 			//send data to course question to be inserted
 			try
 			{
-				$this->Admin_model->insert_course_question($question_id,$event_type_id);
+				$this->Admin_model->insert_course_question($question_id,$event_id);
 			} catch (Exception $e) {
 				echo 'Caught exception: ', $e->getMessage(), "\n";
 			}
@@ -700,7 +730,7 @@ class Admin extends CI_Controller {
 			}
 
 			$this->session->set_flashdata('added', 'True or false question added');
-			redirect('admin/questionEvent');
+			//redirect('admin/questionEvent');
 
 		}
 
@@ -734,7 +764,7 @@ class Admin extends CI_Controller {
 			}
 
 			$this->session->set_flashdata('added', 'Multiple choice question added');
-			redirect('admin/questionEvent');
+			//redirect('admin/questionEvent');
 		}
 
 		//if question type is multiple select insert all answers into db
@@ -765,7 +795,7 @@ class Admin extends CI_Controller {
 			}
 
 			$this->session->set_flashdata('added', 'Multiple select question added');
-			redirect('admin/questionEvent');
+			//redirect('admin/questionEvent');
 		}	
 	}
 

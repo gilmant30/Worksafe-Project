@@ -45,13 +45,18 @@
 
   echo form_open('admin/uploadQuestion');
   echo form_hidden('event_id', $event->EVENT_ID);
+  echo form_label('Question: ', 'question');
   echo form_input($question);
+  echo form_label('Category: ', 'category');
   echo form_input($category);
   if($event->EVENT_TYPE_ID == '1')
   {
+    echo form_label('Date: ', 'question_date');
     echo form_input($date);
   }
+  echo form_label('Source link: ', 'source');
   echo form_input($source);
+  echo form_label('Question type: ', 'option_type');
   echo form_dropdown('option_type', $options, 'multiple_choice', $options_id);
   echo '<br />';
 

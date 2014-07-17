@@ -5,7 +5,7 @@
 
 <div id="nav_menu">
 	<ul>
-		<li><a href="<?=base_url();?>index.php/">Home</a></li>
+		<li><a href="<?=base_url();?>index.php">Home</a></li>
 		<li><a href="<?=base_url();?>index.php/competition/about">Learn more</a></li>
 		<li><a href="<?=base_url();?>index.php/competition/leaderboard">Leaderboard</a></li>
 		<li><a href="<?=base_url();?>index.php/competition/contact">Contact</a></li>

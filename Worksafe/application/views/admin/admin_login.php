@@ -25,7 +25,9 @@
 	$password = array('name' => 'password', 'placeholder' => 'Password');
 
 	echo form_open('admin/login');
+  echo form_label('Email: ', 'email');
 	echo form_input($input);
+  echo form_label('Password: ', 'password');
 	echo form_password($password);
 	echo form_submit('admin_login_submit', 'Log in');
   echo form_close();

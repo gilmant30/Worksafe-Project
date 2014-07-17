@@ -1,18 +1,27 @@
-
-
 body {
-    width: 75%;
-    margin: 40px auto;
-    font-family: 'trebuchet MS', 'Lucida sans', Arial;
-    font-size: 14px;
-    color: #444;
-    background: url(../img/background_img.jpg) no-repeat;
-    background-size: 100%;
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  font-family:'Open Sans',sans-serif;
+  background: url(../img/background_img.jpg);
+  background-size: 100%;
+  text-align: center;
 }
 
+#leaderboard{
+    margin: auto;
+    width:75%;
+}
+
+h1{
+    float: left;
+}
 
 table {
     *border-collapse: collapse; /* IE7 and lower */
+    margin: auto;
+    display: inline;
     border-spacing: 0;
     width: 100%;   
     background:#fff; 

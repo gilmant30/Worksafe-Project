@@ -23,31 +23,42 @@
 <h2>Questions and answers for competition</h2>
 
 <?php
-echo form_open('admin/editCompetition');
-echo form_hidden('competition_id', $competition_id);
-foreach ($review as $question) {
-	echo '<p>Question: <a href="'.base_url().'index.php/admin/deleteQuestionAssoc/'.$question['question_id'].'">Delete Question</a></p>';
-	$array = array('name' => 'q'.$question['question_id'], 'value' => $question['question_name']->load() );
-	echo form_input($array);
-	echo '<p id="date">Date: '.$question['question_date'].'</p>';
-	echo '<p id="type">Type of question: '.$question['question_type'].'</p>';
-	echo '<p>Answers:</p>';
-	foreach ($question['answer_data'] as $value) {
-		if($value->CORRECT == 'y')
-		{
-			$answer = array('name' => 'a'.$value->ANSWER_ID, 'value' => $value->ANSWER->load(), 'id' => 'correct');
-		}
-		else
-		{
-			$answer = array('name' => 'a'.$value->ANSWER_ID, 'value' => $value->ANSWER->load());
-		}
-		echo form_input($answer);
-	}
-		echo "<br />";
-		echo "<br />";
+if(!empty($no_questions))
+{
+echo "no questions have been added for this competition, go to create questions to add some";
+echo '<br />';
+echo '<br />';
+echo '<a href="'.base_url().'index.php/admin/questionEvent">Create Question</a>';
+echo '<br />';
 }
-	echo form_submit('edit_competition', 'Update Competition');
-echo form_close();
+else
+{
+	echo form_open('admin/editCompetition');
+	echo form_hidden('competition_id', $competition_id);
+	foreach ($review as $question) {
+		echo '<p>Question: <a href="'.base_url().'index.php/admin/deleteQuestionAssoc/'.$question['question_id'].'">Delete Question</a></p>';
+		$array = array('name' => 'q'.$question['question_id'], 'value' => $question['question_name']->load() );
+		echo form_input($array);
+		echo '<p id="date">Date: '.$question['question_date'].'</p>';
+		echo '<p id="type">Type of question: '.$question['question_type'].'</p>';
+		echo '<p>Answers:</p>';
+		foreach ($question['answer_data'] as $value) {
+			if($value->CORRECT == 'y')
+			{
+				$answer = array('name' => 'a'.$value->ANSWER_ID, 'value' => $value->ANSWER->load(), 'id' => 'correct');
+			}
+			else
+			{
+				$answer = array('name' => 'a'.$value->ANSWER_ID, 'value' => $value->ANSWER->load());
+			}
+			echo form_input($answer);
+		}
+			echo "<br />";
+			echo "<br />";
+	}
+		echo form_submit('edit_competition', 'Update Competition');
+	echo form_close();
+}
 ?>
 <br />
 <a id="home_link" href="<?= base_url();?>index.php/admin/Competition">Competition home page</a>

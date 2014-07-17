@@ -45,7 +45,7 @@
 
   echo '<div>'.$error.'</div>';
   echo '<br />';
-  echo '<a href="http://localhost/worksafe/index.php/admin/competition">Home page</a>';
+  echo '<a href="'.base_url().'index.php/admin/competition">Home page</a>';
   	
   ?>
 </div>

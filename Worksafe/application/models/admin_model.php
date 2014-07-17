@@ -299,10 +299,7 @@ class Admin_model extends CI_Model {
 	{
 		$query = $this->db->query("SELECT * FROM date_question WHERE event_id = '$competition_id'");
 
-		if($query->num_rows() > 0)
-			return $query;
-		else
-			echo "Error with get_all_questions() function";
+		return $query;
 	}
 
 	//get all the question data by the question id

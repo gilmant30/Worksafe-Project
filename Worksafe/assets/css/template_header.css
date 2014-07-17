@@ -1,3 +1,14 @@
+body {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  font-family:'Open Sans',sans-serif;
+  background: url(../img/background_img.jpg);
+  background-size: 100%;
+  text-align: center;
+}
+
 strong{
   color: white;
   background-color: #e98410;
@@ -40,23 +51,17 @@ img{
   float:left;
 }
 
-#nav_menu{
+#nav_menu ul{
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
   text-align: right;
+  margin-top: 15px;
+ 
 }
 
-li{
-  display: inline-block;
-  margin-top: 15px;
+#nav_menu li{
+  display: inline;
   margin-right: 15px;
 }
 
-.button{
-    background:#eee;
-    text-decoration:none;
-    color:#333;
-    font-family:Arial, sans-serif;
-    font-size:25px;
-    font-weight:bold;
-    padding:3px 5px;
-    border:1px solid #aaa;
-}

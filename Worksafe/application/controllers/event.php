@@ -8,7 +8,7 @@ class Event extends CI_Controller {
 		parent::__construct();
 		$this->load->helper(array('form', 'url', 'string', 'cookie'));  //load a form and the base_url
         $this->load->library(array('form_validation', 'security', 'session')); //set form_validation rules and xss_cleaning
-        
+        date_default_timezone_set('America/Chicago');
 	}
 
 	public function index()

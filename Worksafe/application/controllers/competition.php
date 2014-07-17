@@ -9,18 +9,20 @@ class Competition extends CI_Controller {
 		$this->load->helper(array('form', 'url', 'string', 'cookie'));  //load a form and the base_url
         $this->load->library(array('form_validation', 'security', 'session')); //set form_validation rules and xss_cleaning
         $this->load->model('Competition_model');
+        date_default_timezone_set('America/Chicago');
 	}
 
 
-	//index/home page
+	//index and home page
 	public function index($competition_id)
 	{
 		if(empty($competition_id))
 		{
-			if(empty($this->input->cookie('competition_id')))
+			if($this->input->cookie('competition_id') == FALSE)
+			{
 				redirect('competition/fail');
-			
-			else if(!empty($this->input->cookie('competition_id')))
+			}
+			else
 			{
 				$competition_id = $this->input->cookie('competition_id');
 				redirect('competition/index/'.$competition_id.'');
@@ -36,7 +38,7 @@ class Competition extends CI_Controller {
 		$data['competition_id'] = $competition_id;
 		$data['commitment'] = $this->session->flashdata('commitment');
 
-		if(empty($this->input->cookie('participant_id')))
+		if($this->input->cookie('participant_id') == FALSE)
 		{
 			//set cookie for competition id
 			$cookie_competition_id = array(
@@ -353,7 +355,7 @@ class Competition extends CI_Controller {
 	//about page
 	public function about()
 	{
-		if(empty($this->input->cookie('participant_id')))
+		if($this->input->cookie('participant_id') == FALSE)
 		{
 			$this->load->view('template/login_header');
 		}
@@ -367,7 +369,7 @@ class Competition extends CI_Controller {
 	//contact page currently empty
 	public function contact()
 	{
-		if(empty($this->input->cookie('participant_id')))
+		if($this->input->cookie('participant_id') == FALSE)
 		{
 			$this->load->view('template/login_header');
 		}
@@ -446,7 +448,7 @@ class Competition extends CI_Controller {
 		}
 
 
-		if(empty($this->input->cookie('participant_id')))
+		if($this->input->cookie('participant_id') == FALSE)
 		{
 			$this->load->view('template/login_header');
 		}
