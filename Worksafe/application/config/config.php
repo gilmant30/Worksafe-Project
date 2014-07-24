@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://mem-jiradev-app/worksafe/';
+$config['base_url']	= 'http://localhost/worksafe/';
 
 /*
 |--------------------------------------------------------------------------

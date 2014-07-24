@@ -255,9 +255,9 @@ class Admin_model extends CI_Model {
 	}
 
 	//get all participants that are linked to a specific organization
-	function get_participants_by_org($org_id)
+	function get_participants_by_org($org_id, $competition_id)
 	{
-		$query = $this->db->query("SELECT * FROM user_org_assoc WHERE org_id = '$org_id'");
+		$query = $this->db->query("SELECT * FROM user_org_assoc WHERE org_id = '$org_id' AND event_id = '$competition_id'");
 
 		return $query;
 	}
@@ -287,9 +287,9 @@ class Admin_model extends CI_Model {
 	}
 
 	//get the number of commits for a specific user
-	function commits_by_user($participant_id)
+	function commits_by_user($participant_id, $competition_id)
 	{
-		$query = $this->db->query("SELECT * FROM commitment WHERE user_id = '$participant_id'");
+		$query = $this->db->query("SELECT * FROM commitment WHERE user_id = '$participant_id' AND event_id = '$competition_id'");
 
 		return $query->num_rows();	
 	}
@@ -495,35 +495,117 @@ class Admin_model extends CI_Model {
 	}
 
 	//get the # of correct answers from an organization
-	function get_org_correct_ans($org_id)
+	function get_org_correct_ans($org_id, $competition_id)
 	{
-		$query = $this->db->query("SELECT user_question.CORRECT FROM user_question JOIN user_org_assoc ON user_question.USER_ID = user_org_assoc.PARTICIPANT_ID WHERE user_org_assoc.ORG_ID = '$org_id' AND user_question.CORRECT = 'y'");
+		$query = $this->db->query("SELECT user_question.CORRECT FROM user_question JOIN user_org_assoc ON user_question.USER_ID = user_org_assoc.PARTICIPANT_ID WHERE user_org_assoc.ORG_ID = '$org_id' AND user_question.event_id = '$competition_id' AND user_question.CORRECT = 'y'");
 	
 		return $query->num_rows();
 	}
 
 	//get the total # of answers from an organization
-	function get_org_total_ans($org_id)
+	function get_org_total_ans($org_id, $competition_id)
 	{
-		$query = $this->db->query("SELECT user_question.CORRECT FROM user_question JOIN user_org_assoc ON user_question.USER_ID = user_org_assoc.PARTICIPANT_ID WHERE user_org_assoc.ORG_ID = '$org_id'");
+		$query = $this->db->query("SELECT user_question.CORRECT FROM user_question JOIN user_org_assoc ON user_question.USER_ID = user_org_assoc.PARTICIPANT_ID WHERE user_org_assoc.ORG_ID = '$org_id' AND user_question.event_id = '$competition_id'");
 	
 		return $query->num_rows();		
 	}
 
 	//get the # of correct answers from a participant
-	function get_participant_correct_ans($participant_id)
+	function get_participant_correct_ans($participant_id, $competition_id)
 	{
-		$query = $this->db->query("SELECT CORRECT FROM user_question WHERE user_id = '$participant_id' AND user_question.CORRECT = 'y'");
+		$query = $this->db->query("SELECT CORRECT FROM user_question WHERE user_id = '$participant_id' AND correct = 'y' AND event_id = '$competition_id'");
 	
 		return $query->num_rows();
 	}
 
 	//get the total # of answers from a participant
-	function get_participant_total_ans($participant_id)
+	function get_participant_total_ans($participant_id, $competition_id)
 	{
-		$query = $this->db->query("SELECT CORRECT FROM user_question WHERE user_id = '$participant_id'");
+		$query = $this->db->query("SELECT CORRECT FROM user_question WHERE user_id = '$participant_id' AND event_id = '$competition_id'");
 	
 		return $query->num_rows();
+	}
+
+	function add_organization($email,$name)
+	{
+		$this->db->set('USER_NAME', $name);
+		$this->db->set('EMAIL', $email);
+
+		if($this->db->insert('USER_TABLE') != TRUE)
+		{
+			return 'error';
+		}
+		else
+		{
+			return 'added';
+		}
+	}
+
+	//get the participant id from the user table
+	function get_org_id($email)
+	{
+		//return query with user_id
+		$query = $this->db->query("SELECT user_id FROM user_table WHERE email = '$email'");
+
+		if($query->num_rows() == 1)
+		{
+			$row = $query->row();
+			return $row->USER_ID;
+		}
+		else
+		{
+			echo "error with retrieving question id";
+		}
+	}
+
+	function add_org_user_role($org_id)
+	{
+		$this->db->set('ROLE_ID', '2');
+		$this->db->set('USER_ID', $org_id);
+		$this->db->set('STATUS', 'active');
+
+		if($this->db->insert('USER_ROLE') != TRUE)
+		{
+			return 'error';
+		}
+		else
+		{
+			return 'added';
+		}
+	}
+
+	function add_org_to_comp($email,$name,$competition_id)
+	{
+		$query = $this->add_organization($email,$name);
+
+		if($query == 'error')
+		{
+			return $query;
+		}
+		else
+		{
+			$org_id = $this->get_org_id($email);
+			$query = $this->add_org_user_role($org_id);
+
+			if($query == 'error')
+			{
+				return $query;
+			}
+			else
+			{
+				$this->db->set('ORG_ID', $org_id);
+				$this->db->set('EVENT_ID', $competition_id);
+
+				if($this->db->insert('ORG_COMP') != TRUE)
+				{
+					return 'error';
+				}
+				else
+				{
+					return 'added';
+				}
+			}
+		}
 	}
 }
 

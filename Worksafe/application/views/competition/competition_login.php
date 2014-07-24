@@ -1,6 +1,6 @@
+<!DOCTYPE html>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 <style>@import url('<?=base_url()?>/assets/css/login.css'); </style>
-
-
 
 <div id="login">
 

@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 <style>@import url('<?=base_url()?>/assets/css/template_header.css'); </style>
 
 <div id="header">
@@ -6,7 +8,7 @@
 <div id="nav_menu">
 	<ul>
 		<li><a href="<?=base_url();?>index.php/">Home</a></li>
-		<li><a href="<?=base_url();?>index.php/competition/about">Learn more</a></li>
+		<li><a href="<?=base_url();?>index.php/competition/about">Learn More</a></li>
 		<li><a href="<?=base_url();?>index.php/competition/leaderboard">Leaderboard</a></li>
 		<li><a href="<?=base_url();?>index.php/competition/contact">Contact</a></li>
 	</ul>

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 <html>
 <head>
 
@@ -48,7 +49,7 @@ if($question->QUESTION_TYPE == 'true_false')
   echo '<br />';
   if($question->SOURCE_LINK != NULL)
   {
-    echo '<p>Source: <a href ="'.$question->SOURCE_LINK.'">Source link</a></p>';
+    echo '<p><a href ="'.$question->SOURCE_LINK.'">Need a hint?</a></p>';
   }
   echo '<br />';
   echo form_submit('particpant_answer_question_submit', 'Submit Answer');
@@ -76,7 +77,7 @@ else if($question->QUESTION_TYPE == 'multiple_choice')
     }
     if($question->SOURCE_LINK != NULL)
     {
-      echo '<p>Source: <a href ="'.$question->SOURCE_LINK.'">Source link</a></p>';
+      echo '<p><a href ="'.$question->SOURCE_LINK.'">Need a hint?</a></p>';
     }
     echo "<br />";
 
@@ -109,7 +110,7 @@ else if($question->QUESTION_TYPE == 'multiple_select')
     echo "<br />";
     if($question->SOURCE_LINK != NULL)
     {
-      echo '<p>Source: <a href ="'.$question->SOURCE_LINK.'">Source link</a></p>';
+      echo '<p><a href ="'.$question->SOURCE_LINK.'">Need a hint?</a></p>';
     }   
     echo "<br />";
 

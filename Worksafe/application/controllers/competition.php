@@ -403,8 +403,8 @@ class Competition extends CI_Controller {
 			//reset the org commits
 			$org_commits = 0;
 
-			$correct = $this->Admin_model->get_org_correct_ans($org->USER_ID);
-			$total = $this->Admin_model->get_org_total_ans($org->USER_ID);
+			$correct = $this->Admin_model->get_org_correct_ans($org->USER_ID, $competition_id);
+			$total = $this->Admin_model->get_org_total_ans($org->USER_ID, $competition_id);
 			
 			if($total == 0)
 				$percent_correct = 0;
@@ -415,7 +415,7 @@ class Competition extends CI_Controller {
 			}
 
 			//get all participants associated with a specific organization
-			$query = $this->Admin_model->get_participants_by_org($org->USER_ID);
+			$query = $this->Admin_model->get_participants_by_org($org->USER_ID, $competition_id);
 
 			//go through each array of participants to get individual commitments
 			foreach ($query->result() as $participant) {
@@ -424,7 +424,7 @@ class Competition extends CI_Controller {
 				$participant_data = $this->Admin_model->get_participant_data($participant->PARTICIPANT_ID);
 
 				//get # of commitments by participants so far
-				$participant_commits = $this->Admin_model->commits_by_user($participant_data->USER_ID);
+				$participant_commits = $this->Admin_model->commits_by_user($participant_data->USER_ID, $competition_id);
 
 				$org_commits = $org_commits + $participant_commits;
 

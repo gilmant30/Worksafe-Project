@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 <html>
 <head>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>

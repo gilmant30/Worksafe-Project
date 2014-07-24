@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 <html>
 <head>
 
@@ -44,6 +45,7 @@
 	</table>
 
 <br />
+<a href="<?= base_url();?>index.php/admin/addOrganization/<?=$competition->EVENT_ID?>">Add new organization</a>
 <a href="<?= base_url();?>index.php/admin/competition">Home page</a>
 
 </div>

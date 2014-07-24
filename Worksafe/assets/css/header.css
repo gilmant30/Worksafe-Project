@@ -10,26 +10,51 @@ strong{
 }
 
 a {
-    background:#eee;
-    text-decoration:none;
-    color:#333;
-    font-family:Arial, sans-serif;
-    font-size:25px;
+    -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+    box-shadow:inset 0px 1px 0px 0px #ffffff;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #23aed1), color-stop(1, #dfdfdf) );
+    background:-moz-linear-gradient( center top, #23aed1 5%, #dfdfdf 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#23aed1', endColorstr='#dfdfdf');
+    background-color:#23aed1;
+    -webkit-border-top-left-radius:6px;
+    -moz-border-radius-topleft:6px;
+    border-top-left-radius:6px;
+    -webkit-border-top-right-radius:6px;
+    -moz-border-radius-topright:6px;
+    border-top-right-radius:6px;
+    -webkit-border-bottom-right-radius:6px;
+    -moz-border-radius-bottomright:6px;
+    border-bottom-right-radius:6px;
+    -webkit-border-bottom-left-radius:6px;
+    -moz-border-radius-bottomleft:6px;
+    border-bottom-left-radius:6px;
+    text-indent:0;
+    border:1px solid #dcdcdc;
+    display:inline-block;
+    color:black;
+    font-family:arial;
+    font-size:15px;
     font-weight:bold;
-    padding:3px 5px;
-    border:1px solid #aaa;
-    border-radius:3px;
-    cursor:default;
+    font-style:normal;
+    height:50px;
+    line-height:50px;
+    width:200px;
+    text-decoration:none;
+    text-align:center;
+    text-shadow:1px 1px 0px #ffffff;
 }
 
 a:hover {
-    background-color:#f2f2f2;
-    border-color:#888;
-    box-shadow:0 0 2px #ccc;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #23aed1) );
+    background:-moz-linear-gradient( center top, #dfdfdf 5%, #23aed1 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#23aed1');
+    background-color:#dfdfdf;
 }
 
 a:active {
-    vertical-align:-1px;
+    position:relative;
+    top:1px;
 }
 
 #q {

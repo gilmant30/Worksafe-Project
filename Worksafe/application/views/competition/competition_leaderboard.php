@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 <html>
 <head>
 <style>@import url('<?=base_url()?>/assets/css/leaderboard.css'); </style>

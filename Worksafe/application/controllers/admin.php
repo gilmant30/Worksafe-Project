@@ -417,6 +417,41 @@ class Admin extends CI_Controller {
 		redirect('admin/reviewCompetition/'.$competition_id.'');
 	}
 
+	public function addOrganization($competition_id)
+	{
+		$query = $this->Admin_model->get_competition_data($competition_id);
+		$data['competition'] = $query->row();
+
+		//validate form
+		$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+		$this->form_validation->set_rules('name', 'Name', 'required');
+
+		if($this->form_validation->run() == FALSE)
+		{
+			$data['success'] = '';
+			$this->load->view('admin/new_organization', $data);
+		}
+		else
+		{	
+			$email = $this->security->xss_clean($this->input->post('email'));
+			$name = $this->security->xss_clean($this->input->post('name'));
+
+			$query = $this->Admin_model->add_org_to_comp($email,$name,$competition_id);
+			
+			if($query == 'error')
+			{
+				$data['success'] = 'Error with adding the organization';
+				$this->load->view('admin/new_organization', $data);
+			}
+			else
+			{
+				$data['success'] = 'Organization has been added';
+				$this->load->view('admin/new_organization', $data);
+			}
+			
+		}
+	}
+
 	//show all active organizations for the active competition
 	public function showOrganization($competition_id)
 	{
@@ -442,8 +477,8 @@ class Admin extends CI_Controller {
 			//reset the org commits
 			$org_commits = 0;
 
-			$correct = $this->Admin_model->get_org_correct_ans($org->USER_ID);
-			$total = $this->Admin_model->get_org_total_ans($org->USER_ID);
+			$correct = $this->Admin_model->get_org_correct_ans($org->USER_ID, $competition_id);
+			$total = $this->Admin_model->get_org_total_ans($org->USER_ID, $competition_id);
 			if($total == 0)
 			{
 				$percent_correct = '0.00';
@@ -455,7 +490,7 @@ class Admin extends CI_Controller {
 			}
 
 			//get all participants associated with a specific organization
-			$query = $this->Admin_model->get_participants_by_org($org->USER_ID);
+			$query = $this->Admin_model->get_participants_by_org($org->USER_ID, $competition_id);
 
 			//go through each array of participants to get individual commitments
 			foreach ($query->result() as $participant) {
@@ -464,7 +499,7 @@ class Admin extends CI_Controller {
 				$participant_data = $this->Admin_model->get_participant_data($participant->PARTICIPANT_ID);
 
 				//get # of commitments by participants so far
-				$participant_commits = $this->Admin_model->commits_by_user($participant_data->USER_ID);
+				$participant_commits = $this->Admin_model->commits_by_user($participant_data->USER_ID, $competition_id);
 
 				$org_commits = $org_commits + $participant_commits;
 
@@ -511,7 +546,7 @@ class Admin extends CI_Controller {
 		$data['participant'] = new ArrayObject();
 
 		//get all participants associated with a specific organization
-		$query = $this->Admin_model->get_participants_by_org($org_id);
+		$query = $this->Admin_model->get_participants_by_org($org_id, $competition_id);
 
 		//go through each participant to get their commitments
 		foreach ($query->result() as $row) {
@@ -519,10 +554,10 @@ class Admin extends CI_Controller {
 			$participant_data = $this->Admin_model->get_participant_data($row->PARTICIPANT_ID);
 
 			//get the # of correct answers for each participant
-			$correct = $this->Admin_model->get_participant_correct_ans($row->PARTICIPANT_ID);
+			$correct = $this->Admin_model->get_participant_correct_ans($row->PARTICIPANT_ID, $competition_id);
 			
 			//get the total number of answers for each participant
-			$total = $this->Admin_model->get_participant_total_ans($row->PARTICIPANT_ID);
+			$total = $this->Admin_model->get_participant_total_ans($row->PARTICIPANT_ID, $competition_id);
 			if($total == 0)
 			{
 				$percent_correct = '0.00';
@@ -536,7 +571,7 @@ class Admin extends CI_Controller {
 
 
 			//get # of commitments by participants so far
-			$commits = $this->Admin_model->commits_by_user($participant_data->USER_ID);
+			$commits = $this->Admin_model->commits_by_user($participant_data->USER_ID, $competition_id);
 
 			//put data into array
 			$participant_array = array(
@@ -730,7 +765,7 @@ class Admin extends CI_Controller {
 			}
 
 			$this->session->set_flashdata('added', 'True or false question added');
-			//redirect('admin/questionEvent');
+			redirect('admin/questionEvent');
 
 		}
 
@@ -764,7 +799,7 @@ class Admin extends CI_Controller {
 			}
 
 			$this->session->set_flashdata('added', 'Multiple choice question added');
-			//redirect('admin/questionEvent');
+			redirect('admin/questionEvent');
 		}
 
 		//if question type is multiple select insert all answers into db
@@ -795,7 +830,7 @@ class Admin extends CI_Controller {
 			}
 
 			$this->session->set_flashdata('added', 'Multiple select question added');
-			//redirect('admin/questionEvent');
+			redirect('admin/questionEvent');
 		}	
 	}
 

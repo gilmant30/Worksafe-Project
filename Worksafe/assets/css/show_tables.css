@@ -18,7 +18,6 @@ table {
 }
 
 .bordered {
-    border: solid #ccc 1px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
     border-radius: 6px;
@@ -56,6 +55,10 @@ table {
     box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;        
     border-top: none;
     text-shadow: 0 1px 0 rgba(255,255,255,.5); 
+}
+
+.bordered td{
+    background:#fff;
 }
 
 .bordered td:first-child, .bordered th:first-child {

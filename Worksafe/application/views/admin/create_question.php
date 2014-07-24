@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 <html>
 <head>
 
@@ -74,6 +75,8 @@
   	
   ?>
 </div>
+
+<a href="<?= base_url();?>index.php/admin/">Home Page</a>
 
 </body>
 </html>
