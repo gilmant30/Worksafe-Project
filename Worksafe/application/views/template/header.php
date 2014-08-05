@@ -3,7 +3,7 @@
 <style>@import url('<?=base_url()?>/assets/css/template_header.css'); </style>
 
 <div id="header">
-<a href="http://www.safetyfanatics.com/"><img id="logo" src="<?=base_url();?>/assets/img/safety_fanatic_logo2.png"></a>
+<a href="http://www.safetyfanatics.com/" target="_blank"><img id="logo" src="<?=base_url();?>/assets/img/safety_fanatic_logo2.png"></a>
 
 <div id="nav_menu">
 	<ul>

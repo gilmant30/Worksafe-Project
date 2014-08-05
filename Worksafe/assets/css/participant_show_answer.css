@@ -89,3 +89,7 @@ body{
 #correct_answer{
   border: 2px solid green;
 }
+
+#wrong_answer{
+  border: 2px solid red;
+}

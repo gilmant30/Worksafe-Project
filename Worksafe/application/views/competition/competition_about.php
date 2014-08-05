@@ -99,318 +99,318 @@ The team that has the most participation at the end of the day on Thursday, will
       		<td>Spry, Kristen</td>
       	</tr>
       	<tr>
-      		<td>Austin, Justina</td>
+      		<td>Baer, Heather</td>
       		<td>Devine, Patrick</td>
       		<td>Kauffman, Rhonda</td>
       		<td>Parsons, Amy</td>
       		<td>Steinmetz, Robert</td>
       	</tr>    
       	<tr>
-      		<td>Baer, Heather</td>
+      		<td>Baldwin Griep, Kristi</td>
       		<td>Dodge, Jerilyn</td>
       		<td>Keener, Zach</td>
       		<td>Patterson, Chonna</td>
-      		<td>Stephenson, Elizabeth</td>
+      		<td>Stillman, Scott</td>
       	</tr>  
       	<tr>
-      		<td>Baldwin Griep, Kristi</td>
+      		<td>Barker, Linda</td>
       		<td>Dominguez, Jennifer</td>
       		<td>Keener, Debbra</td>
       		<td>Paul, Jeff</td>
-      		<td>Stillman, Scott</td>
-      	</tr> 
-      	<tr>
-      		<td>Barker, Linda</td>
-      		<td>Dudley, Johnna</td>
-      		<td>Kehl, Adam</td>
-      		<td>Payton, Darlene</td>
       		<td>Stokes, Will</td>
       	</tr> 
       	<tr>
       		<td>Barnes, Kelee</td>
-      		<td>Duncan, Angela</td>
-      		<td>Kelley, Pam</td>
-      		<td>Peck, Jennifer</td>
+      		<td>Dudley, Johnna</td>
+      		<td>Kehl, Adam</td>
+      		<td>Payton, Darlene</td>
       		<td>Storm, Jeanne</td>
       	</tr> 
       	<tr>
       		<td>Barth, Jennifer</td>
-      		<td>Early, Tonya</td>
-      		<td>Kelly, Kevin</td>
-      		<td>Peery, Kevin</td>
+      		<td>Duncan, Angela</td>
+      		<td>Kelley, Pam</td>
+      		<td>Peck, Jennifer</td>
       		<td>Strobing, Gailyn</td>
       	</tr> 
       	<tr>
       		<td>Barton, Jamie</td>
-      		<td>Edwards, Shawn</td>
-      		<td>Khan, Tauheed</td>
-      		<td>Pekkala, Holly</td>
+      		<td>Early, Tonya</td>
+      		<td>Kelly, Kevin</td>
+      		<td>Peery, Kevin</td>
       		<td>Summers, Steven</td>
       	</tr> 
       	<tr>
       		<td>Bauman, Justin</td>
-      		<td>Ehrhart, James</td>
-      		<td>King, Eric</td>
-      		<td>Pellegrino, Joe</td>
+      		<td>Edwards, Shawn</td>
+      		<td>Khan, Tauheed</td>
+      		<td>Pekkala, Holly</td>
       		<td>Sweeten, Terri</td>
       	</tr> 
       	<tr>
       		<td>Baumgartner, Kristie</td>
-      		<td>Engle, Allan</td>
-      		<td>King, Sherry</td>
-      		<td>Perkins, Glenda</td>
+      		<td>Ehrhart, James</td>
+      		<td>King, Eric</td>
+      		<td>Pellegrino, Joe</td>
       		<td>Tate, Kathy</td>
       	</tr> 
       	<tr>
       		<td>Belcher, Sarah</td>
-      		<td>Evans, Tracy</td>
-      		<td>Kirchhoff, Lucinda</td>
-      		<td>Peterson, Kathleen</td>
+      		<td>Engle, Allan</td>
+      		<td>King, Sherry</td>
+      		<td>Peoples, Lynn</td>
       		<td>Taylor, Stacy</td>
       	</tr> 
       	<tr>
       		<td>Bell, Glenda</td>
-      		<td>Fick, Therese</td>
-      		<td>Kleekamp, Aaron</td>
-      		<td>Phillips, Douglas</td>
+      		<td>Evans, Tracy</td>
+      		<td>Kirchhoff, Lucinda</td>
+      		<td>Perkins, Glenda</td>
       		<td>Teter, Michael</td>
       	</tr> 
       	<tr>
       		<td>Bertrand, Chelsea</td>
-      		<td>Fischer, Kent</td>
-      		<td>Kohnle, Corey</td>
-      		<td>Phillips, CJ</td>
+      		<td>Fick, Therese</td>
+      		<td>Kleekamp, Aaron</td>
+      		<td>Peterson, Kathleen</td>
       		<td>Tettleton, Rene</td>
       	</tr> 
       	<tr>
       		<td>Bhojwani, Pavan</td>
+      		<td>Fischer, Kent</td>
+      		<td>Kohnle, Corey</td>
+      		<td>Phillips, Douglas</td>
+      		<td>Thelen, Janet</td>
+      	</tr> 
+      	<tr>
+      		<td>Bias, Emily</td>
       		<td>Flippin, Greg</td>
       		<td>Kramel, Karen</td>
-      		<td>Porter, Marilyn</td>
-      		<td>Thelen, Janet</td>
+      		<td>Phillips, CJ</td>
+      		<td>Traylor, Nancy</td>
       	</tr>    
             <tr>
-                  <td>Bias, Emily</td>
+                  <td>Blank, Nikole</td>
                   <td>Fox, Shannon</td>
                   <td>Kravchick, Michael</td>
-                  <td>Pundmann, Vicki</td>
-                  <td>Traylor, Nancy</td>
-            </tr>   	
-            <tr>
-                  <td>Blank, Nikole</td>
-                  <td>Fox, Kimberly</td>
-                  <td>Krieger, Mark</td>
-                  <td>Puricelli, Maria</td>
+                  <td>Porter, Marilyn</td>
                   <td>Tucker, Kara</td>
-            </tr>  
+            </tr>   	
             <tr>
                   <td>Boley, Candice</td>
                   <td>Geering, Christopher</td>
-                  <td>Kuergeleis, Andrea</td>
-                  <td>Quinn, Tisha</td>
+                  <td>Krieger, Mark</td>
+                  <td>Pundmann, Vicki</td>
                   <td>Turner, Anita</td>
             </tr>  
             <tr>
                   <td>Booth, Melissa</td>
                   <td>Gerling, Ryan</td>
-                  <td>Lawson, Rachel</td>
-                  <td>Radmacher, Michelle</td>
+                  <td>Kuergeleis, Andrea</td>
+                  <td>Puricelli, Maria</td>
                   <td>Tzou, Patrick</td>
             </tr>  
             <tr>
                   <td>Borghardt, Adrienna</td>
                   <td>Gessling, Tami</td>
-                  <td>Layne, Debbie</td>
-                  <td>Raines, Christine</td>
+                  <td>Lawson, Rachel</td>
+                  <td>Quinn, Tisha</td>
                   <td>Underwood, Joyce</td>
             </tr>  
             <tr>
                   <td>Borgmann, Amanda</td>
                   <td>Gifford, Ralph</td>
-                  <td>Lees, Carol</td>
-                  <td>Reckner, Amanda</td>
+                  <td>Layne, Debbie</td>
+                  <td>Radmacher, Michelle</td>
                   <td>Valdemar, Kathy</td>
             </tr>  
             <tr>
                   <td>Bounds, Gregory</td>
                   <td>Gilpin, Peggy</td>
-                  <td>Lehnhoff, Cathy</td>
-                  <td>Reifsteck, Keith</td>
+                  <td>Lees, Carol</td>
+                  <td>Raines, Christine</td>
                   <td>Varnum, Jan</td>
             </tr>  
             <tr>
                   <td>Brandes, Susan</td>
                   <td>Glindemann, Geri</td>
-                  <td>Long, Ashley</td>
-                  <td>Reisig, David</td>
+                  <td>Lehnhoff, Cathy</td>
+                  <td>Reckner, Amanda</td>
                   <td>Vest, Lisa</td>
             </tr>  
             <tr>
                   <td>Bremer, Pam</td>
                   <td>Goodwin, Greg</td>
-                  <td>Loy, Jennifer</td>
-                  <td>Rinderer, Charlie</td>
+                  <td>Long, Ashley</td>
+                  <td>Reifsteck, Keith</td>
                   <td>Viviano, Alice</td>
             </tr>  
             <tr>
                   <td>Brothers, Tiffany</td>
                   <td>Gragg, Liz</td>
-                  <td>Loyd, John</td>
-                  <td>Ritter, Mitch</td>
+                  <td>Loy, Jennifer</td>
+                  <td>Reisig, David</td>
                   <td>Wallerstein, Michelle</td>
             </tr>  
             <tr>
                   <td>Brown, Terri</td>
                   <td>Green, Sunny</td>
-                  <td>Luebbering, Matt</td>
-                  <td>Roberts, Karen</td>
+                  <td>Loyd, John</td>
+                  <td>Rinderer, Charlie</td>
                   <td>Walton, Flint</td>
             </tr>  
             <tr>
                   <td>Brown, Maureen</td>
                   <td>Hague, Julie</td>
-                  <td>Mackey, Sally</td>
-                  <td>Robinson, Shelley</td>
+                  <td>Luebbering, Matt</td>
+                  <td>Ritter, Mitch</td>
                   <td>Waring, Sandra</td>
-            </tr> 
+            </tr>  
             <tr>
                   <td>Brown, Brian</td>
                   <td>Hargis, Kassie</td>
-                  <td>Markes, Ron</td>
-                  <td>Robinson, Nina</td>
+                  <td>Mackey, Sally</td>
+                  <td>Roberts, Karen</td>
                   <td>Weber, Don</td>
             </tr> 
             <tr>
                   <td>Burgess, Sheila</td>
                   <td>Harris, Natasha</td>
-                  <td>Marshall, Shapree</td>
-                  <td>Robinson, Stephanie</td>
+                  <td>Markes, Ron</td>
+                  <td>Robinson, Shelley</td>
                   <td>West, Theresa L.</td>
             </tr> 
             <tr>
                   <td>Burks, Jormel</td>
                   <td>Hart, Jennifer</td>
                   <td>Martin, Jennifer</td>
-                  <td>Rogers, Michael</td>
+                  <td>Robinson, Nina</td>
                   <td>West, Melanie</td>
             </tr> 
             <tr>
                   <td>Burks, Rhonda</td>
                   <td>Hassler, Heather</td>
                   <td>Martin, Mark</td>
-                  <td>Romstad, Cheryl</td>
+                  <td>Robinson, Stephanie</td>
                   <td>Wheatley, Jennifer</td>
             </tr> 
             <tr>
                   <td>Burks, Brittany</td>
                   <td>Heckemeyer, Perry</td>
                   <td>Mattes, Lauren</td>
-                  <td>Rowe, Heather</td>
+                  <td>Rogers, Michael</td>
                   <td>Whitaker, Jerico</td>
             </tr> 
             <tr>
                   <td>Burnett, Yolanda</td>
                   <td>Heckman, Chris</td>
                   <td>Matthews, Tanna</td>
-                  <td>Rozelle-Thomas, Lee</td>
+                  <td>Romstad, Cheryl</td>
                   <td>White, Mathew</td>
             </tr> 
             <tr>
                   <td>Burnett, Christa</td>
                   <td>Hester, Stephanie</td>
                   <td>Mcclure, Leah</td>
-                  <td>Salmons, Kevin</td>
+                  <td>Rowe, Heather</td>
                   <td>Whitesides, John</td>
             </tr> 
             <tr>
                   <td>Buxton, Heidi</td>
                   <td>Hildebrand, Ryan</td>
                   <td>McCoy, Misty</td>
-                  <td>Salmons, Monica</td>
+                  <td>Rozelle-Thomas, Lee</td>
                   <td>Wiest, Megan</td>
             </tr> 
             <tr>
                   <td>Byington, Bill</td>
                   <td>Hogan, Sandy</td>
                   <td>McCune, Irma</td>
-                  <td>Sandhu, Gurpreet</td>
+                  <td>Salmons, Kevin</td>
                   <td>Wiggins, Jocelyn</td>
             </tr> 
             <tr>
                   <td>Canton, Tammy</td>
                   <td>Holmes, Steve</td>
                   <td>McCutchen-O'Neal, Julie</td>
-                  <td>Sartwell, Marva</td>
+                  <td>Salmons, Monica</td>
                   <td>Williams, Gechel</td>
             </tr> 
             <tr>
                   <td>Capelton, Toy</td>
                   <td>Huang, Ming-Ern</td>
                   <td>Meyer, Tracey</td>
-                  <td>Savage, Vickie</td>
+                  <td>Sandhu, Gurpreet</td>
                   <td>Williamson, Bradley</td>
             </tr> 
             <tr>
                   <td>Carlisle, Dave</td>
                   <td>Huitink, Chaelynn</td>
                   <td>Meyer, Lori</td>
-                  <td>Schmidt, Sheila</td>
+                  <td>Sartwell, Marva</td>
                   <td>Willis, Ryan</td>
             </tr> 
             <tr>
                   <td>Coleman, Angel</td>
                   <td>Hulett, Joy</td>
                   <td>Miller, James</td>
-                  <td>Schnebelen, Michael</td>
+                  <td>Savage, Vickie</td>
                   <td>Wilson, Timothy</td>
             </tr> 
             <tr>
                   <td>Colley, Rhonda</td>
-                  <td>Ingalsbe, Barbara</td>
+                  <td>Innes, Linda</td>
                   <td>Miller, Tammy</td>
-                  <td>Schulte, Tony</td>
+                  <td>Schmidt, Sheila</td>
                   <td>Woll, Kim</td>
             </tr> 
             <tr>
                   <td>Combs, Alan</td>
-                  <td>Innes, Linda</td>
+                  <td>Ivy, June</td>
                   <td>Millikan, Meagan</td>
-                  <td>Scoble, Derek</td>
+                  <td>Schnebelen, Michael</td>
                   <td>Woods, Robert</td>
             </tr> 
             <tr>
                   <td>Cooley, Matthew</td>
-                  <td>Ivy, June</td>
+                  <td>Jackman, Timothy</td>
                   <td>Mitchell, Paulette</td>
-                  <td>Seeman, Theresa</td>
+                  <td>Schulte, Tony</td>
                   <td>Woodward, Mark</td>
             </tr> 
             <tr>
                   <td>Copeland, Bill</td>
-                  <td>Jackman, Timothy</td>
+                  <td>Jackman, Curtis</td>
                   <td>Moreau, Mindy</td>
-                  <td>Seidt, Wesley</td>
+                  <td>Scoble, Derek</td>
                   <td>Yonke, Louise</td>
             </tr> 
             <tr>
                   <td>Corbet, Lisa</td>
-                  <td>Jackman, Curtis</td>
+                  <td>Jacobs, Thomas</td>
                   <td>Morley, Raymond</td>
-                  <td>Selby, Pat</td>
+                  <td>Seeman, Theresa</td>
                   <td>Young, Monica</td>
             </tr> 
             <tr>
                   <td>Corlett, Debbie</td>
-                  <td>Jacobs, Thomas</td>
+                  <td></td>
                   <td>Mueller, Michael</td>
-                  <td>Self, Pete</td>
+                  <td>Seidt, Wesley</td>
                   <td>Zey, Kelley</td>
             </tr> 
             <tr>
                   <td>Cowgill, Beth</td>
                   <td></td>
                   <td></td>
+                  <td>Selby, Pat</td>
                   <td></td>
+            </tr> 
+            <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>Self, Pete</td>
                   <td></td>
             </tr> 
             

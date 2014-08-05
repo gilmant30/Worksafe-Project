@@ -30,11 +30,13 @@ echo '<span class="button" style="width:350px;">'.$category.' </span>';
     {
         if($correct == TRUE)
         {
-          echo '<p id="correct">CORRECT! you selected <strong>'.$answer.'</strong></p>';
+          echo '<p id="correct">CORRECT!</p>';
+          echo '<p class="answer" id = "correct_answer">'.$answer.'</p>';
         }
         else
         {
-          echo '<p id="wrong">Nice try!....the correct answer is <strong>'.$answer.'</strong></p>';
+          echo '<p id="incorrect_multi">Nice try!....the correct answer is...</p>';
+          echo '<p class="answer" id = "wrong_answer">'.$answer.'</p>';
         }
     }
 
@@ -46,14 +48,17 @@ echo '<span class="button" style="width:350px;">'.$category.' </span>';
       }
     foreach ($answer as $ans) {
 
-        //$radio_input = array('name' => 'answer', 'value' => $ans->ANSWER_ID);
         if($ans->CORRECT == 'y')
         {
           if($correct == TRUE)
           {
             echo '<p>CORRECT!</p>';
+            echo '<p class="answer" id = "correct_answer">'.$ans->ANSWER->load().'</p>';
           }
-          echo '<p class="answer" id = "correct_answer">'.$ans->ANSWER->load().'</p>';
+          else
+          {
+            echo '<p class="answer" id = "wrong_answer">'.$ans->ANSWER->load().'</p>';
+          }
         }
       
       }

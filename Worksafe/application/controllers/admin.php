@@ -32,7 +32,7 @@ class Admin extends CI_Controller {
 	public function login()
 	{
 		//put validation on so email and password fields are required
-		$this->form_validation->set_rules('email', 'Email', 'required');
+		$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 		$this->form_validation->set_rules('password', 'Password', 'required');
 
 		//if either is empty returns error
@@ -53,7 +53,7 @@ class Admin extends CI_Controller {
 			$query = $this->Admin_model->validate_admin_login($email,$pass);
 			
 			//if number of rows returned is zero then user is not in the db so return an error else redirect to competition page
-			if($query->num_rows() >0)
+			if($query->num_rows() > 0)
 			{
 				//set session data for admin logged in
 				$session_data = array(
@@ -66,7 +66,7 @@ class Admin extends CI_Controller {
 			}
 			else
 			{
-			$this->session->set_flashdata('error', 'Email or password is incorrect');
+			$this->session->set_flashdata('error', $query->num_rows());
 			redirect('admin/index');
 			}
 		}
@@ -514,7 +514,8 @@ class Admin extends CI_Controller {
 					'user_id' => $org->USER_ID,
 					'name' => $org->USER_NAME,
 					'total_commits' => $org_commits,
-					'percent_correct' => $percent_correct
+					'percent_correct' => $percent_correct,
+					'correct' => $correct
 					);
 
 				//add array to array of objects
@@ -578,7 +579,8 @@ class Admin extends CI_Controller {
 				'user_id' => $participant_data->USER_ID,
 				'email' => $participant_data->EMAIL,
 				'commit' => $commits,
-				'percent_correct' => $percent_correct
+				'percent_correct' => $percent_correct,
+				'correct' => $correct
 				 );
 
 			//append to end of object array

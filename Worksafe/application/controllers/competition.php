@@ -65,7 +65,7 @@ class Competition extends CI_Controller {
 
 	public function fail()
 	{
-		echo 'no comp id in the url or the competition does not exist';
+		echo 'no comp id in the url or the competition does not exist or the competition is not active yet';
 	}
 
 	//logic for logging in as a participant
@@ -90,6 +90,9 @@ class Competition extends CI_Controller {
 		{
 			//grab email from the postfield
 			$email = $this->security->xss_clean($this->input->post('email'));
+
+			//lower case email
+			$email = strtolower($email);
 
 			//query db to make sure email is already in the database
 			$query = $this->Competition_model->check_participant_email_with_comp($email, $competition_id);
@@ -172,6 +175,9 @@ class Competition extends CI_Controller {
 		{
 			//check to make sure email is valid
 			$email = $this->security->xss_clean($this->input->post('email'));
+
+			//lower case email
+			$email = strtolower($email);
 			
 			$org_id = $this->security->xss_clean($this->input->post('organization'));
 
@@ -439,7 +445,8 @@ class Competition extends CI_Controller {
 					'user_id' => $org->USER_ID,
 					'name' => $org->USER_NAME,
 					'total_commits' => $org_commits,
-					'percent_correct' => $percent_correct
+					'percent_correct' => $percent_correct,
+					'correct' => $correct
 					);
 
 				//add array to array of objects
@@ -694,7 +701,7 @@ class Competition extends CI_Controller {
 		//if commitment has been given already don't give another, redirect to message page
 		if($commit > 0)
 		{
-			$this->session->set_flashdata('commitment', 'You have already received your point for the day');
+			$this->session->set_flashdata('commitment', 'You have already received your points for the day');
 			redirect('competition/index/'.$competition_id.'');
 		}
 		else
@@ -707,7 +714,7 @@ class Competition extends CI_Controller {
 			} catch (Exception $e) {
 				echo 'Caught exception: ', $e->getMessage(), "\n";
 			}
-			$this->session->set_flashdata('commitment', 'Congratulations you recieved your point for the day!');
+			$this->session->set_flashdata('commitment', 'Congratulations you recieved your points for the day!');
 			redirect('competition/index/'.$competition_id.'');
 		}
 	}

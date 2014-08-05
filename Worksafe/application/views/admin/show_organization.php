@@ -26,8 +26,9 @@
 		<tr>
 			<th>Organization id</th>
 			<th>Organization name</th>
-      <th>Total participation</th>
-      <th>Correct questions (%)</th>
+      <th>Total Correct Answers</th>
+        <!--<th>Total Points</th>
+        <th>Correct questions (%)</th>-->
 		</tr>
   </thead>
       <tbody>
@@ -36,8 +37,9 @@
     	echo "<tr>";
     	echo '<td><a href ="'.base_url().'index.php/admin/showParticipants/'.$competition->EVENT_ID.'/'.$row['user_id'].'" id="org_id_link">'.$row['user_id'].'</a></td>';
     	echo '<td>'.$row['name'].'</td>';
-      echo '<td>'.$row['total_commits'].'</td>';
-      echo '<td>'.$row['percent_correct'].'</td>';
+      echo '<td>'.$row['correct'].'</td>';
+      //echo '<td>'.$row['total_commits'].'</td>';
+      //echo '<td>'.$row['percent_correct'].'</td>';
     	echo "</tr>";
   }
   ?>

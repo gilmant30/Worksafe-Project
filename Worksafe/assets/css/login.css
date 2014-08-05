@@ -98,3 +98,7 @@ input[type="submit"]:hover{
   color:red;
 }
 
+label#email_label {
+ display: block;
+ }
+

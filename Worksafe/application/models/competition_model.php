@@ -15,7 +15,7 @@ class Competition_model extends CI_Model {
 	//get all the organizations that are active
 	function get_all_organizations()
 	{
-		$query = $this->db->query("SELECT user_table.user_name, user_table.user_id FROM user_table INNER JOIN user_role ON user_table.user_id = user_role.user_id INNER JOIN role_table ON role_table.role_id = user_role.role_id WHERE user_role.role_id = '2' AND user_role.status = 'active'");
+		$query = $this->db->query("SELECT wsw_user.user_name, wsw_user.user_id FROM wsw_user INNER JOIN wsw_user_role ON wsw_user.user_id = wsw_user_role.user_id INNER JOIN wsw_role ON wsw_role.role_id = wsw_user_role.role_id WHERE wsw_user_role.role_id = '2' AND wsw_user_role.status = 'active'");
 
 		//return entire query
 		return $query;
@@ -24,7 +24,7 @@ class Competition_model extends CI_Model {
 	//check to see if participant email is in the database and if so that they are a participant
 	function check_participant_email($email)
 	{
-		$query = $this->db->query("SELECT user_table.user_name, user_table.user_id FROM user_table INNER JOIN user_role ON user_table.user_id = user_role.user_id WHERE user_table.email = '$email' AND user_role.role_id = '3'");
+		$query = $this->db->query("SELECT wsw_user.user_name, wsw_user.user_id FROM wsw_user INNER JOIN wsw_user_role ON wsw_user.user_id = wsw_user_role.user_id WHERE wsw_user.email = '$email' AND wsw_user_role.role_id = '3'");
 
 		return $query;
 	}
@@ -32,7 +32,7 @@ class Competition_model extends CI_Model {
 	//check to see if participant email is in the database and if so that they are a participant
 	function check_participant_email_with_comp($email,$competition_id)
 	{
-		$query = $this->db->query("SELECT user_table.user_name, user_table.user_id FROM user_table INNER JOIN user_role ON user_table.user_id = user_role.user_id INNER JOIN user_org_assoc ON user_org_assoc.participant_id = user_table.user_id WHERE user_table.email = '$email' AND user_role.role_id = '3' AND user_org_assoc.event_id = '$competition_id'");
+		$query = $this->db->query("SELECT wsw_user.user_name, wsw_user.user_id FROM wsw_user INNER JOIN wsw_user_role ON wsw_user.user_id = wsw_user_role.user_id INNER JOIN wsw_user_org_assoc ON wsw_user_org_assoc.participant_id = wsw_user.user_id WHERE wsw_user.email = '$email' AND wsw_user_role.role_id = '3' AND wsw_user_org_assoc.event_id = '$competition_id'");
 
 		return $query;
 	}
@@ -45,7 +45,7 @@ class Competition_model extends CI_Model {
 			);
 
 		//insert into db, throw error if data not inserted
-		if( $this->db->insert('USER_TABLE', $data) != TRUE)
+		if( $this->db->insert('WSW_USER', $data) != TRUE)
 		{
 			throw new Exception("Cannot insert into user table");
 		}
@@ -59,7 +59,7 @@ class Competition_model extends CI_Model {
 	function get_participant_id($email,$zipcode)
 	{
 		//return query with user_id
-		$query = $this->db->query("SELECT user_id FROM user_table WHERE email = '$email'");
+		$query = $this->db->query("SELECT user_id FROM wsw_user WHERE email = '$email'");
 
 		if($query->num_rows() == 1)
 		{
@@ -72,7 +72,7 @@ class Competition_model extends CI_Model {
 		}
 	}
 
-	//insert the participant into the 'user_role' table with the participant role associated with them
+	//insert the participant into the 'wsw_user_role' table with the participant role associated with them
 	function insert_participant_into_user_role($participant_id)
 	{
 		$data = array(
@@ -82,9 +82,9 @@ class Competition_model extends CI_Model {
 			);
 
 		//insert into db, throw error if data not inserted
-		if( $this->db->insert('USER_ROLE', $data) != TRUE)
+		if( $this->db->insert('WSW_USER_ROLE', $data) != TRUE)
 		{
-			throw new Exception("Cannot insert into user_role table");
+			throw new Exception("Cannot insert into wsw_user_role table");
 		}
 		else
 		{
@@ -92,7 +92,7 @@ class Competition_model extends CI_Model {
 		}
 	}
 
-	//insert into the 'user_org_assoc' table to associate the participant with the organization they will represent
+	//insert into the 'wsw_user_org_assoc' table to associate the participant with the organization they will represent
 	function assoc_user_org($participant_id, $org_id, $competition_id)
 	{
 		$data = array(
@@ -102,9 +102,9 @@ class Competition_model extends CI_Model {
 		);
 
 		//insert into db, throw error if data not inserted
-		if( $this->db->insert('USER_ORG_ASSOC', $data) != TRUE)
+		if( $this->db->insert('WSW_USER_ORG_ASSOC', $data) != TRUE)
 		{
-			throw new Exception("Cannot insert into user_org_assoc table");
+			throw new Exception("Cannot insert into wsw_user_org_assoc table");
 		}
 		else
 		{
@@ -115,7 +115,7 @@ class Competition_model extends CI_Model {
 	//get competition data for the active competition
 	function get_competition_data($competition_id)
 	{
-		$query = $this->db->query("SELECT * FROM event WHERE active = 'y' AND event_type_id = '$this->competition' AND event_id = '$competition_id'");
+		$query = $this->db->query("SELECT * FROM wsw_event WHERE active = 'y' AND event_type_id = '$this->competition' AND event_id = '$competition_id'");
 		
 		if($query->num_rows() == 1)
 		{
@@ -130,7 +130,7 @@ class Competition_model extends CI_Model {
 	//get competition data for the active competition
 	function get_competitions()
 	{
-		$query = $this->db->query("SELECT * FROM event WHERE active = 'y' AND event_type_id = '$this->competition'");
+		$query = $this->db->query("SELECT * FROM wsw_event WHERE active = 'y' AND event_type_id = '$this->competition'");
 		
 		if($query->num_rows() == 1)
 		{
@@ -144,7 +144,7 @@ class Competition_model extends CI_Model {
 
 	function get_courses()
 	{
-		$query = $this->db->query("SELECT * FROM event WHERE active = 'y' AND event_type_id = '$this->course'");
+		$query = $this->db->query("SELECT * FROM wsw_event WHERE active = 'y' AND event_type_id = '$this->course'");
 
 		if($query->num_rows() > 0)
 		{
@@ -159,7 +159,7 @@ class Competition_model extends CI_Model {
 	//get competition id for the active competition
 	function get_competition_id()
 	{
-		$query = $this->db->query("SELECT * FROM event WHERE active = 'y' AND event_type_id = '$this->competition'");
+		$query = $this->db->query("SELECT * FROM wsw_event WHERE active = 'y' AND event_type_id = '$this->competition'");
 		
 		if($query->num_rows() == 1)
 		{
@@ -175,7 +175,7 @@ class Competition_model extends CI_Model {
 	//get the data for the questions for the particular day it is
 	function get_question_data_from_date_question($competition_id)
 	{
-		$query = $this->db->query("SELECT * FROM date_question WHERE event_id = '$competition_id'");
+		$query = $this->db->query("SELECT * FROM wsw_date_question WHERE event_id = '$competition_id'");
 
 		if($query->num_rows() > 0)
 			return $query;
@@ -186,7 +186,7 @@ class Competition_model extends CI_Model {
 	//get the question data for a single question by the question id
 	function get_question($question_id)
 	{
-		$query = $this->db->query("SELECT * FROM question WHERE question_id = '$question_id'");
+		$query = $this->db->query("SELECT * FROM wsw_question WHERE question_id = '$question_id'");
 
 		if($query->num_rows() == 1)
 			return $query->row();
@@ -197,7 +197,7 @@ class Competition_model extends CI_Model {
 	//get all the answer data for a particular question
 	function get_answers($question_id)
 	{
-		$query = $this->db->query("SELECT * FROM answer WHERE question_id = '$question_id'");
+		$query = $this->db->query("SELECT * FROM wsw_answer WHERE question_id = '$question_id'");
 
 		if($query->num_rows() > 0)
 			return $query;
@@ -208,7 +208,7 @@ class Competition_model extends CI_Model {
 	//get the number of questions in the competition per day
 	function get_questions_per_day_in_competition()
 	{
-		$query = $this->db->query("SELECT question_per_day FROM event WHERE active = 'y';");
+		$query = $this->db->query("SELECT question_per_day FROM wsw_event WHERE active = 'y';");
 
 		if($query->num_rows() == 1)
 		{
@@ -222,7 +222,7 @@ class Competition_model extends CI_Model {
 	//get all answer data for a single answer by the answer id
 	function check_answer($answer_id)
 	{
-		$query = $this->db->query("SELECT * FROM answer WHERE answer_id = '$answer_id'");
+		$query = $this->db->query("SELECT * FROM wsw_answer WHERE answer_id = '$answer_id'");
 
 		if($query->num_rows() == 1)
 		{
@@ -242,7 +242,7 @@ class Competition_model extends CI_Model {
 		$this->db->set('COMMITMENT_DATE', "TO_DATE('$date','YYYY-MM-DD')",false);
 
 		//insert into db, throw error if data not inserted
-		if( $this->db->insert('COMMITMENT') != TRUE)
+		if( $this->db->insert('WSW_COMMITMENT') != TRUE)
 		{
 			throw new Exception("Cannot insert into commitment table");
 		}
@@ -257,7 +257,7 @@ class Competition_model extends CI_Model {
 	{
 		$flag = 0;
 		$today_date = date('d-m-Y');
-		$query = $this->db->query("SELECT * FROM commitment WHERE user_id = '$participant_id' AND event_id = '$competition_id'");
+		$query = $this->db->query("SELECT * FROM wsw_commitment WHERE user_id = '$participant_id' AND event_id = '$competition_id'");
 
 		foreach ($query->result() as $commit) {
 			$date = date('d-m-Y',strtotime($commit->COMMITMENT_DATE));
@@ -274,7 +274,7 @@ class Competition_model extends CI_Model {
 
 	function get_user_question_data($participant_id, $question_id)
 	{
-		$query = $this->db->query("SELECT * FROM user_question WHERE user_id = '$participant_id' AND question_id = '$question_id'");
+		$query = $this->db->query("SELECT * FROM wsw_user_question WHERE user_id = '$participant_id' AND question_id = '$question_id'");
 
 		return $query;
 	}
@@ -290,7 +290,7 @@ class Competition_model extends CI_Model {
 			);
 
 		//insert into db, throw error if data not inserted
-		if( $this->db->insert('USER_QUESTION', $data) != TRUE)
+		if( $this->db->insert('WSW_USER_QUESTION', $data) != TRUE)
 		{
 			throw new Exception("Cannot insert into user_question table");
 		}
@@ -302,7 +302,7 @@ class Competition_model extends CI_Model {
 
 	function get_category_name($category_id)
 	{
-		$query = $this->db->query("SELECT * FROM CATEGORY_TABLE WHERE CATEGORY_ID = '$category_id'");
+		$query = $this->db->query("SELECT * FROM WSW_CATEGORY WHERE CATEGORY_ID = '$category_id'");
 
 		$query = $query->row();
 
@@ -311,14 +311,14 @@ class Competition_model extends CI_Model {
 
 	function get_all_org_competition($competition_id)
 	{
-		$query = $this->db->query("SELECT user_table.user_name, user_table.user_id FROM user_table INNER JOIN user_role ON user_table.user_id = user_role.user_id INNER JOIN role_table ON role_table.role_id = user_role.role_id INNER JOIN org_comp ON org_comp.ORG_ID = user_table.USER_ID WHERE user_role.role_id = '2' AND user_role.status = 'active' AND org_comp.EVENT_ID = '$competition_id'");
+		$query = $this->db->query("SELECT wsw_user.user_name, wsw_user.user_id FROM wsw_user INNER JOIN wsw_user_role ON wsw_user.user_id = wsw_user_role.user_id INNER JOIN wsw_role ON wsw_role.role_id = wsw_user_role.role_id INNER JOIN wsw_org_comp ON wsw_org_comp.ORG_ID = wsw_user.USER_ID WHERE wsw_user_role.role_id = '2' AND wsw_user_role.status = 'active' AND wsw_org_comp.EVENT_ID = '$competition_id'");
 		
 		return $query;
 	}
 
 	function competition_exists($competition_id)
 	{
-		$query = $this->db->query("SELECT * FROM event WHERE event_id = '$competition_id'");
+		$query = $this->db->query("SELECT * FROM wsw_event WHERE event_id = '$competition_id' AND active = 'y'");
 
 		$query = $query->num_rows();
 

@@ -28,8 +28,9 @@ $(document).ready(function()
       <thead>
   		<tr>
   			<th>Team name</th>
-        <th>Total Points</th>
-        <th>Correct questions (%)</th>
+        <th>Total Correct Answers</th>
+        <!--<th>Total Points</th>
+        <th>Correct questions (%)</th>-->
   		</tr>
     </thead>
         <tbody>
@@ -37,8 +38,9 @@ $(document).ready(function()
     	foreach ($organization as $row) {
       	echo "<tr>";
       	echo '<td>'.$row['name'].'</td>';
-        echo '<td>'.$row['total_commits'].'</td>';
-        echo '<td>'.$row['percent_correct'].'</td>';
+        echo '<td>'.$row['correct'].'</td>';
+        //echo '<td>'.$row['total_commits'].'</td>';
+        //echo '<td>'.$row['percent_correct'].'</td>';
       	echo "</tr>";
     }
     ?>

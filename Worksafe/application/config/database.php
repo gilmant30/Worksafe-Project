@@ -56,9 +56,9 @@ $tnsnames = '(DESCRIPTION =
     (INSTANCE_NAME = itdev)))';
 
 $db['default']['hostname'] = $tnsnames;
-$db['default']['username'] = 'OPS$TGILMAN';
-$db['default']['password'] = 'memi2013';
-$db['default']['database'] = 'OPS$TGILMAN';
+$db['default']['username'] = 'mts_dude';
+$db['default']['password'] = 'mts_rad1';
+$db['default']['database'] = 'OPS$WWW';
 $db['default']['dbdriver'] = 'oci8';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
@@ -77,7 +77,7 @@ $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
 $db['default']['username'] = 'tgilman';
-$db['default']['password'] = 'Mizzou30';
+$db['default']['password'] = '';
 $db['default']['database'] = 'worksafe';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';

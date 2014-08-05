@@ -12,9 +12,9 @@ body {
 table {
     *border-collapse: collapse; /* IE7 and lower */
     border-spacing: 0;
-    display: inline;
     width: 75%;   
     background:#fff; 
+    margin: 0 auto; 
 }
 
 .bordered {
@@ -23,7 +23,11 @@ table {
     border-radius: 6px;
     -webkit-box-shadow: 0 1px 1px #ccc; 
     -moz-box-shadow: 0 1px 1px #ccc; 
-    box-shadow: 0 1px 1px #ccc;         
+    box-shadow: 0 1px 1px #ccc;        
+}
+
+.bordered tr{
+    background: #fbf8e9;
 }
 
 .bordered tr:hover {

@@ -7,9 +7,11 @@
   <h2>Login</h2>
   <?php
 	$email = array('name' => 'email', 'placeholder' => 'Email');
+  $label = array('id' => 'email_label');
 
 	echo form_open('competition/login');
   echo form_hidden('competition_id',$competition_id);
+  echo form_label('Email:', 'email', $label);
 	echo form_input($email);
   echo '<br />';
 	echo '<a href="'.base_url().'index.php/competition/signup">Signup</a>';
