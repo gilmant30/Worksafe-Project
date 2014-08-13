@@ -47,9 +47,45 @@ class Competition extends CI_Controller {
 			'expire' => 86500,
 			);
 
-			$this->input->set_cookie($cookie_competition_id);
-			$this->load->view('template/login_header', $data);
-			$data['signup'] = TRUE;
+			$username= $this->Competition_model->get_user_from_server();
+			$username = strtolower($username);
+			$email = $username."@mem-ins.com";
+
+			//query db to make sure email is already in the database
+			$query = $this->Competition_model->check_participant_email_with_comp($email, $competition_id);
+
+			//if number of rows returned is greater than 0 then email exists 
+			if($query->num_rows() > 0)
+			{
+				//grab all info for the user that has logged in
+				$row = $query->row();
+
+				//set cookie for participant id
+				$cookie_participant_id = array(
+				'name' => 'participant_id',
+				'value' => $row->USER_ID,
+				'expire' => 86500,
+				);
+
+				//set session data for logged in
+				$session_data = array(
+					'email' => $email,
+					'isLoggedin' => TRUE
+				);
+				
+				//set cookie and session
+				$this->input->set_cookie($cookie_participant_id);
+				$this->input->set_cookie($cookie_competition_id);
+				$this->session->set_userdata($session_data);
+
+				redirect('competition/index/'.$competition_id.'');
+			}
+			else
+			{
+				$this->input->set_cookie($cookie_competition_id);
+				$this->load->view('template/login_header', $data);
+				$data['signup'] = TRUE;
+			}
 		}
 		else
 		{
@@ -714,9 +750,16 @@ class Competition extends CI_Controller {
 			} catch (Exception $e) {
 				echo 'Caught exception: ', $e->getMessage(), "\n";
 			}
-			$this->session->set_flashdata('commitment', 'Congratulations you recieved your points for the day!');
-			redirect('competition/index/'.$competition_id.'');
+			redirect('competition/questionComplete');
+			//$this->session->set_flashdata('commitment', 'Congratulations you received your points for the day!');
+			//redirect('competition/index/'.$competition_id.'');
 		}
+	}
+
+	public function questionComplete()
+	{
+		$data['competition_id'] = $this->input->cookie('competition_id');
+		$this->load->view('competition/question_complete', $data);
 	}
 
 	//logging out
